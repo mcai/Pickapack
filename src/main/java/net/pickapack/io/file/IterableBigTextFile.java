@@ -18,26 +18,19 @@
  ******************************************************************************/
 package net.pickapack.io.file;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.Iterator;
 
 public class IterableBigTextFile implements Iterable<String> {
-    private BufferedReader _reader;
+    private BufferedReader reader;
 
-    public IterableBigTextFile(String filePath) {
-        try {
-            _reader = new BufferedReader(new FileReader(filePath));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    public IterableBigTextFile(Reader reader) {
+        this.reader = new BufferedReader(reader);
     }
 
     public void close() {
         try {
-            _reader.close();
+            reader.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -48,21 +41,21 @@ public class IterableBigTextFile implements Iterable<String> {
     }
 
     private class FileIterator implements Iterator<String> {
-        private String _currentLine;
+        private String currentLine;
 
         public boolean hasNext() {
             try {
-                _currentLine = _reader.readLine();
+                currentLine = reader.readLine();
             } catch (Exception ex) {
-                _currentLine = null;
+                currentLine = null;
                 ex.printStackTrace();
             }
 
-            return _currentLine != null;
+            return currentLine != null;
         }
 
         public String next() {
-            return _currentLine;
+            return currentLine;
         }
 
         public void remove() {

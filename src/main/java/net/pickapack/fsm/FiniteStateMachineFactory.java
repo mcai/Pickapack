@@ -18,6 +18,8 @@
  ******************************************************************************/
 package net.pickapack.fsm;
 
+import net.pickapack.Params;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +42,7 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
         this.transitions.clear();
     }
 
-    public void fireTransition(FiniteStateMachineT fsm, ConditionT condition, Object... params) {
+    public void fireTransition(FiniteStateMachineT fsm, ConditionT condition, Params params) {
         if (this.transitions.containsKey(fsm.getState())) {
             this.transitions.get(fsm.getState()).fireTransition(fsm, condition, params);
         } else {
@@ -48,7 +50,7 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
         }
     }
 
-    void changeState(FiniteStateMachineT from, ConditionT condition, Object[] params, StateT newState) {
+    void changeState(FiniteStateMachineT from, ConditionT condition, Params params, StateT newState) {
         if (from != newState) {
             from.setState(newState, condition, params);
         }

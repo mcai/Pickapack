@@ -18,8 +18,10 @@
  ******************************************************************************/
 package net.pickapack.fsm;
 
+import net.pickapack.Params;
+
 public interface FiniteStateMachine<StateT, ConditionT> {
     StateT getState();
 
-    void setState(StateT state, ConditionT condition, Object[] params);
+    void setState(StateT state, ConditionT condition, Params params);
 }

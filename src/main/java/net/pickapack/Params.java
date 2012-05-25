@@ -16,24 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with PickaPack. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package net.pickapack.fsm;
+package net.pickapack;
 
-import net.pickapack.Params;
+import java.util.HashMap;
+import java.util.Map;
 
-public class SimpleFiniteStateMachine<StateT, ConditionT> implements FiniteStateMachine<StateT,ConditionT> {
-    private StateT state;
+public class Params {
+    private Map<Object, Object> properties;
 
-    public SimpleFiniteStateMachine(StateT state) {
-        this.state = state;
+    public Params() {
+        this.properties = new HashMap<Object, Object>();
     }
 
-    @Override
-    public StateT getState() {
-        return state;
+    public void put(Object key, Object value) {
+        this.properties.put(key, value);
     }
 
-    @Override
-    public void setState(StateT state, ConditionT condition, Params params) {
-        this.state = state;
+    @SuppressWarnings("unchecked")
+    public <T> T get(Class<T> clz, Object key, T defaultValue) {
+        return this.properties.containsKey (key) ? (T) this.properties.get(key) : defaultValue;
+    }
+
+    public <T> T get(Class<T> clz, Object key) {
+        return this.get(clz, key, null);
     }
 }

@@ -32,5 +32,8 @@ public class FileServer {
         if(args.length == 2) {
             serve(args[0], Integer.parseInt(args[1]));
         }
+        else {
+            System.out.println("Usage: FileServer <folder-to-be-shared> <port>");
+        }
     }
 }

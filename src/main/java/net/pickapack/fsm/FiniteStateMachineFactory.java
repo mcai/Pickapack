@@ -66,7 +66,7 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
             for(ConditionT condition : perStateTransitions.keySet()) {
                 StateT newState = perStateTransitions.get(condition).getNewState();
 
-                System.out.printf("  -> %s (%s) %n", newState, condition);
+                System.out.printf("  -> %s:  %s %n", condition, newState);
             }
 
             System.out.println();

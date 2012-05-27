@@ -19,52 +19,82 @@
 package net.pickapack.fsm;
 
 import net.pickapack.Params;
+import net.pickapack.action.Action;
+import net.pickapack.action.Action3;
 import net.pickapack.action.Function2;
 import net.pickapack.action.Function3;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends FiniteStateMachine<StateT, ConditionT>> {
-    private Map<ConditionT, Function3<FiniteStateMachineT, ConditionT, Params, StateT>> perStateTransitions;
+    private Map<ConditionT, MyFunction3> perStateTransitions;
     private FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT> fsmFactory;
     private StateT state;
 
     StateTransitions(FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT> fsmFactory, StateT state) {
         this.fsmFactory = fsmFactory;
         this.state = state;
-        this.perStateTransitions = new HashMap<ConditionT, Function3<FiniteStateMachineT, ConditionT, Params, StateT>>();
+        this.perStateTransitions = new LinkedHashMap<ConditionT, MyFunction3>();
     }
 
-    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onConditions(List<ConditionT> conditions, Function3<FiniteStateMachineT, ConditionT, Params, StateT> transition) {
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onConditions(List<ConditionT> conditions, Action3<FiniteStateMachineT, ConditionT, Params> transition, StateT newState) {
         for (ConditionT condition : conditions) {
-            this.onCondition(condition, transition);
+            this.onCondition(condition, transition, newState);
         }
 
         return this;
     }
 
-    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, Function3<FiniteStateMachineT, ConditionT, Params, StateT> transition) {
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, final Action3<FiniteStateMachineT, ConditionT, Params> transition, final StateT newState) {
         if (this.perStateTransitions.containsKey(condition)) {
             throw new IllegalArgumentException("Transition of condition " + condition + " in state " + this.state + " has already been registered");
         }
 
-        this.perStateTransitions.put(condition, transition);
+        this.perStateTransitions.put(condition, new MyFunction3(newState) {
+            @Override
+            public StateT apply(FiniteStateMachineT from, ConditionT condition, Params params) {
+                transition.apply(from, condition, params);
+
+                if(newState == null) {
+                    return from.getState();
+                }
+
+                return newState;
+            }
+        });
 
         return this;
     }
 
+    public abstract class MyFunction3 implements Function3<FiniteStateMachineT, ConditionT, Params, StateT> {
+        private StateT newState;
+
+        protected MyFunction3(StateT newState) {
+            this.newState = newState;
+        }
+
+        public StateT getNewState() {
+            return newState;
+        }
+    }
+
     public StateTransitions<StateT, ConditionT, FiniteStateMachineT> ignoreCondition(ConditionT condition) {
-        return this.onCondition(condition, new Function3<FiniteStateMachineT, ConditionT, Params, StateT>() {
-            public StateT apply(FiniteStateMachineT from, ConditionT condition, Params params) {
-                return from.getState();
+        return this.onCondition(condition, new Action3<FiniteStateMachineT, ConditionT, Params>() {
+            public void apply(FiniteStateMachineT from, ConditionT condition, Params params) {
+                from.getState();
             }
-        });
+        }, null);
     }
 
     public void clear() {
         this.perStateTransitions.clear();
+    }
+
+    Map<ConditionT, MyFunction3> getPerStateTransitions() {
+        return perStateTransitions;
     }
 
     void fireTransition(FiniteStateMachineT fsm, ConditionT condition, Params params) {

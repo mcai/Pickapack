@@ -21,13 +21,14 @@ package net.pickapack.fsm;
 import net.pickapack.Params;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT extends FiniteStateMachine<StateT, ConditionT>> {
     private Map<StateT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>> transitions;
 
     public FiniteStateMachineFactory() {
-        this.transitions = new HashMap<StateT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>>();
+        this.transitions = new LinkedHashMap<StateT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>>();
     }
 
     public StateTransitions<StateT, ConditionT, FiniteStateMachineT> inState(StateT state) {
@@ -53,6 +54,22 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
     void changeState(FiniteStateMachineT from, ConditionT condition, Params params, StateT newState) {
         if (from != newState) {
             from.setState(newState, condition, params);
+        }
+    }
+
+    public void dump() {
+        for(StateT state : this.transitions.keySet()) {
+            System.out.println(state);
+
+            StateTransitions<StateT, ConditionT, FiniteStateMachineT> stateTransitions = this.transitions.get(state);
+            Map<ConditionT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>.MyFunction3> perStateTransitions = stateTransitions.getPerStateTransitions();
+            for(ConditionT condition : perStateTransitions.keySet()) {
+                StateT newState = perStateTransitions.get(condition).getNewState();
+
+                System.out.printf("  -> %s (%s) %n", newState, condition);
+            }
+
+            System.out.println();
         }
     }
 }

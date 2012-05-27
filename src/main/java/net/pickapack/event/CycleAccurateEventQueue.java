@@ -22,9 +22,9 @@ import net.pickapack.action.Action;
 
 import java.util.concurrent.PriorityBlockingQueue;
 
-public final class CycleAccurateEventQueue {
+public class CycleAccurateEventQueue {
     private long currentCycle;
-    private PriorityBlockingQueue<CycleAccurateEvent> events;
+    protected PriorityBlockingQueue<CycleAccurateEvent> events;
 
     public CycleAccurateEventQueue() {
         this.events = new PriorityBlockingQueue<CycleAccurateEvent>();
@@ -50,7 +50,7 @@ public final class CycleAccurateEventQueue {
         return this;
     }
 
-    private void schedule(CycleAccurateEvent event) {
+    protected void schedule(CycleAccurateEvent event) {
         this.events.add(event);
     }
 

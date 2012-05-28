@@ -72,6 +72,12 @@
     <orderEntry type="library" name="Maven: org.apache.ant:ant:1.7.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ant:ant-launcher:1.7.0" level="project" />
     <orderEntry type="library" name="Maven: com.jcraft:jsch:0.1.48" level="project" />
+    <orderEntry type="library" name="Maven: org.parboiled:parboiled-core:1.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.parboiled:parboiled-java:1.0.2" level="project" />
+    <orderEntry type="library" name="Maven: asm:asm:3.3.1" level="project" />
+    <orderEntry type="library" name="Maven: asm:asm-util:3.3.1" level="project" />
+    <orderEntry type="library" name="Maven: asm:asm-tree:3.3.1" level="project" />
+    <orderEntry type="library" name="Maven: asm:asm-analysis:3.3.1" level="project" />
   </component>
 </module>
 

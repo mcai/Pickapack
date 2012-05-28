@@ -18,14 +18,15 @@
  ******************************************************************************/
 package net.pickapack.fsm.event;
 
+import net.pickapack.Params;
 import net.pickapack.fsm.FiniteStateMachine;
 
 public class FiniteStateMachineStateChangedEvent extends FiniteStateMachineEvent {
     private FiniteStateMachine<?, ?> from;
     private Object condition;
-    private Object[] params;
+    private Params params;
 
-    public FiniteStateMachineStateChangedEvent(FiniteStateMachine<?, ?> from, Object condition, Object... params) {
+    public FiniteStateMachineStateChangedEvent(FiniteStateMachine<?, ?> from, Object condition, Params params) {
         this.from = from;
         this.condition = condition;
         this.params = params;
@@ -39,7 +40,7 @@ public class FiniteStateMachineStateChangedEvent extends FiniteStateMachineEvent
         return condition;
     }
 
-    public Object[] getParams() {
+    public Params getParams() {
         return params;
     }
 }

@@ -20,23 +20,24 @@ package net.pickapack.fsm;
 
 import net.pickapack.Params;
 import net.pickapack.action.Function2;
+import net.pickapack.action.Function3;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends FiniteStateMachine<StateT, ConditionT>> {
-    private Map<ConditionT, Function2<FiniteStateMachineT, Params, StateT>> perStateTransitions;
+    private Map<ConditionT, Function3<FiniteStateMachineT, ConditionT, Params, StateT>> perStateTransitions;
     private FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT> fsmFactory;
     private StateT state;
 
     StateTransitions(FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT> fsmFactory, StateT state) {
         this.fsmFactory = fsmFactory;
         this.state = state;
-        this.perStateTransitions = new HashMap<ConditionT, Function2<FiniteStateMachineT, Params, StateT>>();
+        this.perStateTransitions = new HashMap<ConditionT, Function3<FiniteStateMachineT, ConditionT, Params, StateT>>();
     }
 
-    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onConditions(List<ConditionT> conditions, Function2<FiniteStateMachineT, Params, StateT> transition) {
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onConditions(List<ConditionT> conditions, Function3<FiniteStateMachineT, ConditionT, Params, StateT> transition) {
         for (ConditionT condition : conditions) {
             this.onCondition(condition, transition);
         }
@@ -44,7 +45,7 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
         return this;
     }
 
-    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, Function2<FiniteStateMachineT, Params, StateT> transition) {
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, Function3<FiniteStateMachineT, ConditionT, Params, StateT> transition) {
         if (this.perStateTransitions.containsKey(condition)) {
             throw new IllegalArgumentException("Transition of condition " + condition + " in state " + this.state + " has already been registered");
         }
@@ -55,8 +56,8 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
     }
 
     public StateTransitions<StateT, ConditionT, FiniteStateMachineT> ignoreCondition(ConditionT condition) {
-        return this.onCondition(condition, new Function2<FiniteStateMachineT, Params, StateT>() {
-            public StateT apply(FiniteStateMachineT from, Params params) {
+        return this.onCondition(condition, new Function3<FiniteStateMachineT, ConditionT, Params, StateT>() {
+            public StateT apply(FiniteStateMachineT from, ConditionT condition, Params params) {
                 return from.getState();
             }
         });
@@ -68,7 +69,7 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
 
     void fireTransition(FiniteStateMachineT fsm, ConditionT condition, Params params) {
         if (this.perStateTransitions.containsKey(condition)) {
-            fsmFactory.changeState(fsm, condition, params, this.perStateTransitions.get(condition).apply(fsm, params));
+            fsmFactory.changeState(fsm, condition, params, this.perStateTransitions.get(condition).apply(fsm, condition, params));
         } else {
             throw new IllegalArgumentException("Unexpected condition " + condition + " in state " + this.state + " is not among " + this.perStateTransitions.keySet());
         }

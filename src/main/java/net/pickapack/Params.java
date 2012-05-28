@@ -29,15 +29,31 @@ public class Params {
     }
 
     public void put(Object key, Object value) {
+        if(key == null || value == null) {
+            throw new IllegalArgumentException();
+        }
+
         this.properties.put(key, value);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T get(Class<T> clz, Object key, T defaultValue) {
+        if(clz == null || key == null) {
+            throw new IllegalArgumentException();
+        }
+
         return this.properties.containsKey (key) ? (T) this.properties.get(key) : defaultValue;
     }
 
     public <T> T get(Class<T> clz, Object key) {
         return this.get(clz, key, null);
+    }
+
+    public int size() {
+        return this.properties.size();
+    }
+
+    public boolean isEmpty() {
+        return this.properties.isEmpty();
     }
 }

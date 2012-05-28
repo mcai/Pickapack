@@ -18,18 +18,19 @@
  ******************************************************************************/
 package net.pickapack.fsm.event;
 
+import net.pickapack.Params;
 import net.pickapack.StringHelper;
 import net.pickapack.fsm.FiniteStateMachine;
 
 import java.util.Arrays;
 
 public class ExitStateEvent extends FiniteStateMachineStateChangedEvent {
-    public ExitStateEvent(FiniteStateMachine<?, ?> from, Object condition, Object... params) {
+    public ExitStateEvent(FiniteStateMachine<?, ?> from, Object condition, Params params) {
         super(from, condition, params);
     }
 
     @Override
     public String toString() {
-        return String.format("Before %s.%s%s", getFrom(), getCondition(), (getParams() == null || getParams().length == 0 ? "" : "(" + StringHelper.join(Arrays.asList(getParams()), ", ") + ")"));
+        return String.format("Before %s.%s%s", getFrom(), getCondition(), (getParams() == null || getParams().isEmpty() ? "" : "(" + StringHelper.join(Arrays.asList(getParams()), ", ") + ")"));
     }
 }

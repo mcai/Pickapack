@@ -20,12 +20,11 @@ package net.pickapack.fsm;
 
 import net.pickapack.Params;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT extends FiniteStateMachine<StateT, ConditionT>> {
-    private Map<StateT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>> transitions;
+    Map<StateT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>> transitions;
 
     public FiniteStateMachineFactory() {
         this.transitions = new LinkedHashMap<StateT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>>();
@@ -43,17 +42,17 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
         this.transitions.clear();
     }
 
-    public void fireTransition(FiniteStateMachineT fsm, ConditionT condition, Params params) {
+    public void fireTransition(FiniteStateMachineT fsm, Object sender, ConditionT condition, Params params) {
         if (this.transitions.containsKey(fsm.getState())) {
-            this.transitions.get(fsm.getState()).fireTransition(fsm, condition, params);
+            this.transitions.get(fsm.getState()).fireTransition(fsm, sender, condition, params);
         } else {
             throw new IllegalArgumentException("No handler registered for condition " + condition + " in state " + fsm.getState());
         }
     }
 
-    void changeState(FiniteStateMachineT from, ConditionT condition, Params params, StateT newState) {
+    void changeState(FiniteStateMachineT from, Object sender, ConditionT condition, Params params, StateT newState) {
         if (from != newState) {
-            from.setState(newState, condition, params);
+            from.setState(sender, condition, params, newState);
         }
     }
 
@@ -62,11 +61,10 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
             System.out.println(state);
 
             StateTransitions<StateT, ConditionT, FiniteStateMachineT> stateTransitions = this.transitions.get(state);
-            Map<ConditionT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>.MyFunction3> perStateTransitions = stateTransitions.getPerStateTransitions();
+            Map<ConditionT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>.StateTransition> perStateTransitions = stateTransitions.getPerStateTransitions();
             for(ConditionT condition : perStateTransitions.keySet()) {
-                StateT newState = perStateTransitions.get(condition).getNewState();
-
-                System.out.printf("  -> %s:  %s %n", condition, newState);
+                StateTransitions<StateT, ConditionT, FiniteStateMachineT>.StateTransition stateTransition = perStateTransitions.get(condition);
+                System.out.printf("  -> %s:  %s [%d] %n", condition, stateTransition.getNewState(), stateTransition.getNumExecutions());
             }
 
             System.out.println();

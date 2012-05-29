@@ -16,12 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with PickaPack. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package net.pickapack.fsm;
+package net.pickapack.action;
 
-import net.pickapack.Params;
+import java.io.Serializable;
 
-public interface FiniteStateMachine<StateT, ConditionT> {
-    StateT getState();
-
-    void setState(Object sender, ConditionT condition, Params params, StateT state);
+public interface Function4<T1, T2, T3, T4, TResult> extends Serializable {
+    TResult apply(T1 param1, T2 param2, T3 param3, T4 param4);
 }

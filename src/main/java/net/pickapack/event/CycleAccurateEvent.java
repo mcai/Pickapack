@@ -23,6 +23,7 @@ import net.pickapack.action.Action;
 public class CycleAccurateEvent implements Comparable<CycleAccurateEvent> {
     private Object sender;
     private Action action;
+    private long scheduledTime;
     private long when;
     private long id;
 
@@ -50,6 +51,14 @@ public class CycleAccurateEvent implements Comparable<CycleAccurateEvent> {
 
     public long getId() {
         return id;
+    }
+
+    public long getScheduledTime() {
+        return scheduledTime;
+    }
+
+    public void setScheduledTime(long scheduledTime) {
+        this.scheduledTime = scheduledTime;
     }
 
     public long getWhen() {

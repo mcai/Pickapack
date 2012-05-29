@@ -25,6 +25,8 @@ import net.pickapack.fsm.event.EnterStateEvent;
 import net.pickapack.fsm.event.ExitStateEvent;
 import net.pickapack.fsm.event.FiniteStateMachineEvent;
 
+import java.util.Map;
+
 public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implements FiniteStateMachine<StateT,ConditionT> {
     private String name;
     private StateT state;
@@ -55,10 +57,35 @@ public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implemen
         return state;
     }
 
+    private boolean settingStates = false;
+
     @Override
-    public void setState(StateT state, ConditionT condition, Params params) {
-        this.eventDispatcher.dispatch(new ExitStateEvent(this, condition, params));
+    public void setState(Object sender, ConditionT condition, Params params, StateT state) {
+        if(this.settingStates) {
+            throw new IllegalArgumentException();
+        }
+
+        this.settingStates = true;
+
+        this.eventDispatcher.dispatch(new ExitStateEvent(this, sender, condition, params));
         this.state = state;
-        this.eventDispatcher.dispatch(new EnterStateEvent(this, condition, params));
+        this.eventDispatcher.dispatch(new EnterStateEvent(this, sender, condition, params));
+
+        this.settingStates = false;
+    }
+
+    public void dump(FiniteStateMachineFactory<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>> fsmFactory) {
+        for(StateT state : fsmFactory.transitions.keySet()) {
+            System.out.println(state);
+
+            StateTransitions<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>> stateTransitions = fsmFactory.transitions.get(state);
+            Map<ConditionT, StateTransitions<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>>.StateTransition> perStateTransitions = stateTransitions.getPerStateTransitions();
+            for(ConditionT condition : perStateTransitions.keySet()) {
+                StateTransitions<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>>.StateTransition stateTransition = perStateTransitions.get(condition);
+                System.out.printf("  -> %s:  %s [%d] %n", condition, stateTransition.getNewState(), stateTransition.getNumExecutionsPerFsm(this));
+            }
+
+            System.out.println();
+        }
     }
 }

@@ -23,6 +23,8 @@ import net.pickapack.Params;
 public class SimpleFiniteStateMachine<StateT, ConditionT> implements FiniteStateMachine<StateT,ConditionT> {
     private StateT state;
 
+    private boolean settingStates = false;
+
     public SimpleFiniteStateMachine(StateT state) {
         this.state = state;
     }
@@ -33,7 +35,15 @@ public class SimpleFiniteStateMachine<StateT, ConditionT> implements FiniteState
     }
 
     @Override
-    public void setState(StateT state, ConditionT condition, Params params) {
+    public void setState(Object sender, ConditionT condition, Params params, StateT state) {
+        if(this.settingStates) {
+            throw new IllegalArgumentException();
+        }
+
+        this.settingStates = true;
+
         this.state = state;
+
+        this.settingStates = false;
     }
 }

@@ -51,6 +51,7 @@ public class CycleAccurateEventQueue {
     }
 
     protected void schedule(CycleAccurateEvent event) {
+        event.setScheduledTime(this.getCurrentCycle());
         this.events.add(event);
     }
 

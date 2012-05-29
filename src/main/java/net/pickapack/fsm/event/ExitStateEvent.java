@@ -25,12 +25,12 @@ import net.pickapack.fsm.FiniteStateMachine;
 import java.util.Arrays;
 
 public class ExitStateEvent extends FiniteStateMachineStateChangedEvent {
-    public ExitStateEvent(FiniteStateMachine<?, ?> from, Object condition, Params params) {
-        super(from, condition, params);
+    public ExitStateEvent(FiniteStateMachine<?, ?> fsm, Object sender, Object condition, Params params) {
+        super(fsm, sender, condition, params);
     }
 
     @Override
     public String toString() {
-        return String.format("Before %s.%s%s", getFrom(), getCondition(), (getParams() == null || getParams().isEmpty() ? "" : "(" + StringHelper.join(Arrays.asList(getParams()), ", ") + ")"));
+        return String.format("Before %s: %s.%s%s", getFsm(), getSender(), getCondition(), (getParams() == null || getParams().isEmpty() ? "" : "(" + StringHelper.join(Arrays.asList(getParams()), ", ") + ")"));
     }
 }

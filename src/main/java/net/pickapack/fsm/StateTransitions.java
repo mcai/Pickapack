@@ -19,89 +19,131 @@
 package net.pickapack.fsm;
 
 import net.pickapack.Params;
-import net.pickapack.action.Action;
-import net.pickapack.action.Action3;
-import net.pickapack.action.Function2;
-import net.pickapack.action.Function3;
+import net.pickapack.action.*;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends FiniteStateMachine<StateT, ConditionT>> {
-    private Map<ConditionT, MyFunction3> perStateTransitions;
+    private Map<ConditionT, StateTransition> perStateTransitions;
     private FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT> fsmFactory;
     private StateT state;
+    private Action1<FiniteStateMachineT> onCompletedCallback;
 
     StateTransitions(FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT> fsmFactory, StateT state) {
         this.fsmFactory = fsmFactory;
         this.state = state;
-        this.perStateTransitions = new LinkedHashMap<ConditionT, MyFunction3>();
+        this.perStateTransitions = new LinkedHashMap<ConditionT, StateTransition>();
     }
 
-    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onConditions(List<ConditionT> conditions, Action3<FiniteStateMachineT, ConditionT, Params> transition, StateT newState) {
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> setOnCompletedCallback(Action1<FiniteStateMachineT> onCompletedCallback) {
+        this.onCompletedCallback = onCompletedCallback;
+        return this;
+    }
+
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onConditions(List<ConditionT> conditions, Action4<FiniteStateMachineT, Object, ConditionT, Params> transition, StateT newState) {
+        return onConditions(conditions, transition, newState, null);
+    }
+
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onConditions(List<ConditionT> conditions, Action4<FiniteStateMachineT, Object, ConditionT, Params> transition, StateT newState, Action1<FiniteStateMachineT> onCompletedCallback) {
         for (ConditionT condition : conditions) {
-            this.onCondition(condition, transition, newState);
+            this.onCondition(condition, transition, newState, onCompletedCallback);
         }
 
         return this;
     }
 
-    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, final Action3<FiniteStateMachineT, ConditionT, Params> transition, final StateT newState) {
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, final Action4<FiniteStateMachineT, Object, ConditionT, Params> transition, final StateT newState) {
+        return onCondition(condition, transition, newState, null);
+    }
+
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, final Action4<FiniteStateMachineT, Object, ConditionT, Params> transition, final StateT newState, Action1<FiniteStateMachineT> onCompletedCallback) {
         if (this.perStateTransitions.containsKey(condition)) {
             throw new IllegalArgumentException("Transition of condition " + condition + " in state " + this.state + " has already been registered");
         }
 
-        this.perStateTransitions.put(condition, new MyFunction3(newState) {
-            @Override
-            public StateT apply(FiniteStateMachineT from, ConditionT condition, Params params) {
-                transition.apply(from, condition, params);
-
-                if(newState == null) {
-                    return from.getState();
-                }
-
-                return newState;
-            }
-        });
+        this.perStateTransitions.put(condition, new StateTransition(newState, transition, onCompletedCallback));
 
         return this;
     }
 
-    public abstract class MyFunction3 implements Function3<FiniteStateMachineT, ConditionT, Params, StateT> {
-        private StateT newState;
-
-        protected MyFunction3(StateT newState) {
-            this.newState = newState;
-        }
-
-        public StateT getNewState() {
-            return newState;
-        }
-    }
-
     public StateTransitions<StateT, ConditionT, FiniteStateMachineT> ignoreCondition(ConditionT condition) {
-        return this.onCondition(condition, new Action3<FiniteStateMachineT, ConditionT, Params>() {
-            public void apply(FiniteStateMachineT from, ConditionT condition, Params params) {
+        return this.onCondition(condition, new Action4<FiniteStateMachineT, Object, ConditionT, Params>() {
+            public void apply(FiniteStateMachineT from, Object sender, ConditionT condition, Params params) {
                 from.getState();
             }
-        }, null);
+        }, null, null);
     }
 
     public void clear() {
         this.perStateTransitions.clear();
     }
 
-    Map<ConditionT, MyFunction3> getPerStateTransitions() {
+    Map<ConditionT, StateTransition> getPerStateTransitions() {
         return perStateTransitions;
     }
 
-    void fireTransition(FiniteStateMachineT fsm, ConditionT condition, Params params) {
+    void fireTransition(FiniteStateMachineT fsm, Object sender, ConditionT condition, Params params) {
         if (this.perStateTransitions.containsKey(condition)) {
-            fsmFactory.changeState(fsm, condition, params, this.perStateTransitions.get(condition).apply(fsm, condition, params));
+            StateTransition stateTransition = this.perStateTransitions.get(condition);
+            fsmFactory.changeState(fsm, sender, condition, params, stateTransition.apply(fsm, sender, condition, params));
+            if(stateTransition.onCompletedCallback != null) {
+                stateTransition.onCompletedCallback.apply(fsm);
+            }
+
+            if(this.onCompletedCallback != null) {
+                this.onCompletedCallback.apply(fsm);
+            }
         } else {
             throw new IllegalArgumentException("Unexpected condition " + condition + " in state " + this.state + " is not among " + this.perStateTransitions.keySet());
+        }
+    }
+
+    public class StateTransition implements Function4<FiniteStateMachineT, Object, ConditionT, Params, StateT> {
+        private final StateT newState;
+        private Map<FiniteStateMachineT, Integer> numExecutionsPerFsm;
+        private long numExecutions;
+        private final Action4<FiniteStateMachineT, Object, ConditionT, Params> transition;
+        private Action1<FiniteStateMachineT> onCompletedCallback;
+
+        public StateTransition(StateT newState, Action4<FiniteStateMachineT, Object, ConditionT, Params> transition, Action1<FiniteStateMachineT> onCompletedCallback) {
+            this.newState = newState;
+            this.numExecutionsPerFsm = new HashMap<FiniteStateMachineT, Integer>();
+            this.transition = transition;
+            this.onCompletedCallback = onCompletedCallback;
+        }
+
+        public StateT apply(FiniteStateMachineT from, Object sender, ConditionT condition, Params params) {
+            this.transition.apply(from, sender, condition, params);
+
+            if(!this.numExecutionsPerFsm.containsKey(from)) {
+                 this.numExecutionsPerFsm.put(from, 0);
+            }
+            this.numExecutionsPerFsm.put(from, this.numExecutionsPerFsm.get(from) + 1);
+
+            this.numExecutions++;
+
+            if(this.newState == null) {
+                return from.getState();
+            }
+
+            return this.newState;
+        }
+
+        public StateTransition setOnCompletedCallback(Action1<FiniteStateMachineT> onCompletedCallback) {
+            this.onCompletedCallback = onCompletedCallback;
+            return this;
+        }
+
+        public int getNumExecutionsPerFsm(FiniteStateMachineT fsm) {
+            return this.numExecutionsPerFsm.containsKey(fsm) ? this.numExecutionsPerFsm.get(fsm) : 0;
+        }
+
+        public StateT getNewState() {
+            return newState;
+        }
+
+        public long getNumExecutions() {
+            return numExecutions;
         }
     }
 }

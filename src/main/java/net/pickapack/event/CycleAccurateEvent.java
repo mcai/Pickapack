@@ -36,7 +36,23 @@ public class CycleAccurateEvent implements Comparable<CycleAccurateEvent> {
 
     @Override
     public int compareTo(CycleAccurateEvent otherEvent) {
-        return this.when < otherEvent.when ? -1 : this.when == otherEvent.when ? 0 : 1;
+        if (this.when < otherEvent.when) {
+            return -1;
+        }
+        else if (this.when == otherEvent.when) {
+            if (this.id < otherEvent.id) {
+                return -1;
+            }
+            else if (this.id == otherEvent.id) {
+                return 0;
+            }
+            else {
+                return 1;
+            }
+        }
+        else {
+            return 1;
+        }
     }
 
     @Override

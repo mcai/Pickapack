@@ -87,7 +87,7 @@ public class BlockingEventDispatcher<BlockingEventT extends BlockingEvent> {
         this.listeners.clear();
     }
 
-    private class ProxyAction2<BlockingEventK extends BlockingEventT> implements Action2<Object, BlockingEventK> {
+    protected static class ProxyAction2<BlockingEventK> implements Action2<Object, BlockingEventK> {
         private Action1<BlockingEventK> listener;
 
         public ProxyAction2(Action1<BlockingEventK> listener) {

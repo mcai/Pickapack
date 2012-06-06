@@ -87,6 +87,10 @@ public class BlockingEventDispatcher<BlockingEventT extends BlockingEvent> {
         this.listeners.clear();
     }
 
+    public boolean isEmpty() {
+        return this.listeners.isEmpty();
+    }
+
     protected static class ProxyAction2<BlockingEventK> implements Action2<Object, BlockingEventK> {
         private Action1<BlockingEventK> listener;
 

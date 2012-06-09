@@ -112,18 +112,18 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
             this.onCompletedCallback = onCompletedCallback;
         }
 
-        public StateT apply(FiniteStateMachineT from, Object sender, ConditionT condition, Params params) {
-            this.transition.apply(from, sender, condition, params);
+        public StateT apply(FiniteStateMachineT fsm, Object sender, ConditionT condition, Params params) {
+            this.transition.apply(fsm, sender, condition, params);
 
-            if(!this.numExecutionsPerFsm.containsKey(from)) {
-                 this.numExecutionsPerFsm.put(from, 0);
+            if(!this.numExecutionsPerFsm.containsKey(fsm)) {
+                 this.numExecutionsPerFsm.put(fsm, 0);
             }
-            this.numExecutionsPerFsm.put(from, this.numExecutionsPerFsm.get(from) + 1);
+            this.numExecutionsPerFsm.put(fsm, this.numExecutionsPerFsm.get(fsm) + 1);
 
             this.numExecutions++;
 
             if(this.newState == null) {
-                return from.getState();
+                return fsm.getState();
             }
 
             return this.newState;

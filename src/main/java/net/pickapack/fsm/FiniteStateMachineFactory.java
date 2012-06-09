@@ -50,10 +50,8 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
         }
     }
 
-    void changeState(FiniteStateMachineT from, Object sender, ConditionT condition, Params params, StateT newState) {
-        if (from != newState) {
-            from.setState(sender, condition, params, newState);
-        }
+    void changeState(FiniteStateMachineT fsm, Object sender, ConditionT condition, Params params, StateT newState) {
+        fsm.setState(sender, condition, params, newState);
     }
 
     public void dump() {

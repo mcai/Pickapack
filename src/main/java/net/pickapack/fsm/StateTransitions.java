@@ -40,11 +40,11 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
         return this;
     }
 
-    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onConditions(List<ConditionT> conditions, Action4<FiniteStateMachineT, Object, ConditionT, Params> transition, StateT newState) {
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onConditions(List<ConditionT> conditions, Action4<FiniteStateMachineT, Object, ConditionT, ? extends Params> transition, StateT newState) {
         return onConditions(conditions, transition, newState, null);
     }
 
-    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onConditions(List<ConditionT> conditions, Action4<FiniteStateMachineT, Object, ConditionT, Params> transition, StateT newState, Action1<FiniteStateMachineT> onCompletedCallback) {
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onConditions(List<ConditionT> conditions, Action4<FiniteStateMachineT, Object, ConditionT, ? extends Params> transition, StateT newState, Action1<FiniteStateMachineT> onCompletedCallback) {
         for (ConditionT condition : conditions) {
             this.onCondition(condition, transition, newState, onCompletedCallback);
         }
@@ -52,16 +52,35 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
         return this;
     }
 
-    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, final Action4<FiniteStateMachineT, Object, ConditionT, Params> transition, final StateT newState) {
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, final Action4<FiniteStateMachineT, Object, ConditionT, ? extends Params> transition, final StateT newState) {
         return onCondition(condition, transition, newState, null);
     }
 
-    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, final Action4<FiniteStateMachineT, Object, ConditionT, Params> transition, final StateT newState, Action1<FiniteStateMachineT> onCompletedCallback) {
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, final Action4<FiniteStateMachineT, Object, ConditionT, ? extends Params> transition, final StateT newState, Action1<FiniteStateMachineT> onCompletedCallback) {
         if (this.perStateTransitions.containsKey(condition)) {
             throw new IllegalArgumentException("Transition of condition " + condition + " in state " + this.state + " has already been registered");
         }
 
-        this.perStateTransitions.put(condition, new StateTransition(newState, transition, onCompletedCallback));
+        List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> actions = new ArrayList<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>>();
+        actions.add(new FiniteStateMachineAction<FiniteStateMachineT, ConditionT, Params>(state + ": " + condition + " -> unamedAction/" + newState) {
+            @Override
+            @SuppressWarnings("unchecked")
+            public void apply(FiniteStateMachineT fsm, Object sender, ConditionT eventType, Params params) {
+                ((Action4<FiniteStateMachineT, Object, ConditionT, Params>) transition).apply(fsm, sender,  eventType, params);
+            }
+        });
+
+        this.perStateTransitions.put(condition, new StateTransition(newState, actions, onCompletedCallback));
+
+        return this;
+    }
+
+    public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, final List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> actions, final StateT newState, Action1<FiniteStateMachineT> onCompletedCallback) {
+        if (this.perStateTransitions.containsKey(condition)) {
+            throw new IllegalArgumentException("Transition of condition " + condition + " in state " + this.state + " has already been registered");
+        }
+
+        this.perStateTransitions.put(condition, new StateTransition(newState, actions, onCompletedCallback));
 
         return this;
     }
@@ -99,21 +118,24 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
     }
 
     public class StateTransition implements Function4<FiniteStateMachineT, Object, ConditionT, Params, StateT> {
-        private final StateT newState;
+        private StateT newState;
         private Map<FiniteStateMachineT, Integer> numExecutionsPerFsm;
         private long numExecutions;
-        private final Action4<FiniteStateMachineT, Object, ConditionT, Params> transition;
+        private List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> actions;
         private Action1<FiniteStateMachineT> onCompletedCallback;
 
-        public StateTransition(StateT newState, Action4<FiniteStateMachineT, Object, ConditionT, Params> transition, Action1<FiniteStateMachineT> onCompletedCallback) {
+        public StateTransition(StateT newState, List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> actions, Action1<FiniteStateMachineT> onCompletedCallback) {
             this.newState = newState;
             this.numExecutionsPerFsm = new HashMap<FiniteStateMachineT, Integer>();
-            this.transition = transition;
+            this.actions = actions;
             this.onCompletedCallback = onCompletedCallback;
         }
 
+        @SuppressWarnings("unchecked")
         public StateT apply(FiniteStateMachineT fsm, Object sender, ConditionT condition, Params params) {
-            this.transition.apply(fsm, sender, condition, params);
+            for(FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params> action : this.actions) {
+                ((FiniteStateMachineAction<FiniteStateMachineT, ConditionT, Params>) action).apply(fsm, sender, condition, params);
+            }
 
             if(!this.numExecutionsPerFsm.containsKey(fsm)) {
                  this.numExecutionsPerFsm.put(fsm, 0);
@@ -136,6 +158,10 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
 
         public int getNumExecutionsPerFsm(FiniteStateMachineT fsm) {
             return this.numExecutionsPerFsm.containsKey(fsm) ? this.numExecutionsPerFsm.get(fsm) : 0;
+        }
+
+        public List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> getActions() {
+            return actions;
         }
 
         public StateT getNewState() {

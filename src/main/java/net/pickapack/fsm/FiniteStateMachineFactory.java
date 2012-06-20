@@ -62,7 +62,22 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
             Map<ConditionT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>.StateTransition> perStateTransitions = stateTransitions.getPerStateTransitions();
             for(ConditionT condition : perStateTransitions.keySet()) {
                 StateTransitions<StateT, ConditionT, FiniteStateMachineT>.StateTransition stateTransition = perStateTransitions.get(condition);
-                System.out.printf("  -> %s:  %s/%s [%d] %n", condition, stateTransition.getActions(), stateTransition.getNewState(), stateTransition.getNumExecutions());
+                System.out.printf(" :%s ->%s/%s [%d] %n", condition, stateTransition.getActions(), stateTransition.getNewState(), stateTransition.getNumExecutions());
+            }
+
+            System.out.println();
+        }
+    }
+
+    public void dump(String name, Map<String, Object> stats) {
+        for(StateT state : this.transitions.keySet()) {
+            System.out.println(state);
+
+            StateTransitions<StateT, ConditionT, FiniteStateMachineT> stateTransitions = this.transitions.get(state);
+            Map<ConditionT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>.StateTransition> perStateTransitions = stateTransitions.getPerStateTransitions();
+            for(ConditionT condition : perStateTransitions.keySet()) {
+                StateTransitions<StateT, ConditionT, FiniteStateMachineT>.StateTransition stateTransition = perStateTransitions.get(condition);
+                stats.put(String.format("%s.%s:%s->%s/%s", name, state, condition, stateTransition.getActions(), stateTransition.getNewState()), stateTransition.getNumExecutions());
             }
 
             System.out.println();

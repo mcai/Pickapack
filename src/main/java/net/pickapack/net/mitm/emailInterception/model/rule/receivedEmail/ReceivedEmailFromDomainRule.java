@@ -5,6 +5,9 @@ import net.pickapack.net.mitm.emailInterception.model.event.ReceivedEmailEvent;
 public class ReceivedEmailFromDomainRule implements ReceivedEmailRule {
     private String fromDomain;
 
+    public ReceivedEmailFromDomainRule() {
+    }
+
     public ReceivedEmailFromDomainRule(String fromDomain) {
         this.fromDomain = fromDomain;
     }

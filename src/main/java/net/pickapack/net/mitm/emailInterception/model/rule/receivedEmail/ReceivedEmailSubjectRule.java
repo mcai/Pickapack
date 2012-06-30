@@ -5,6 +5,9 @@ import net.pickapack.net.mitm.emailInterception.model.event.ReceivedEmailEvent;
 public class ReceivedEmailSubjectRule implements ReceivedEmailRule {
     private String subject;
 
+    public ReceivedEmailSubjectRule() {
+    }
+
     public ReceivedEmailSubjectRule(String subject) {
         this.subject = subject;
     }

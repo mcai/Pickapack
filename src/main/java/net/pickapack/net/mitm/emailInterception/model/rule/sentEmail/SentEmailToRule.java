@@ -5,6 +5,9 @@ import net.pickapack.net.mitm.emailInterception.model.event.SentEmailEvent;
 public class SentEmailToRule implements SentEmailRule {
     private String to;
 
+    public SentEmailToRule() {
+    }
+
     public SentEmailToRule(String to) {
         this.to = to;
     }

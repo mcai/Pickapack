@@ -3,10 +3,18 @@ package net.pickapack.net.mitm.emailInterception.model.rule.receivedEmail;
 import net.pickapack.net.mitm.emailInterception.model.event.ReceivedEmailEvent;
 import net.pickapack.net.mitm.emailInterception.model.rule.common.OrRule;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ReceivedEmailOrRule implements OrRule, ReceivedEmailRule {
     private List<ReceivedEmailRule> rules;
+
+    public ReceivedEmailOrRule() {
+    }
+
+    public ReceivedEmailOrRule(ReceivedEmailRule... rules) {
+        this(Arrays.asList(rules));
+    }
 
     public ReceivedEmailOrRule(List<ReceivedEmailRule> rules) {
         this.rules = rules;

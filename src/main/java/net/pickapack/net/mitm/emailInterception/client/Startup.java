@@ -1,10 +1,13 @@
 package net.pickapack.net.mitm.emailInterception.client;
 
 import com.jayway.jsonpath.JsonPath;
+import net.pickapack.JsonSerializationHelper;
 import net.pickapack.dateTime.DateHelper;
 import net.pickapack.net.IOHelper;
 import net.pickapack.net.mitm.emailInterception.model.event.ReceivedEmailEvent;
 import net.pickapack.net.mitm.emailInterception.model.event.SentEmailEvent;
+import net.pickapack.net.mitm.emailInterception.model.rule.receivedEmail.ReceivedEmailAndRule;
+import net.pickapack.net.mitm.emailInterception.model.rule.receivedEmail.ReceivedEmailContentRule;
 import net.pickapack.net.mitm.emailInterception.model.rule.receivedEmail.ReceivedEmailRule;
 import net.pickapack.net.mitm.emailInterception.model.rule.receivedEmail.ReceivedEmailSubjectRule;
 import net.pickapack.net.mitm.emailInterception.model.rule.sentEmail.SentEmailRule;
@@ -54,9 +57,15 @@ public class Startup {//TODO: logic to be moved into EmailInterceptionService(Im
         List<ReceivedEmailRule> receivedEmailRules = new ArrayList<ReceivedEmailRule>();
         List<SentEmailRule> sentEmailRules = new ArrayList<SentEmailRule>();
 
-        receivedEmailRules.add(new ReceivedEmailSubjectRule("rerer")); //TODO: load from file
+        receivedEmailRules.add(new ReceivedEmailAndRule(new ReceivedEmailSubjectRule("rerer"), new ReceivedEmailSubjectRule("rerer")));
+        receivedEmailRules.add(new ReceivedEmailContentRule("rerer"));
 
         final EmailInterceptionTask emailInterceptionTask = new EmailInterceptionTask(receivedEmailRules, sentEmailRules);
+
+        String s = JsonSerializationHelper.prettyPrint(JsonSerializationHelper.toJson(emailInterceptionTask));
+        System.out.println(s);
+
+        EmailInterceptionTask t = JsonSerializationHelper.fromJson(EmailInterceptionTask.class, s);
 
         ServiceManager.getEmailInterceptionService().addEmailInterceptionTask(emailInterceptionTask);
 

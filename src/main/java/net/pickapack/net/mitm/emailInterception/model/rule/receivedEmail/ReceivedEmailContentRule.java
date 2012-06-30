@@ -5,6 +5,9 @@ import net.pickapack.net.mitm.emailInterception.model.event.ReceivedEmailEvent;
 public class ReceivedEmailContentRule implements ReceivedEmailRule {
     private String content;
 
+    public ReceivedEmailContentRule() {
+    }
+
     public ReceivedEmailContentRule(String content) {
         this.content = content;
     }

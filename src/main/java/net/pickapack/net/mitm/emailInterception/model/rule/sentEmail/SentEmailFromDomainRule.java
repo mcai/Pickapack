@@ -5,6 +5,9 @@ import net.pickapack.net.mitm.emailInterception.model.event.SentEmailEvent;
 public class SentEmailFromDomainRule implements SentEmailRule {
     private String toDomain;
 
+    public SentEmailFromDomainRule() {
+    }
+
     public SentEmailFromDomainRule(String toDomain) {
         this.toDomain = toDomain;
     }

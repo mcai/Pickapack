@@ -5,6 +5,9 @@ import net.pickapack.net.mitm.emailInterception.model.event.SentEmailEvent;
 public class SentEmailContentRule implements SentEmailRule {
     private String content;
 
+    public SentEmailContentRule() {
+    }
+
     public SentEmailContentRule(String content) {
         this.content = content;
     }

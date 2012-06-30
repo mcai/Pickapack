@@ -5,6 +5,9 @@ import net.pickapack.net.mitm.emailInterception.model.event.SentEmailEvent;
 public class SentEmailAttachmentNameRule implements SentEmailRule {
     private String attachmentName;
 
+    public SentEmailAttachmentNameRule() {
+    }
+
     public SentEmailAttachmentNameRule(String attachmentName) {
         this.attachmentName = attachmentName;
     }

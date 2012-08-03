@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 
 public class MapHelper {
-    public static void load(Map<String, Object> map, String fileName) {
+    public static void load(Map<String, String> map, String fileName) {
         if (new File(fileName).exists()) {
             try {
                 load(map, new FileInputStream(fileName));
@@ -33,7 +33,7 @@ public class MapHelper {
         }
     }
 
-    public static void load(Map<String, Object> map, InputStream in) {
+    public static void load(Map<String, String> map, InputStream in) {
         try {
             Properties prop = new Properties();
 
@@ -49,7 +49,7 @@ public class MapHelper {
         }
     }
 
-    public static void save(Map<String, Object> map, String fileName) {
+    public static void save(Map<String, String> map, String fileName) {
         try {
             save(map, new FileOutputStream(fileName));
         } catch (IOException e) {
@@ -57,11 +57,11 @@ public class MapHelper {
         }
     }
 
-    public static void save(Map<String, Object> map, OutputStream out) {
+    public static void save(Map<String, String> map, OutputStream out) {
         if (map.size() > 0) {
             PrintWriter pw = new PrintWriter(out);
 
-            for (Map.Entry<String, Object> entry : map.entrySet()) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
                 pw.println(entry.getKey() + "=" + entry.getValue());
             }
 

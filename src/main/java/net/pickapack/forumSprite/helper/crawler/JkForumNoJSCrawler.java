@@ -1,4 +1,4 @@
-package net.pickapack.spider.noJs.crawler.example;
+package net.pickapack.forumSprite.helper.crawler;
 
 import net.pickapack.dateTime.DateHelper;
 import net.pickapack.action.Action1;

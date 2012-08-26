@@ -1,4 +1,4 @@
-package net.pickapack.net.mitm;
+package net.pickapack.net.mitm.emailInterception.client;
 
 import net.pickapack.net.IOHelper;
 import net.pickapack.net.mitm.emailInterception.model.rule.receivedEmail.ReceivedEmailRule;
@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MITMProxyServer {
+public class Startup {//TODO: logic to be moved into EmailInterceptionService(Impl)!!!
     public static final BasicLineParser LINE_PARSER = new BasicLineParser(new ProtocolVersion("HTTP", 1, 1));
 
     public static void main(String[] args) throws IOException, GeneralSecurityException, SQLException {

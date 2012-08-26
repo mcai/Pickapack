@@ -24,21 +24,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandLineHelper {
-    public static int invokeNativeCommand(String[] cmd) {
+    public static int invokeNativeCommand(String[] cmd, boolean waitFor) {
         try {
             Runtime r = Runtime.getRuntime();
             Process ps = r.exec(cmd);
 //            ProcessBuilder pb = new ProcessBuilder(cmd);
 //            Process ps = pb.start();
 
-            int exitValue = ps.waitFor();
-            if (exitValue != 0) {
-                System.out.println("WARN: Process exits with non-zero code: " + exitValue);
+            if(waitFor) {
+                int exitValue = ps.waitFor();
+                if (exitValue != 0) {
+                    System.out.println("WARN: Process exits with non-zero code: " + exitValue);
+                }
+
+                ps.destroy();
+
+                return exitValue;
             }
 
-            ps.destroy();
-
-            return exitValue;
+            return 0;
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
@@ -46,11 +50,19 @@ public class CommandLineHelper {
     }
 
     public static int invokeNativeCommand(String args) {
-        return invokeNativeCommand(args.split(" "));
+        return invokeNativeCommand(args, true);
     }
 
     public static int invokeShellCommand(String args) {
-        return invokeNativeCommand(new String[]{"sh", "-c", args});
+        return invokeShellCommand(args, true);
+    }
+
+    public static int invokeNativeCommand(String args, boolean waitFor) {
+        return invokeNativeCommand(args.split(" "), waitFor);
+    }
+
+    public static int invokeShellCommand(String args, boolean waitFor) {
+        return invokeNativeCommand(new String[]{"sh", "-c", args}, waitFor);
     }
 
     public static List<String> invokeNativeCommandAndGetResult(String[] cmd) {

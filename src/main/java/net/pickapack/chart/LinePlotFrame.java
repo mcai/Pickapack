@@ -18,8 +18,8 @@
  ******************************************************************************/
 package net.pickapack.chart;
 
-import net.pickapack.DateHelper;
 import net.pickapack.action.Function;
+import net.pickapack.dateTime.DateHelper;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -35,7 +35,6 @@ import org.jfree.ui.ApplicationFrame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 
@@ -45,7 +44,7 @@ public class LinePlotFrame extends ApplicationFrame {
     private List<Map<SubLinePlotLine, Function<Double>>> dataSinks;
     private LinePlot linePlot;
 
-    public LinePlotFrame(LinePlot linePlot, int width, int height) throws SQLException {
+    public LinePlotFrame(LinePlot linePlot, int width, int height) {
         super(linePlot.getTitle());
         this.linePlot = linePlot;
 
@@ -104,7 +103,7 @@ public class LinePlotFrame extends ApplicationFrame {
 
     private class DataSink implements Runnable {
         public void run() {
-            while (true) {
+            for(;;) {
                 for (int i = 0; i < numSubPlots; i++) {
                     TimeSeriesCollection timeSeriesCollection = dataSets.get(i);
 

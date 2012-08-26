@@ -19,8 +19,8 @@
 package net.pickapack.fsm.event;
 
 import net.pickapack.Params;
-import net.pickapack.StringHelper;
 import net.pickapack.fsm.FiniteStateMachine;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
 
@@ -31,6 +31,6 @@ public class ExitStateEvent extends FiniteStateMachineStateChangedEvent {
 
     @Override
     public String toString() {
-        return String.format("Before %s: %s.%s%s", getFsm(), getSender(), getCondition(), (getParams() == null || getParams().isEmpty() ? "" : "(" + StringHelper.join(Arrays.asList(getParams()), ", ") + ")"));
+        return String.format("Before %s: %s.%s%s", getFsm(), getSender(), getCondition(), (getParams() == null || getParams().isEmpty() ? "" : "(" + StringUtils.join(Arrays.asList(getParams()), ", ") + ")"));
     }
 }

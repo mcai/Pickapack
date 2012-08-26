@@ -18,7 +18,7 @@
  ******************************************************************************/
 package net.pickapack.im.channel;
 
-import net.pickapack.DateHelper;
+import net.pickapack.dateTime.DateHelper;
 import net.pickapack.JsonSerializationHelper;
 import net.pickapack.im.sink.InstantMessage;
 import net.pickapack.im.sink.MessageSink;

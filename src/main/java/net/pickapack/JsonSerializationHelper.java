@@ -19,8 +19,17 @@
 package net.pickapack;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class JsonSerializationHelper {
+    private static Gson gson;
+    private static Gson gsonPrettyPrint;
+
+    static {
+        gson = new Gson();
+        gsonPrettyPrint = new GsonBuilder().setPrettyPrinting().serializeNulls().serializeSpecialFloatingPointValues().create();
+    }
+
     public static <T> T deserialize(Class<T> clz, String str) {
         return fromJson(clz, str);
     }
@@ -30,18 +39,19 @@ public class JsonSerializationHelper {
     }
 
     public static <T> T fromJson(Class<T> clz, String str) {
-        Gson gson = new Gson();
         return gson.fromJson(str, clz);
     }
 
     public static String toJson(Object obj) {
-        Gson gson = new Gson();
-        return gson.toJson(obj);
+        return toJson(obj, false);
+    }
+
+    public static String toJson(Object obj, boolean prettyPrint) {
+        return prettyPrint ? gsonPrettyPrint.toJson(obj) : gson.toJson(obj);
     }
 
     public static class ObjectWrapper {
         private String className;
-
         private String str;
 
         public ObjectWrapper(String className, Object obj) {

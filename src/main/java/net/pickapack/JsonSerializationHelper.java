@@ -50,6 +50,10 @@ public class JsonSerializationHelper {
         return prettyPrint ? gsonPrettyPrint.toJson(obj) : gson.toJson(obj);
     }
 
+    public static String prettyPrint(String json) {
+        return gsonPrettyPrint.toJson(gsonPrettyPrint.fromJson(json, Object.class));
+    }
+
     public static class ObjectWrapper {
         private String className;
         private String str;

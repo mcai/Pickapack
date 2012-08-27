@@ -23,6 +23,9 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
     private long createTime;
 
     @DatabaseField
+    private long receiveTime;
+
+    @DatabaseField
     private String email;
 
     @DatabaseField
@@ -62,6 +65,14 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
 
     public long getCreateTime() {
         return createTime;
+    }
+
+    public long getReceiveTime() {
+        return receiveTime;
+    }
+
+    public void setReceiveTime(long receiveTime) {
+        this.receiveTime = receiveTime;
     }
 
     public String getEmail() {

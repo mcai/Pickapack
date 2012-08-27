@@ -1,13 +1,21 @@
 package net.pickapack.text;
 
+import org.htmlcleaner.DomSerializer;
+import org.htmlcleaner.HtmlCleaner;
+import org.htmlcleaner.TagNode;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.QName;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.lang.Object;import java.lang.RuntimeException;import java.lang.String;import java.lang.SuppressWarnings;import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +42,24 @@ public class XPathHelper {
         try {
             return (T) xpath.compile(xpathExpression).evaluate(obj, qName);
         } catch (XPathExpressionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Document parse(String text) throws IOException, TransformerException, XPathExpressionException {
+        return parse(text.getBytes("UTF-8"));
+    }
+
+    public static Document parse(byte[] data) throws IOException, TransformerException, XPathExpressionException {
+        return parse(data, HtmlCleaner.DEFAULT_CHARSET);
+    }
+
+    public static Document parse(byte[] data, String charset) throws IOException, TransformerException, XPathExpressionException {
+        HtmlCleaner cleaner = new HtmlCleaner();
+        TagNode rootNode = cleaner.clean(new ByteArrayInputStream(data), charset);
+        try {
+            return new DomSerializer(cleaner.getProperties(), true).createDOM(rootNode);
+        } catch (ParserConfigurationException e) {
             throw new RuntimeException(e);
         }
     }

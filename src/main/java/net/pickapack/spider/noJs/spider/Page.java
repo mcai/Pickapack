@@ -1,6 +1,5 @@
 package net.pickapack.spider.noJs.spider;
 
-import net.pickapack.net.DocumentParserHelper;
 import net.pickapack.text.XPathHelper;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
@@ -45,7 +44,7 @@ public class Page {
 
     private void buildDocument() {
         try {
-            this.document = DocumentParserHelper.parse(this.getText().getBytes("UTF-8"));
+            this.document = XPathHelper.parse(this.getText().getBytes("UTF-8"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (TransformerException e) {

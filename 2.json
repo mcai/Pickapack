@@ -1,0 +1,162 @@
+[
+    [
+        ["v", "h6LP1Dd-97Q.en.", "8", "ed3d12bc898fa02e"]
+        ,
+        ["di", 45, , , , , []
+            , []
+            , , , []
+            , []
+            , []
+        ]
+        ,
+        ["ub", [
+            ["tieaupy", 306051]
+            ,
+            ["Notes", 306051]
+            ,
+            ["SMS", 306051]
+            ,
+            ["^i", 306432]
+            ,
+            ["^act", 306051]
+            ,
+            ["^t", 306051]
+            ,
+            ["^b", 306051]
+            ,
+            ["^f", 306344]
+            ,
+            ["^r", 306051]
+            ,
+            ["^all", 306432]
+            ,
+            ["^s", 306207]
+            ,
+            ["^k", 306051]
+        ]
+            , 306432]
+        ,
+        ["la", "7:13 pm", 1, "125.119.101.193", 0, , 0, , 1345117952, "125.119.101.193", "39 minutes ago", 0]
+        ,
+        ["cfs", []
+            , []
+        ]
+        ,
+        ["h", 0]
+        ,
+        ["ugn", "Min Cai"]
+        ,
+        ["st", 1345117952]
+        ,
+        ["uiv", 50]
+        ,
+        ["cs", "1392f35ce7c2894b", "1392f35ce7c2894b", 1, , , 1345116820472000, "1392f35ce7c2894b", ["1392f35ce7c2894b"]
+            , []
+            , []
+            , [
+            ["1392f35ce7c2894b", ["^all", "^i", "^smartlabel_group", "^u"]
+            ]
+        ]
+            , , , []
+            , [
+            ["snataraj", "surya.narayanan@inria.fr"]
+            ,
+            ["", "marss86-devel@cs.binghamton.edu"]
+        ]
+            , , , []
+            , []
+        ]
+        ,
+        ["ms", "1392f35ce7c2894b", "", 4, "snataraj \u003csurya.narayanan@inria.fr\u003e", "snataraj", "surya.narayanan@inria.fr", 1345116769000, "I am trying to run parsec benchmark image with more than 10 cores and Qemu do...", ["^all", "^i", "^smartlabel_group", "^u"]
+            , 0, 1, "[marss86-devel] qemu doesnt boot for more than 10 cores", ["1392f35ce7c2894b", ["marss86-devel@cs.binghamton.edu"]
+            , []
+            , []
+            , []
+            , "[marss86-devel] qemu doesnt boot for more than 10 cores", "I am trying to run parsec benchmark image with more than 10 cores and Qemu doesnt boot. it gets frozen after\u003cbr\u003e\n/tmp: waiting for (null)\u003cbr\u003e\n\u003cbr\u003e\nWhat is the problem here? How much can marss scale?\u003cspan class\u003d\"HOEnZb\"\u003e\u003cfont color\u003d#888888\u003e\u003cbr\u003e\n\u003cbr\u003e\n\u003cbr\u003e\n-- \u003cbr\u003e\nSurya Narayanan, E301 - 12, Inria Rennes - Bretagne Atlantique Research Centre Campus universitaire de Beaulieu 35042 Rennes Cedex\u003cbr\u003e\n\u003cbr\u003e\n______________________________\u003cu\u003e\u003c/u\u003e\u003cWBR\u003e_________________\u003cbr\u003e\n\u003ca href\u003d\"http://www.marss86.org\" target\u003d\"_blank\"\u003ehttp://www.marss86.org\u003c/a\u003e\u003cbr\u003e\nMarss86-Devel mailing list\u003cbr\u003e\n\u003ca href\u003d\"mailto:Marss86-Devel@cs.binghamton.edu\" target\u003d\"_blank\"\u003eMarss86-Devel@cs.binghamton.\u003cu\u003e\u003c/u\u003eed\u003cWBR\u003eu\u003c/a\u003e\u003cbr\u003e\n\u003ca href\u003d\"https://www.cs.binghamton.edu/mailman/listinfo/marss86-devel\" target\u003d\"_blank\"\u003ehttps://www.cs.binghamton.edu/\u003cu\u003e\u003c/u\u003e\u003cWBR\u003emailman/listinfo/marss86-devel\u003c/a\u003e\u003cbr\u003e\n\u003cbr\u003e\n\u003c/font\u003e\u003c/span\u003e", [
+                []
+                ,
+                [0]
+                ,
+                ""
+            ]
+            , 0, [
+                []
+                ,
+                [
+                    ["marss86-devel", "marss86-devel@cs.binghamton.edu"]
+                ]
+                ,
+                []
+                ,
+                []
+                ,
+                [
+                    ["marss86-devel", "marss86-devel@cs.binghamton.edu"]
+                ]
+                ,
+                []
+            ]
+            , "Thu, Aug 16, 2012 at 7:32 PM", []
+            , 1, 1, 0, 0, 1, "163.com", , "", "\u003c502CDA60.80309@inria.fr\u003e", "[marss86-devel] qemu doesnt boot for more than 10 cores", "MARSS Development Mailing List \u003cmarss86-devel.cs.binghamton.edu\u003e", , [0]
+            , , []
+            , , 0, [0]
+            , 2, , , []
+            , []
+            , 0, 0, 1, 0, 0, , , []
+            , , 536, -1]
+            , , 0, "7:32 PM", "7:32 pm", 0, , , "", ["en"]
+            , 0, "Thu, Aug 16, 2012 at 7:32 PM", []
+            , , , , 0, , , , 0, 1, "163.com", "surya.narayanan@inria.fr", [
+            []
+            ,
+            [
+                ["marss86-devel", "marss86-devel@cs.binghamton.edu"]
+            ]
+            ,
+            []
+            ,
+            []
+            ,
+            [
+                ["marss86-devel", "marss86-devel@cs.binghamton.edu"]
+            ]
+            ,
+            []
+        ]
+            , -1, , , , "inria.fr", , []
+            , []
+            , 0]
+        ,
+        ["ce"]
+        ,
+        ["ua", [
+            ["tieaupy", 306051]
+            ,
+            ["Notes", 306051]
+            ,
+            ["SMS", 306051]
+            ,
+            ["^i", 306432]
+            ,
+            ["^act", 306051]
+            ,
+            ["^t", 306051]
+            ,
+            ["^b", 306051]
+            ,
+            ["^f", 306344]
+            ,
+            ["^r", 306051]
+            ,
+            ["^all", 306432]
+            ,
+            ["^s", 306207]
+            ,
+            ["^k", 306051]
+        ]
+            , 306432]
+        ,
+        ["e", 14, , , 3421]
+    ],
+    "54c8517eddb75776"
+]

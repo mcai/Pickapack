@@ -78,7 +78,7 @@ public class JkForumNoJSCrawler extends NoJSCrawler {
                 return;
             }
 
-            if (!page1.getText().contains("歡迎你回來")) {
+            if (!page1.getText().contains("歡迎您回來")) {
                 throw new IllegalArgumentException();
             }
 
@@ -303,7 +303,7 @@ public class JkForumNoJSCrawler extends NoJSCrawler {
 //        String url = "http://www.jkforum.net/forum-forumdisplay-fid-1116-page-1.html";
 //        String url = "http://www.jkforum.net/forum-viewthread-tid-2975818-extra-page%3D1%26orderby%3Ddateline.html";
 //        String url = "http://www.jkforum.net/thread-3122913-1-2.html";
-        String url = "http://www.jkforum.net/thread-3117859-1-1.html";
+        String url = "http://www.jkforum.net/thread-3138550-1-1.html";
 
         if (args.length == 1) {
             url = args[0];

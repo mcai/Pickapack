@@ -17,6 +17,12 @@ public class GmailJsonHelper {
         parseType2Json(FileUtils.readAllText("2.json"));
     }
 
+    //TODO: view=tl (thread list), start=0, num=70
+    //TODO: view=cv (conversation view?), multi th(thread id)=xxxx
+    //TODO: search=inbox
+    //TODO: processing body: trim, read https:// url, skip line, read json
+    //TODO: ms field in json
+
     private static void parseType1Json(String json) throws TransformerException, IOException, XPathExpressionException {
         IndentedPrintWriter pw = new IndentedPrintWriter(System.out, true);
 

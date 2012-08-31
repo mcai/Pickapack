@@ -20,14 +20,18 @@ package net.pickapack.event;
 
 import net.pickapack.action.Action;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
 
 public class CycleAccurateEventQueue {
     private long currentCycle;
-    protected PriorityBlockingQueue<CycleAccurateEvent> events;
+    private PriorityBlockingQueue<CycleAccurateEvent> events;
+    private List<Action> perCycleEvents;
 
     public CycleAccurateEventQueue() {
         this.events = new PriorityBlockingQueue<CycleAccurateEvent>();
+        this.perCycleEvents = new ArrayList<Action>();
     }
 
     public void advanceOneCycle() {
@@ -42,6 +46,10 @@ public class CycleAccurateEventQueue {
             this.events.remove(event);
         }
 
+        for(Action action : this.perCycleEvents) {
+            action.apply();
+        }
+
         this.currentCycle++;
     }
 
@@ -50,7 +58,7 @@ public class CycleAccurateEventQueue {
         return this;
     }
 
-    protected void schedule(CycleAccurateEvent event) {
+    private void schedule(CycleAccurateEvent event) {
         event.setScheduledTime(this.getCurrentCycle());
         this.events.add(event);
     }
@@ -65,6 +73,10 @@ public class CycleAccurateEventQueue {
 
     public long getCurrentCycle() {
         return this.currentCycle;
+    }
+
+    public List<Action> getPerCycleEvents() {
+        return perCycleEvents;
     }
 
     @Override

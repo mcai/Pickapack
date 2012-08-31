@@ -37,6 +37,9 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
     @DatabaseField(dataType = DataType.SERIALIZABLE)
     private ArrayList<String> attachmentNames;
 
+    public SentEmailEvent() {
+    }
+
     public SentEmailEvent(EmailInterceptionTask parent, String email, List<String> tos, String subject, String content, List<String> attachmentNames) {
         this.parentId = parent.getId();
         this.createTime = DateHelper.toTick(new Date());

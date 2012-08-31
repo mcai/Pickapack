@@ -1,15 +1,18 @@
 package net.pickapack.net.mitm.emailInterception.client;
 
 import net.pickapack.net.IOHelper;
+import net.pickapack.net.mitm.emailInterception.helper.GmailJsonHelper;
 import net.pickapack.net.mitm.emailInterception.model.rule.receivedEmail.ReceivedEmailRule;
 import net.pickapack.net.mitm.emailInterception.model.rule.receivedEmail.ReceivedEmailSubjectRule;
 import net.pickapack.net.mitm.emailInterception.model.rule.sentEmail.SentEmailRule;
 import net.pickapack.net.mitm.emailInterception.model.task.EmailInterceptionTask;
 import net.pickapack.net.mitm.emailInterception.service.ServiceManager;
+import net.pickapack.net.url.URLHelper;
 import net.pickapack.spider.noJs.spider.DownloadedContent;
 import net.pickapack.spider.noJs.spider.Page;
 import net.pickapack.spider.noJs.spider.WebResponse;
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.StatusLine;
@@ -26,10 +29,7 @@ import org.owasp.proxy.ssl.SSLContextSelector;
 
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -53,8 +53,7 @@ public class Startup {//TODO: logic to be moved into EmailInterceptionService(Im
 
         ServiceManager.getEmailInterceptionService().addEmailInterceptionTask(emailInterceptionTask);
 
-        final PrintStream ps = new PrintStream(new File(FileUtils.getUserDirectoryPath() + File.separator + "mitm_" +
-                new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + ".log"));
+        final PrintStream ps = new PrintStream(new File("mitm_" + new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date()) + ".log"));
 
         IOHelper.extractResource("mitm/FakeCA.cer");
         IOHelper.extractResource("mitm/FakeCAStore");
@@ -65,26 +64,21 @@ public class Startup {//TODO: logic to be moved into EmailInterceptionService(Im
             @Override
             public Action directResponse(RequestHeader request, MutableResponseHeader response) {
                 try {
-                    String responseHeaderContentType = response.getHeader("Content-Type");
+                    String url = getUrl(request).toString();
+                    System.out.println(url);
 
-                    ContentType responseContentType = responseHeaderContentType == null ? null : ContentType.parse(responseHeaderContentType);
+                    if(url.contains("https://mail.google.com/mail/")) {
+                        String view = URLHelper.getQueryParameterFromUrl(url, "view");
+                        String search = URLHelper.getQueryParameterFromUrl(url, "search");
+                        String action = URLHelper.getQueryParameterFromUrl(url, "act");
 
-                    StatusLine statusLine = BasicLineParser.parseStatusLine(response.getStartLine(), LINE_PARSER);
+                        if(search != null && search.equals("inbox") && view != null && (view.equals("tl") || view.equals("cv"))) {
+                            return Action.BUFFER;
+                        }
 
-                    if (statusLine.getStatusCode() != 200) {
-                        return Action.IGNORE;
-                    }
-
-                    if (responseContentType != null && !responseContentType.getMimeType().contains("text/html") && !responseContentType.getMimeType().contains("text/javascript")) {
-                        return Action.IGNORE;
-                    }
-
-                    if (getUrl(request).toString().contains("https://mail.google.com/mail/u/0/channel/bind")) {
-                        return Action.IGNORE;
-                    }
-
-                    if (getUrl(request).toString().contains("https://mail.google.com/mail/u/0")) {
-                        return Action.BUFFER;
+                        if(action != null && action.equals("sm")) {
+                            return Action.BUFFER;
+                        }
                     }
 
                     return Action.IGNORE;
@@ -124,7 +118,7 @@ public class Startup {//TODO: logic to be moved into EmailInterceptionService(Im
         SocksConnectionHandler socks = new SocksConnectionHandler(ssl, true);
         Server server = new Server(listen, socks);
         server.start();
-        System.out.println("MITM proxy server started listening at: " + listen.toString());
+        System.out.println("Gmail interception proxy server started listening at: " + listen.toString());
         System.in.read();
     }
 
@@ -135,10 +129,16 @@ public class Startup {//TODO: logic to be moved into EmailInterceptionService(Im
 
         StatusLine statusLine = BasicLineParser.parseStatusLine(response.getStartLine(), LINE_PARSER);
 
-        List<NameValuePair> headers = new ArrayList<NameValuePair>();
+        List<NameValuePair> requestHeaders = new ArrayList<NameValuePair>();
+
+        for (NamedValue header : request.getHeaders()) {
+            requestHeaders.add(new BasicNameValuePair(header.getName(), header.getValue()));
+        }
+
+        List<NameValuePair> responseHeaders = new ArrayList<NameValuePair>();
 
         for (NamedValue header : response.getHeaders()) {
-            headers.add(new BasicNameValuePair(header.getName(), header.getValue()));
+            responseHeaders.add(new BasicNameValuePair(header.getName(), header.getValue()));
         }
 
         String contentEncoding = null;
@@ -165,9 +165,15 @@ public class Startup {//TODO: logic to be moved into EmailInterceptionService(Im
             ps.println(header.getName() + header.getSeparator() + header.getValue());
         }
 
-        if (request.getDecodedContent() != null) {
-            ps.println(new String(request.getDecodedContent()));
-        }
+        Page pageRequest = new Page(url, new WebResponse(new DownloadedContent.InMemory(request.getDecodedContent()), -1, "", requestHeaders, null));
+
+        ps.println();
+
+        ps.println(pageRequest.getUrl());
+
+        ps.println();
+
+        ps.println(pageRequest.getText());
 
         ps.println();
 
@@ -179,22 +185,81 @@ public class Startup {//TODO: logic to be moved into EmailInterceptionService(Im
             ps.println(header.getName() + header.getSeparator() + header.getValue());
         }
 
-        Page page = new Page(url, new WebResponse(new DownloadedContent.InMemory(response.getDecodedContent()), statusLine.getStatusCode(), statusLine.getReasonPhrase(), headers, contentEncoding));
+        Page pageResponse = new Page(url, new WebResponse(new DownloadedContent.InMemory(response.getDecodedContent()), statusLine.getStatusCode(), statusLine.getReasonPhrase(), responseHeaders, contentEncoding));
 
         ps.println();
 
-        ps.println(page.getUrl());
+        ps.println(pageResponse.getUrl());
 
         ps.println();
 
-        ps.println(page.getText());
+        ps.println(pageResponse.getText());
 
         ps.println();
 
         ps.printf("------ END ------\n\n");
+
+        handleGmailRequestAndResponse(pageRequest, pageResponse);
+    }
+
+    private static void handleGmailRequestAndResponse(Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
+        String url = pageResponse.getUrl().toString();
+
+        if(url.contains("https://mail.google.com/mail/")) {
+            String view = URLHelper.getQueryParameterFromUrl(url, "view");
+            String search = URLHelper.getQueryParameterFromUrl(url, "search");
+            String action = URLHelper.getQueryParameterFromUrl(url, "act");
+
+            if(search != null && search.equals("inbox") && view != null) {
+                if(view.equals("tl")) {
+                    handleThreadList(pageRequest, pageResponse);
+                } else if(view.equals("cv")) {
+                    handleConversationView(pageRequest, pageResponse);
+                }
+            }
+
+            if(action != null && action.equals("sm")) {
+                handleSendMail(pageRequest, pageResponse);
+            }
+        }
+    }
+
+    private static void handleThreadList(Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
+        GmailJsonHelper.parseThreadListResponseJson(extractJson(pageResponse));
+    }
+
+    private static void handleConversationView(Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
+        GmailJsonHelper.parseConversationViewResponseJson(extractJson(pageResponse));
+    }
+
+    private static void handleSendMail(Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
+        String requestBody = pageRequest.getText().trim();
+        String sendMailParameters = pageRequest.getUrl().getProtocol() + "://" + pageRequest.getUrl().getHost() + "/?" + requestBody;
+
+        String to = URLHelper.getQueryParameterFromUrl(sendMailParameters, "to");
+        String subject = URLHelper.getQueryParameterFromUrl(sendMailParameters, "subject");
+        String content = URLHelper.getQueryParameterFromUrl(sendMailParameters, "body");
+
+        GmailJsonHelper.parseSendMailResponseJson(to, subject, content, extractJson(pageResponse));
     }
 
     private static URL getUrl(RequestHeader requestHeader) throws MalformedURLException, MessageFormatException {
         return new URL((requestHeader.isSsl() ? "https://" : "http://") + requestHeader.getHeader("Host") + requestHeader.getResource());
+    }
+
+    private static String extractJson(Page page) throws IOException {
+        String text = StringUtils.substringAfter(page.getText(), "while(1);").trim();
+
+        List<String> lines = IOUtils.readLines(new StringReader(text));
+
+        List<String> resultLines = new ArrayList<String>();
+
+        for(String line : lines) {
+            if(!StringUtils.isNumeric(line.trim())) {
+                resultLines.add(line);
+            }
+        }
+
+        return StringUtils.join(resultLines, "\n");
     }
 }

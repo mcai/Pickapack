@@ -40,6 +40,9 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
     @DatabaseField(dataType = DataType.SERIALIZABLE)
     private ArrayList<String> attachmentNames;
 
+    public ReceivedEmailEvent() {
+    }
+
     public ReceivedEmailEvent(EmailInterceptionTask parent, String email, String from, String subject, String content, List<String> attachmentNames) {
         this.parentId = parent.getId();
         this.createTime = DateHelper.toTick(new Date());

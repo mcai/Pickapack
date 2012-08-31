@@ -32,6 +32,9 @@ public class EmailInterceptionTask implements ModelElement {
     @DatabaseField(dataType = DataType.SERIALIZABLE)
     private ArrayList<SentEmailRule> sentEmailRules;
 
+    public EmailInterceptionTask() {
+    }
+
     public EmailInterceptionTask(List<ReceivedEmailRule> receivedEmailRules, List<SentEmailRule> sentEmailRules) {
         this.createTime = DateHelper.toTick(new Date());
         this.receivedEmailRules = new ArrayList<ReceivedEmailRule>(receivedEmailRules);

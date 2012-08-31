@@ -1,6 +1,7 @@
 package net.pickapack.net.mitm.emailInterception.helper;
 
 import com.jayway.jsonpath.JsonPath;
+import net.pickapack.dateTime.DateHelper;
 import net.pickapack.text.XPathHelper;
 import net.pickapack.util.IndentedPrintWriter;
 import org.parboiled.common.FileUtils;
@@ -13,20 +14,16 @@ import java.util.List;
 
 public class GmailJsonHelper {
     public static void main(String[] args) throws TransformerException, IOException, XPathExpressionException {
-        parseType1Json(FileUtils.readAllText("1.json"));
-        parseType2Json(FileUtils.readAllText("2.json"));
+        parseThreadListResponseJson(FileUtils.readAllText("1.json"));
+        parseConversationViewResponseJson(FileUtils.readAllText("2.json"));
     }
 
-    //TODO: view=tl (thread list), start=0, num=70
-    //TODO: view=cv (conversation view?), multi th(thread id)=xxxx
-    //TODO: search=inbox
-    //TODO: processing body: trim, read https:// url, skip line, read json
-    //TODO: ms field in json
-
-    private static void parseType1Json(String json) throws TransformerException, IOException, XPathExpressionException {
+    public static void parseThreadListResponseJson(String responseJson) throws TransformerException, IOException, XPathExpressionException {
         IndentedPrintWriter pw = new IndentedPrintWriter(System.out, true);
 
-        for (Object row : JsonPath.<List<Object>>read(json, "$[0][*]")) {
+        pw.println("Received email list: ");
+
+        for (Object row : JsonPath.<List<Object>>read(responseJson, "$[0][*]")) {
             if (row.toString().startsWith("[\"mla\"")) {
                 String email = JsonPath.read(row.toString(), "$[1][0]").toString();
                 pw.println("email: " + email);
@@ -63,17 +60,32 @@ public class GmailJsonHelper {
         }
     }
 
-    private static void parseType2Json(String json) throws TransformerException, IOException, XPathExpressionException {
+    public static void parseConversationViewResponseJson(String responseJson) throws TransformerException, IOException, XPathExpressionException {
         IndentedPrintWriter pw = new IndentedPrintWriter(System.out, true);
 
-        pw.println("Received email content: ");
+        pw.println("Received email: ");
 
         pw.incrementIndentation();
 
-        for (Object row : JsonPath.<List<Object>>read(json, "$[0][*]")) {
+        for (Object row : JsonPath.<List<Object>>read(responseJson, "$[0][*]")) {
             if (row.toString().contains("[\"ms\"")) {
-                String id = JsonPath.read(row.toString(), "$[13][0]").toString();
+                String id = JsonPath.read(row.toString(), "$[1]").toString();
                 pw.println("id: " + id);
+
+                String from = JsonPath.read(row.toString(), "$[6]").toString();
+                pw.println("from: " + from);
+
+                List<String> tos = JsonPath.read(row.toString(), "$[13][1]");
+                pw.println("tos: " + tos);
+
+                String subject = JsonPath.read(row.toString(), "$[13][5]").toString();
+                pw.println("subject: " + subject);
+
+                Long receiveTime = JsonPath.read(row.toString(), "$[7]");
+                pw.println("receiveTime: " + DateHelper.toString(receiveTime));
+
+                String contentStart = JsonPath.read(row.toString(), "$[8]").toString();
+                pw.println("contentStart: " + contentStart);
 
                 String content = JsonPath.read(row.toString(), "$[13][6]").toString();
                 pw.println("content: ");
@@ -83,6 +95,39 @@ public class GmailJsonHelper {
                 pw.println(content);
 
                 pw.decrementIndentation();
+                break;
+            }
+        }
+
+        pw.decrementIndentation();
+    }
+
+    public static void parseSendMailResponseJson(String to, String subject, String content, String responseJson) throws TransformerException, IOException, XPathExpressionException {
+        IndentedPrintWriter pw = new IndentedPrintWriter(System.out, true);
+
+        pw.println("Sent email: ");
+
+        pw.incrementIndentation();
+
+        pw.println("to: " + to);
+
+        pw.println("subject: " + subject);
+
+        pw.println("content: ");
+
+        pw.incrementIndentation();
+
+        pw.println(content);
+
+        pw.decrementIndentation();
+
+        for (Object row : JsonPath.<List<Object>>read(responseJson, "$[*]")) {
+            if (row.toString().contains("[\"a\"")) {
+                String id = JsonPath.read(row.toString(), "$[3][0]").toString();
+                pw.println("id: " + id);
+
+                String result = JsonPath.read(row.toString(), "$[2]").toString();
+                pw.println("result: " + result);
                 break;
             }
         }

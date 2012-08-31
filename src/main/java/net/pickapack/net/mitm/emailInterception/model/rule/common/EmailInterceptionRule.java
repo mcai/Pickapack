@@ -1,4 +1,6 @@
 package net.pickapack.net.mitm.emailInterception.model.rule.common;
 
-public interface EmailInterceptionRule {
+import java.io.Serializable;
+
+public interface EmailInterceptionRule extends Serializable {
 }

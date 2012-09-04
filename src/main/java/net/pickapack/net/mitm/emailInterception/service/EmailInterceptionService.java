@@ -37,4 +37,6 @@ public interface EmailInterceptionService extends Service {
     void removeSentEmailEventById(long id);
 
     void updateSentEmailEvent(SentEmailEvent sentEmailEvent);
+
+    void runEmailInterceptionTask(EmailInterceptionTask emailInterceptionTask);
 }

@@ -6,6 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import net.pickapack.dateTime.DateHelper;
 import net.pickapack.model.ModelElement;
 import net.pickapack.net.mitm.emailInterception.model.task.EmailInterceptionTask;
+import net.pickapack.net.mitm.emailInterception.service.ServiceManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @DatabaseTable(tableName = "SentEmailEvent")
 public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
-    @DatabaseField(generatedId = true)
+    @DatabaseField(id = true)
     private long id;
 
     @DatabaseField
@@ -37,17 +38,21 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
     @DatabaseField(dataType = DataType.SERIALIZABLE)
     private ArrayList<String> attachmentNames;
 
+    private String result;
+
     public SentEmailEvent() {
     }
 
-    public SentEmailEvent(EmailInterceptionTask parent, String email, List<String> tos, String subject, String content, List<String> attachmentNames) {
+    public SentEmailEvent(EmailInterceptionTask parent, long id, String email, List<String> tos, String subject, String content, List<String> attachmentNames, String result) {
         this.parentId = parent.getId();
+        this.id = id;
         this.createTime = DateHelper.toTick(new Date());
         this.email = email;
         this.tos = new ArrayList<String>(tos);
         this.subject = subject;
         this.content = content;
         this.attachmentNames = new ArrayList<String>(attachmentNames);
+        this.result = result;
     }
 
     public long getId() {
@@ -60,7 +65,7 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
 
     @Override
     public String getTitle() {
-        return ""; //TODO
+        return "sent email event #" + id + " @ " + DateHelper.toString(this.createTime);
     }
 
     public long getCreateTime() {
@@ -85,5 +90,13 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
 
     public List<String> getAttachmentNames() {
         return attachmentNames;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public EmailInterceptionTask getParent() {
+        return ServiceManager.getEmailInterceptionService().getEmailInterceptionTaskById(this.parentId);
     }
 }

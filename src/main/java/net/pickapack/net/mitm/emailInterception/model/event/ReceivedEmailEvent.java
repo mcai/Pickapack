@@ -6,6 +6,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import net.pickapack.dateTime.DateHelper;
 import net.pickapack.model.ModelElement;
 import net.pickapack.net.mitm.emailInterception.model.task.EmailInterceptionTask;
+import net.pickapack.net.mitm.emailInterception.service.ServiceManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @DatabaseTable(tableName = "ReceivedEmailEvent")
 public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent {
-    @DatabaseField(generatedId = true)
+    @DatabaseField(id = true)
     private long id;
 
     @DatabaseField
@@ -31,6 +32,9 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
     @DatabaseField
     private String from;
 
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
+    private ArrayList<String> tos;
+
     @DatabaseField
     private String subject;
 
@@ -43,8 +47,10 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
     public ReceivedEmailEvent() {
     }
 
-    public ReceivedEmailEvent(EmailInterceptionTask parent, String email, String from, String subject, String content, List<String> attachmentNames) {
+    public ReceivedEmailEvent(EmailInterceptionTask parent, long id, String email, String from, List<String> tos, String subject, String content, List<String> attachmentNames) {
+        this.tos = new ArrayList<String>(tos);
         this.parentId = parent.getId();
+        this.id = id;
         this.createTime = DateHelper.toTick(new Date());
         this.email = email;
         this.from = from;
@@ -63,7 +69,7 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
 
     @Override
     public String getTitle() {
-        return ""; //TODO
+        return "received email event #" + id + " @ " + DateHelper.toString(this.receiveTime);
     }
 
     public long getCreateTime() {
@@ -86,6 +92,10 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
         return from;
     }
 
+    public List<String> getTos() {
+        return tos;
+    }
+
     public String getSubject() {
         return subject;
     }
@@ -96,5 +106,9 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
 
     public List<String> getAttachmentNames() {
         return attachmentNames;
+    }
+
+    public EmailInterceptionTask getParent() {
+        return ServiceManager.getEmailInterceptionService().getEmailInterceptionTaskById(this.parentId);
     }
 }

@@ -1,7 +1,8 @@
 package net.pickapack.net.mitm.emailInterception.service;
 
 public class ServiceManager {
-    public static final String DATABASE_URL = "jdbc:mysql://localhost/email_interception?user=root&password=1026@ustc";
+    public static String databaseUser = "root";
+    public static String databasePassword = "1026@ustc";
 
     private static EmailInterceptionService emailInterceptionService;
 
@@ -11,5 +12,9 @@ public class ServiceManager {
 
     public static EmailInterceptionService getEmailInterceptionService() {
         return emailInterceptionService;
+    }
+
+    public static String getDatabaseUrl() {
+        return "jdbc:mysql://localhost/email_interception?user=" + databaseUser + "&password=" + databasePassword;
     }
 }

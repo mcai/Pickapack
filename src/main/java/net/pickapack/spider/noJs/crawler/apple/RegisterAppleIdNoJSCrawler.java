@@ -2,7 +2,7 @@ package net.pickapack.spider.noJs.crawler.apple;
 
 import net.pickapack.dateTime.DateHelper;
 import net.pickapack.action.Action1;
-import net.pickapack.mail.EmailPrefixHelper;
+import net.pickapack.mail.EmailHelper;
 import net.pickapack.net.url.URLHelper;
 import net.pickapack.spider.noJs.crawler.CrawlerLoggingEvent;
 import net.pickapack.spider.noJs.spider.Page;
@@ -457,7 +457,7 @@ public class RegisterAppleIdNoJSCrawler extends iTunesNoJSCrawler {
     }
 
     public static boolean registerNewAppleId(String machineName, String guid, String email, String appleIdPassword, String cardNumber, String ccv, int expirationMonth, int expirationYear, String firstName, String lastName, String street, String city, String state, String postalCode, String areaCode, String phone, Action1<CrawlerLoggingEvent> eventCallback, String proxyHost, int proxyPort) {
-        String recoveryEmail = EmailPrefixHelper.generateEmailPrefix() + "@gmail.com";
+        String recoveryEmail = EmailHelper.generateEmailPrefix() + "@gmail.com";
 
         int birthMonth = 1 + random.nextInt(12);
         int birthDay = 1 + random.nextInt(28);
@@ -468,7 +468,7 @@ public class RegisterAppleIdNoJSCrawler extends iTunesNoJSCrawler {
     }
 
     public static boolean registerNewFreeAppleId(String machineName, String guid, String email, String appleIdPassword, Action1<CrawlerLoggingEvent> eventCallback, String proxyHost, int proxyPort) {
-        String recoveryEmail = EmailPrefixHelper.generateEmailPrefix() + "@gmail.com";
+        String recoveryEmail = EmailHelper.generateEmailPrefix() + "@gmail.com";
 
         int birthMonth = 1 + random.nextInt(12);
         int birthDay = 1 + random.nextInt(28);

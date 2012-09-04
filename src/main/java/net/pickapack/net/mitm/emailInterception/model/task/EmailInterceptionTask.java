@@ -7,11 +7,13 @@ import net.pickapack.dateTime.DateHelper;
 import net.pickapack.model.ModelElement;
 import net.pickapack.net.mitm.emailInterception.model.rule.receivedEmail.ReceivedEmailRule;
 import net.pickapack.net.mitm.emailInterception.model.rule.sentEmail.SentEmailRule;
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
+@Root
 @DatabaseTable(tableName = "EmailInterceptionTask")
 public class EmailInterceptionTask implements ModelElement {
     @DatabaseField(generatedId = true)
@@ -26,19 +28,26 @@ public class EmailInterceptionTask implements ModelElement {
     @DatabaseField
     private long endTime;
 
-    @DatabaseField(dataType = DataType.SERIALIZABLE)
-    private ArrayList<ReceivedEmailRule> receivedEmailRules;
+    @Attribute
+    @DatabaseField
+    private int port;
 
+    @Element
     @DatabaseField(dataType = DataType.SERIALIZABLE)
-    private ArrayList<SentEmailRule> sentEmailRules;
+    private ReceivedEmailRule receivedEmailRule;
+
+    @Element
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
+    private SentEmailRule sentEmailRule;
 
     public EmailInterceptionTask() {
     }
 
-    public EmailInterceptionTask(List<ReceivedEmailRule> receivedEmailRules, List<SentEmailRule> sentEmailRules) {
+    public EmailInterceptionTask(ReceivedEmailRule receivedEmailRule, SentEmailRule sentEmailRule) {
         this.createTime = DateHelper.toTick(new Date());
-        this.receivedEmailRules = new ArrayList<ReceivedEmailRule>(receivedEmailRules);
-        this.sentEmailRules = new ArrayList<SentEmailRule>(sentEmailRules);
+        this.receivedEmailRule = receivedEmailRule;
+        this.sentEmailRule = sentEmailRule;
+        this.port = 3737;
     }
 
     public long getId() {
@@ -52,7 +61,7 @@ public class EmailInterceptionTask implements ModelElement {
 
     @Override
     public String getTitle() {
-        return ""; //TODO
+        return "email interception task #" + id + " @ " + DateHelper.toString(this.beginTime) + " - " + DateHelper.toString(this.endTime);
     }
 
     public long getCreateTime() {
@@ -75,11 +84,19 @@ public class EmailInterceptionTask implements ModelElement {
         this.endTime = endTime;
     }
 
-    public List<ReceivedEmailRule> getReceivedEmailRules() {
-        return receivedEmailRules;
+    public int getPort() {
+        return port;
     }
 
-    public List<SentEmailRule> getSentEmailRules() {
-        return sentEmailRules;
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public ReceivedEmailRule getReceivedEmailRule() {
+        return receivedEmailRule;
+    }
+
+    public SentEmailRule getSentEmailRule() {
+        return sentEmailRule;
     }
 }

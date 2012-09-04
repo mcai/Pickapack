@@ -2,12 +2,15 @@ package net.pickapack.net.mitm.emailInterception.model.rule.sentEmail;
 
 import net.pickapack.net.mitm.emailInterception.model.event.SentEmailEvent;
 import net.pickapack.net.mitm.emailInterception.model.rule.common.OrRule;
+import org.simpleframework.xml.ElementList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class SentEmailOrRule implements OrRule, SentEmailRule {
-    private List<SentEmailRule> rules;
+    @ElementList
+    private ArrayList<SentEmailRule> rules;
 
     public SentEmailOrRule() {
     }
@@ -17,7 +20,7 @@ public class SentEmailOrRule implements OrRule, SentEmailRule {
     }
 
     public SentEmailOrRule(List<SentEmailRule> rules) {
-        this.rules = rules;
+        this.rules = new ArrayList<SentEmailRule>(rules);
     }
 
     @Override

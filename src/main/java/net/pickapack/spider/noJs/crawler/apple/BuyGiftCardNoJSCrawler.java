@@ -2,7 +2,7 @@ package net.pickapack.spider.noJs.crawler.apple;
 
 import net.pickapack.dateTime.DateHelper;
 import net.pickapack.action.Action1;
-import net.pickapack.mail.EmailPrefixHelper;
+import net.pickapack.mail.EmailHelper;
 import net.pickapack.spider.noJs.crawler.CrawlerLoggingEvent;
 import net.pickapack.spider.noJs.spider.Page;
 import org.apache.http.NameValuePair;
@@ -54,11 +54,11 @@ public class BuyGiftCardNoJSCrawler extends LoginAppleIdNoJSCrawler {
         url = page.getFirstByXPath("//*[@formviewname='buyXCardForm'][2]/@url").getNodeValue();
 
         List<NameValuePair> requestParameters = new ArrayList<NameValuePair>();
-        requestParameters.add(new BasicNameValuePair("fromName", EmailPrefixHelper.generateEmailPrefix()));
-        requestParameters.add(new BasicNameValuePair("toName", EmailPrefixHelper.generateEmailPrefix()));
+        requestParameters.add(new BasicNameValuePair("fromName", EmailHelper.generateEmailPrefix()));
+        requestParameters.add(new BasicNameValuePair("toName", EmailHelper.generateEmailPrefix()));
         requestParameters.add(new BasicNameValuePair("buyButton", "submit"));
         requestParameters.add(new BasicNameValuePair("amount", "1"));
-        requestParameters.add(new BasicNameValuePair("message", EmailPrefixHelper.generateEmailPrefix()));
+        requestParameters.add(new BasicNameValuePair("message", EmailHelper.generateEmailPrefix()));
 
         page = this.httpPost("https://buy.itunes.apple.com" + url, requestParameters);
 
@@ -77,11 +77,11 @@ public class BuyGiftCardNoJSCrawler extends LoginAppleIdNoJSCrawler {
         autoDelay();
 
         List<NameValuePair> requestParameters = new ArrayList<NameValuePair>();
-        requestParameters.add(new BasicNameValuePair("fromName", EmailPrefixHelper.generateEmailPrefix()));
-        requestParameters.add(new BasicNameValuePair("toName", EmailPrefixHelper.generateEmailPrefix()));
+        requestParameters.add(new BasicNameValuePair("fromName", EmailHelper.generateEmailPrefix()));
+        requestParameters.add(new BasicNameValuePair("toName", EmailHelper.generateEmailPrefix()));
         requestParameters.add(new BasicNameValuePair("buyButton", "submit"));
         requestParameters.add(new BasicNameValuePair("amount", "1"));
-        requestParameters.add(new BasicNameValuePair("message", EmailPrefixHelper.generateEmailPrefix()));
+        requestParameters.add(new BasicNameValuePair("message", EmailHelper.generateEmailPrefix()));
 
         Page page = this.httpGet("https://buy.itunes.apple.com/WebObjects/MZFinance.woa/wa/com.apple.jingle.app.finance.DirectAction/buyGiftCertificate", requestParameters);
 

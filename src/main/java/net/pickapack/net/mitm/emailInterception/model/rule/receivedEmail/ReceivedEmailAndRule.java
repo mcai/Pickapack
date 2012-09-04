@@ -2,12 +2,15 @@ package net.pickapack.net.mitm.emailInterception.model.rule.receivedEmail;
 
 import net.pickapack.net.mitm.emailInterception.model.event.ReceivedEmailEvent;
 import net.pickapack.net.mitm.emailInterception.model.rule.common.AndRule;
+import org.simpleframework.xml.ElementList;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ReceivedEmailAndRule implements AndRule, ReceivedEmailRule {
-    private List<ReceivedEmailRule> rules;
+    @ElementList
+    private ArrayList<ReceivedEmailRule> rules;
 
     public ReceivedEmailAndRule() {
     }
@@ -17,7 +20,7 @@ public class ReceivedEmailAndRule implements AndRule, ReceivedEmailRule {
     }
 
     public ReceivedEmailAndRule(List<ReceivedEmailRule> rules) {
-        this.rules = rules;
+        this.rules = new ArrayList<ReceivedEmailRule>(rules);
     }
 
     @Override

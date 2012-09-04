@@ -1,7 +1,10 @@
 package net.pickapack.net.mitm.emailInterception.client;
 
+import com.jayway.jsonpath.JsonPath;
+import net.pickapack.dateTime.DateHelper;
 import net.pickapack.net.IOHelper;
-import net.pickapack.net.mitm.emailInterception.helper.GmailJsonHelper;
+import net.pickapack.net.mitm.emailInterception.model.event.ReceivedEmailEvent;
+import net.pickapack.net.mitm.emailInterception.model.event.SentEmailEvent;
 import net.pickapack.net.mitm.emailInterception.model.rule.receivedEmail.ReceivedEmailRule;
 import net.pickapack.net.mitm.emailInterception.model.rule.receivedEmail.ReceivedEmailSubjectRule;
 import net.pickapack.net.mitm.emailInterception.model.rule.sentEmail.SentEmailRule;
@@ -11,6 +14,8 @@ import net.pickapack.net.url.URLHelper;
 import net.pickapack.spider.noJs.spider.DownloadedContent;
 import net.pickapack.spider.noJs.spider.Page;
 import net.pickapack.spider.noJs.spider.WebResponse;
+import net.pickapack.text.XPathHelper;
+import net.pickapack.util.IndentedPrintWriter;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
@@ -26,6 +31,7 @@ import org.owasp.proxy.socks.SocksConnectionHandler;
 import org.owasp.proxy.ssl.AutoGeneratingContextSelector;
 import org.owasp.proxy.ssl.SSLConnectionHandler;
 import org.owasp.proxy.ssl.SSLContextSelector;
+import org.w3c.dom.Document;
 
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
@@ -37,6 +43,7 @@ import java.security.GeneralSecurityException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -49,7 +56,7 @@ public class Startup {//TODO: logic to be moved into EmailInterceptionService(Im
 
         receivedEmailRules.add(new ReceivedEmailSubjectRule("rerer")); //TODO: load from file
 
-        EmailInterceptionTask emailInterceptionTask = new EmailInterceptionTask(receivedEmailRules, sentEmailRules);
+        final EmailInterceptionTask emailInterceptionTask = new EmailInterceptionTask(receivedEmailRules, sentEmailRules);
 
         ServiceManager.getEmailInterceptionService().addEmailInterceptionTask(emailInterceptionTask);
 
@@ -92,7 +99,7 @@ public class Startup {//TODO: logic to be moved into EmailInterceptionService(Im
             @Override
             public void processResponse(BufferedRequest request, MutableBufferedResponse response) {
                 try {
-                    handleRequestAndResponse(request, response, ps);
+                    handleRequestAndResponse(emailInterceptionTask, request, response, ps);
                 } catch (MessageFormatException e) {
                     throw new RuntimeException(e);
                 } catch (UnsupportedEncodingException e) {
@@ -122,7 +129,7 @@ public class Startup {//TODO: logic to be moved into EmailInterceptionService(Im
         System.in.read();
     }
 
-    private static void handleRequestAndResponse(BufferedRequest request, MutableBufferedResponse response, PrintStream ps) throws MessageFormatException, IOException, TransformerException, XPathExpressionException {
+    private static void handleRequestAndResponse(EmailInterceptionTask emailInterceptionTask, BufferedRequest request, MutableBufferedResponse response, PrintStream ps) throws MessageFormatException, IOException, TransformerException, XPathExpressionException {
         String responseHeaderContentType = response.getHeader("Content-Type");
 
         ContentType responseContentType = responseHeaderContentType == null ? null : ContentType.parse(responseHeaderContentType);
@@ -199,10 +206,10 @@ public class Startup {//TODO: logic to be moved into EmailInterceptionService(Im
 
         ps.printf("------ END ------\n\n");
 
-        handleGmailRequestAndResponse(pageRequest, pageResponse);
+        handleGmailRequestAndResponse(emailInterceptionTask, pageRequest, pageResponse);
     }
 
-    private static void handleGmailRequestAndResponse(Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
+    private static void handleGmailRequestAndResponse(EmailInterceptionTask emailInterceptionTask, Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
         String url = pageResponse.getUrl().toString();
 
         if(url.contains("https://mail.google.com/mail/")) {
@@ -212,27 +219,112 @@ public class Startup {//TODO: logic to be moved into EmailInterceptionService(Im
 
             if(search != null && search.equals("inbox") && view != null) {
                 if(view.equals("tl")) {
-                    handleThreadList(pageRequest, pageResponse);
+                    handleThreadList(emailInterceptionTask, pageRequest, pageResponse);
                 } else if(view.equals("cv")) {
-                    handleConversationView(pageRequest, pageResponse);
+                    handleConversationView(emailInterceptionTask, pageRequest, pageResponse);
                 }
             }
 
             if(action != null && action.equals("sm")) {
-                handleSendMail(pageRequest, pageResponse);
+                handleSendMail(emailInterceptionTask, pageRequest, pageResponse);
             }
         }
     }
 
-    private static void handleThreadList(Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
-        GmailJsonHelper.parseThreadListResponseJson(extractJson(pageResponse));
+    private static void handleThreadList(EmailInterceptionTask emailInterceptionTask, Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
+        IndentedPrintWriter pw = new IndentedPrintWriter(System.out, true);
+
+        pw.println("Received email list: ");
+
+        for (Object row : JsonPath.<List<Object>>read(extractJson(pageResponse), "$[0][*]")) {
+            if (row.toString().startsWith("[\"mla\"")) {
+                String email = JsonPath.read(row.toString(), "$[1][0]").toString();
+                pw.println("email: " + email);
+
+                pw.println();
+            } else if (row.toString().startsWith("[\"stu\"")) {
+                for (Object subRow : JsonPath.<List<Object>>read(row.toString(), "$[2]")) {
+                    pw.println("Received email: ");
+
+                    pw.incrementIndentation();
+
+                    String id = JsonPath.read(subRow.toString(), "$[0]").toString();
+                    pw.println("id: " + id);
+
+                    Document documentEmailAndName = XPathHelper.parse(JsonPath.read(subRow.toString(), "$[1][7]").toString());
+
+                    String from = XPathHelper.getFirstByXPath(documentEmailAndName, "//span/@email").getNodeValue();
+                    pw.println("from: " + from);
+
+                    String subject = JsonPath.read(subRow.toString(), "$[1][9]").toString();
+                    pw.println("subject: " + subject);
+
+                    String contentStart = JsonPath.read(subRow.toString(), "$[1][10]").toString();
+                    pw.println("contentStart: " + contentStart);
+
+                    String receiveTime = JsonPath.read(subRow.toString(), "$[1][15]").toString();
+                    pw.println("receiveTime: " + receiveTime);
+
+                    pw.println();
+
+                    pw.decrementIndentation();
+                }
+            }
+        }
     }
 
-    private static void handleConversationView(Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
-        GmailJsonHelper.parseConversationViewResponseJson(extractJson(pageResponse));
+    private static void handleConversationView(EmailInterceptionTask emailInterceptionTask, Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
+        String email = ""; //TODO
+        String from = "";
+        String subject = "";
+        String content = "";
+        List<String> attachmentNames = null; //TODO
+
+        IndentedPrintWriter pw = new IndentedPrintWriter(System.out, true);
+
+        pw.println("Received email: ");
+
+        pw.incrementIndentation();
+
+        for (Object row : JsonPath.<List<Object>>read(extractJson(pageResponse), "$[0][*]")) {
+            if (row.toString().contains("[\"ms\"")) {
+                String id = JsonPath.read(row.toString(), "$[1]").toString();
+                pw.println("id: " + id);
+
+                from = JsonPath.read(row.toString(), "$[6]").toString();
+                pw.println("from: " + from);
+
+                List<String> tos = JsonPath.read(row.toString(), "$[13][1]");
+                pw.println("tos: " + tos);
+
+                subject = JsonPath.read(row.toString(), "$[13][5]").toString();
+                pw.println("subject: " + subject);
+
+                Long receiveTime = JsonPath.read(row.toString(), "$[7]");
+                pw.println("receiveTime: " + DateHelper.toString(receiveTime));
+
+                String contentStart = JsonPath.read(row.toString(), "$[8]").toString();
+                pw.println("contentStart: " + contentStart);
+
+                content = JsonPath.read(row.toString(), "$[13][6]").toString();
+                pw.println("content: ");
+
+                pw.incrementIndentation();
+
+                pw.println(content);
+
+                pw.decrementIndentation();
+                break;
+            }
+        }
+
+        pw.decrementIndentation();
+
+        ReceivedEmailEvent receivedEmailEvent = new ReceivedEmailEvent(emailInterceptionTask, email, from, subject, content, attachmentNames);
+        ServiceManager.getEmailInterceptionService().addReceivedEmailEvent(receivedEmailEvent);
     }
 
-    private static void handleSendMail(Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
+    private static void handleSendMail(EmailInterceptionTask emailInterceptionTask, Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
         String requestBody = pageRequest.getText().trim();
         String sendMailParameters = pageRequest.getUrl().getProtocol() + "://" + pageRequest.getUrl().getHost() + "/?" + requestBody;
 
@@ -240,7 +332,42 @@ public class Startup {//TODO: logic to be moved into EmailInterceptionService(Im
         String subject = URLHelper.getQueryParameterFromUrl(sendMailParameters, "subject");
         String content = URLHelper.getQueryParameterFromUrl(sendMailParameters, "body");
 
-        GmailJsonHelper.parseSendMailResponseJson(to, subject, content, extractJson(pageResponse));
+        String email = ""; //TODO
+        List<String> attachmentNames = null; //TODO
+
+        IndentedPrintWriter pw = new IndentedPrintWriter(System.out, true);
+
+        pw.println("Sent email: ");
+
+        pw.incrementIndentation();
+
+        pw.println("to: " + to);
+
+        pw.println("subject: " + subject);
+
+        pw.println("content: ");
+
+        pw.incrementIndentation();
+
+        pw.println(content);
+
+        pw.decrementIndentation();
+
+        for (Object row : JsonPath.<List<Object>>read(extractJson(pageResponse), "$[*]")) {
+            if (row.toString().contains("[\"a\"")) {
+                String id = JsonPath.read(row.toString(), "$[3][0]").toString();
+                pw.println("id: " + id);
+
+                String result = JsonPath.read(row.toString(), "$[2]").toString();
+                pw.println("result: " + result);
+                break;
+            }
+        }
+
+        pw.decrementIndentation();
+
+        SentEmailEvent sentEmailEvent = new SentEmailEvent(emailInterceptionTask, email, Arrays.asList(to), subject, content, attachmentNames);
+        ServiceManager.getEmailInterceptionService().addSentEmailEvent(sentEmailEvent);
     }
 
     private static URL getUrl(RequestHeader requestHeader) throws MalformedURLException, MessageFormatException {

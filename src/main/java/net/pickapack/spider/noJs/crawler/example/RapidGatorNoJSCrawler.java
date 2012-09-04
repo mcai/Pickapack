@@ -109,9 +109,9 @@ public class RapidGatorNoJSCrawler extends NoJSCrawler {
                 }
             }
 
-//            RapidGatorNoJSCrawler crawler = new RapidGatorNoJSCrawler(NoJSSpider.FIREFOX_3_6);
-            RapidGatorNoJSCrawler crawler = new RapidGatorNoJSCrawler(NoJSSpider.FIREFOX_3_6, "localhost", 8888);
-            crawler.downloadFiles("lomeyykqts@yahoo.com", "yueliang", urls, FileUtils.getUserDirectoryPath() + File.separatorChar + "Videos" + File.separatorChar + "New3" + File.separatorChar + "Rape");
+            RapidGatorNoJSCrawler crawler = new RapidGatorNoJSCrawler(NoJSSpider.FIREFOX_3_6);
+//            RapidGatorNoJSCrawler crawler = new RapidGatorNoJSCrawler(NoJSSpider.FIREFOX_3_6, "localhost", 8888);
+            crawler.downloadFiles("shgod888@live.com", "dydddddg", urls, FileUtils.getUserDirectoryPath() + File.separatorChar + "Videos" + File.separatorChar + "New3" + File.separatorChar + "Rape");
         }
     }
 }

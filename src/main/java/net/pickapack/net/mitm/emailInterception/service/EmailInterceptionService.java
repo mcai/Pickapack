@@ -5,37 +5,36 @@ import net.pickapack.net.mitm.emailInterception.model.event.SentEmailEvent;
 import net.pickapack.net.mitm.emailInterception.model.task.EmailInterceptionTask;
 import net.pickapack.service.Service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface EmailInterceptionService extends Service {
-    List<EmailInterceptionTask> getEmailInterceptionTasks() throws SQLException;
+    List<EmailInterceptionTask> getEmailInterceptionTasks();
 
-    EmailInterceptionTask getEmailInterceptionTaskById(long id) throws SQLException;
+    EmailInterceptionTask getEmailInterceptionTaskById(long id);
 
-    void addEmailInterceptionTask(EmailInterceptionTask emailInterceptionTask) throws SQLException;
+    void addEmailInterceptionTask(EmailInterceptionTask emailInterceptionTask);
 
-    void removeEmailInterceptionTaskById(long id) throws SQLException;
+    void removeEmailInterceptionTaskById(long id);
 
-    void updateEmailInterceptionTask(EmailInterceptionTask emailInterceptionTask) throws SQLException;
+    void updateEmailInterceptionTask(EmailInterceptionTask emailInterceptionTask);
 
-    List<ReceivedEmailEvent> getReceivedEmailEvents() throws SQLException;
+    List<ReceivedEmailEvent> getReceivedEmailEvents();
 
-    ReceivedEmailEvent getReceivedEmailEventById(long id) throws SQLException;
+    ReceivedEmailEvent getReceivedEmailEventById(long id);
 
-    void addReceivedEmailEvent(ReceivedEmailEvent receivedEmailEvent) throws SQLException;
+    void addReceivedEmailEvent(ReceivedEmailEvent receivedEmailEvent);
 
-    void removeReceivedEmailEventById(long id) throws SQLException;
+    void removeReceivedEmailEventById(long id);
 
-    void updateReceivedEmailEvent(ReceivedEmailEvent receivedEmailEvent) throws SQLException;
+    void updateReceivedEmailEvent(ReceivedEmailEvent receivedEmailEvent);
 
-    List<SentEmailEvent> getSentEmailEvents() throws SQLException;
+    List<SentEmailEvent> getSentEmailEvents();
 
-    SentEmailEvent getSentEmailEventById(long id) throws SQLException;
+    SentEmailEvent getSentEmailEventById(long id);
 
-    void addSentEmailEvent(SentEmailEvent sentEmailEvent) throws SQLException;
+    void addSentEmailEvent(SentEmailEvent sentEmailEvent);
 
-    void removeSentEmailEventById(long id) throws SQLException;
+    void removeSentEmailEventById(long id);
 
-    void updateSentEmailEvent(SentEmailEvent sentEmailEvent) throws SQLException;
+    void updateSentEmailEvent(SentEmailEvent sentEmailEvent);
 }

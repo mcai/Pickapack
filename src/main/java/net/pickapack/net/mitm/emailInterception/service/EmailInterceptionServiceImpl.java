@@ -7,7 +7,6 @@ import net.pickapack.net.mitm.emailInterception.model.event.SentEmailEvent;
 import net.pickapack.net.mitm.emailInterception.model.task.EmailInterceptionTask;
 import net.pickapack.service.AbstractService;
 
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,77 +25,77 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
     }
 
     @Override
-    public List<EmailInterceptionTask> getEmailInterceptionTasks() throws SQLException {
+    public List<EmailInterceptionTask> getEmailInterceptionTasks() {
         return this.getAllItems(this.emailInterceptionTasks);
     }
 
     @Override
-    public EmailInterceptionTask getEmailInterceptionTaskById(long id) throws SQLException {
+    public EmailInterceptionTask getEmailInterceptionTaskById(long id) {
         return this.getItemById(this.emailInterceptionTasks, id);
     }
 
     @Override
-    public void addEmailInterceptionTask(EmailInterceptionTask emailInterceptionTask) throws SQLException {
+    public void addEmailInterceptionTask(EmailInterceptionTask emailInterceptionTask) {
         this.addItem(this.emailInterceptionTasks, EmailInterceptionTask.class, emailInterceptionTask);
     }
 
     @Override
-    public void removeEmailInterceptionTaskById(long id) throws SQLException {
+    public void removeEmailInterceptionTaskById(long id) {
         this.removeItemById(this.emailInterceptionTasks, EmailInterceptionTask.class, id);
     }
 
     @Override
-    public void updateEmailInterceptionTask(EmailInterceptionTask emailInterceptionTask) throws SQLException {
+    public void updateEmailInterceptionTask(EmailInterceptionTask emailInterceptionTask) {
         this.updateItem(this.emailInterceptionTasks, EmailInterceptionTask.class, emailInterceptionTask);
     }
 
     @Override
-    public List<ReceivedEmailEvent> getReceivedEmailEvents() throws SQLException {
+    public List<ReceivedEmailEvent> getReceivedEmailEvents() {
         return this.getAllItems(this.receivedEmailEvents);
     }
 
     @Override
-    public ReceivedEmailEvent getReceivedEmailEventById(long id) throws SQLException {
+    public ReceivedEmailEvent getReceivedEmailEventById(long id) {
         return this.getItemById(this.receivedEmailEvents, id);
     }
 
     @Override
-    public void addReceivedEmailEvent(ReceivedEmailEvent receivedEmailEvent) throws SQLException {
+    public void addReceivedEmailEvent(ReceivedEmailEvent receivedEmailEvent) {
         this.addItem(this.receivedEmailEvents, ReceivedEmailEvent.class, receivedEmailEvent);
     }
 
     @Override
-    public void removeReceivedEmailEventById(long id) throws SQLException {
+    public void removeReceivedEmailEventById(long id) {
         this.removeItemById(this.receivedEmailEvents, ReceivedEmailEvent.class, id);
     }
 
     @Override
-    public void updateReceivedEmailEvent(ReceivedEmailEvent receivedEmailEvent) throws SQLException {
+    public void updateReceivedEmailEvent(ReceivedEmailEvent receivedEmailEvent) {
         this.updateItem(this.receivedEmailEvents, ReceivedEmailEvent.class, receivedEmailEvent);
     }
 
     @Override
-    public List<SentEmailEvent> getSentEmailEvents() throws SQLException {
+    public List<SentEmailEvent> getSentEmailEvents() {
         return this.getAllItems(this.sentEmailEvents);
     }
 
     @Override
-    public SentEmailEvent getSentEmailEventById(long id) throws SQLException {
+    public SentEmailEvent getSentEmailEventById(long id) {
         return this.getItemById(this.sentEmailEvents, id);
     }
 
     @Override
-    public void addSentEmailEvent(SentEmailEvent sentEmailEvent) throws SQLException {
+    public void addSentEmailEvent(SentEmailEvent sentEmailEvent) {
         this.addItem(this.sentEmailEvents, SentEmailEvent.class, sentEmailEvent);
     }
 
     @Override
-    public void removeSentEmailEventById(long id) throws SQLException {
+    public void removeSentEmailEventById(long id) {
         this.removeItemById(this.sentEmailEvents, SentEmailEvent.class, id);
     }
 
     @Override
-    public void updateSentEmailEvent(SentEmailEvent sentEmailEvent) throws SQLException {
+    public void updateSentEmailEvent(SentEmailEvent sentEmailEvent) {
         this.updateItem(this.sentEmailEvents, SentEmailEvent.class, sentEmailEvent);
     }
 }

@@ -99,4 +99,9 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
     public EmailInterceptionTask getParent() {
         return ServiceManager.getEmailInterceptionService().getEmailInterceptionTaskById(this.parentId);
     }
+
+    @Override
+    public String toString() {
+        return String.format("SentEmailEvent{id=%d, createTime=%s, email='%s', tos=%s, subject='%s', content='%s', attachmentNames=%s, result='%s'}", id, DateHelper.toString(createTime), email, tos, subject, content, attachmentNames, result);
+    }
 }

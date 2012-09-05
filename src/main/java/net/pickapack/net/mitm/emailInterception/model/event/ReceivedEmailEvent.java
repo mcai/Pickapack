@@ -111,4 +111,9 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
     public EmailInterceptionTask getParent() {
         return ServiceManager.getEmailInterceptionService().getEmailInterceptionTaskById(this.parentId);
     }
+
+    @Override
+    public String toString() {
+        return String.format("ReceivedEmailEvent{id=%d, createTime=%s, receiveTime=%s, email='%s', from='%s', tos=%s, subject='%s', content='%s', attachmentNames=%s}", id, DateHelper.toString(createTime), DateHelper.toString(receiveTime), email, from, tos, subject, content, attachmentNames);
+    }
 }

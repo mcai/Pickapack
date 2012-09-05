@@ -1,5 +1,7 @@
 package net.pickapack.net.mitm.emailInterception.client;
 
+import net.pickapack.net.mitm.emailInterception.model.event.ReceivedEmailEvent;
+import net.pickapack.net.mitm.emailInterception.model.event.SentEmailEvent;
 import net.pickapack.net.mitm.emailInterception.model.task.EmailInterceptionTask;
 import net.pickapack.net.mitm.emailInterception.service.ServiceManager;
 import org.simpleframework.xml.core.Persister;
@@ -24,7 +26,7 @@ public class Startup {
             return;
         }
 
-        EmailInterceptionTask emailInterceptionTask = new Persister().read(EmailInterceptionTask.class, file);
+        final EmailInterceptionTask emailInterceptionTask = new Persister().read(EmailInterceptionTask.class, file);
 
         if(emailInterceptionTask == null) {
             System.out.println("Failed to parse email interception task definition file \"" + fileNameEmailInterceptionTask + "\"!");
@@ -32,6 +34,23 @@ public class Startup {
         }
 
         ServiceManager.getEmailInterceptionService().addEmailInterceptionTask(emailInterceptionTask);
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                for (ReceivedEmailEvent receivedEmailEvent : ServiceManager.getEmailInterceptionService().getReceivedEmailEvents()) {
+                    if (receivedEmailEvent.getParentId() == emailInterceptionTask.getId()) {
+                        System.out.println(receivedEmailEvent);
+                    }
+                }
+
+                for (SentEmailEvent sentEmailEvent : ServiceManager.getEmailInterceptionService().getSentEmailEvents()) {
+                    if(sentEmailEvent.getParentId() == emailInterceptionTask.getId()) {
+                        System.out.println(sentEmailEvent);
+                    }
+                }
+            }
+        });
         ServiceManager.getEmailInterceptionService().runEmailInterceptionTask(emailInterceptionTask);
     }
 }

@@ -97,8 +97,8 @@ public class RapidGatorNoJSCrawler extends NoJSCrawler {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        if (args.length == 1) {
-            String fileNameUrls = args[0];
+        if (args.length == 3) {
+            String fileNameUrls = args[2];
 
             List<String> urls = new ArrayList<String>();
 
@@ -110,8 +110,14 @@ public class RapidGatorNoJSCrawler extends NoJSCrawler {
             }
 
             RapidGatorNoJSCrawler crawler = new RapidGatorNoJSCrawler(NoJSSpider.FIREFOX_3_6);
-//            RapidGatorNoJSCrawler crawler = new RapidGatorNoJSCrawler(NoJSSpider.FIREFOX_3_6, "localhost", 8888);
-            crawler.downloadFiles("shgod888@live.com", "dydddddg", urls, FileUtils.getUserDirectoryPath() + File.separatorChar + "Videos" + File.separatorChar + "New3" + File.separatorChar + "Rape");
+
+            String userId = args[0];
+            String password = args[1];
+
+            crawler.downloadFiles(userId, password, urls, FileUtils.getUserDirectoryPath() + File.separatorChar + "Videos" + File.separatorChar + "New3" + File.separatorChar + "Rape");
+        }
+        else {
+            System.out.println("Usage: program <user_id> <password> <file_containing_list_of_urls_to_download>");
         }
     }
 }

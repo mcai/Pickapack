@@ -1,16 +1,16 @@
 package net.pickapack.net.mitm.emailInterception.service;
 
 public class ServiceManager {
-    public static String databaseUser = "root";
-    public static String databasePassword = "1026@ustc";
+    public static String databaseUser;
+    public static String databasePassword;
 
     private static EmailInterceptionService emailInterceptionService;
 
-    static {
-        emailInterceptionService = new EmailInterceptionServiceImpl();
-    }
-
     public static EmailInterceptionService getEmailInterceptionService() {
+        if(emailInterceptionService == null) {
+            emailInterceptionService = new EmailInterceptionServiceImpl();
+        }
+
         return emailInterceptionService;
     }
 

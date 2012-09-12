@@ -41,14 +41,21 @@ public class NoticeContainer implements Container {
                    }
                }
                else if(action.equals("getNewsList")) {
-                   StringBuilder sb = new StringBuilder();
-                   sb.append("目标强化" + "\n");
-                   sb.append("计划跟踪" + "\n");
-                   sb.append("录用通知" + "\n");
-                   sb.append("论文征稿" + "\n");
-                   sb.append("技术新闻" + "\n");
-                   sb.append("社区动态" + "\n");
-                   body.println(sb.toString());
+                   String title = request.getForm().get("title");
+
+                   if(StringUtils.isNullOrEmpty(title)) {
+                       StringBuilder sb = new StringBuilder();
+                       sb.append("目标强化" + "\n");
+                       sb.append("计划跟踪" + "\n");
+                       sb.append("录用通知" + "\n");
+                       sb.append("论文征稿" + "\n");
+                       sb.append("技术新闻" + "\n");
+                       sb.append("社区动态" + "\n");
+                       body.println(sb.toString());
+                   }
+                   else {
+                       body.println(title + "详情...");
+                   }
                }
 
                response.setCode(HttpURLConnection.HTTP_OK);

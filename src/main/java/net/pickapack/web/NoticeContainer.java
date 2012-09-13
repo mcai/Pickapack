@@ -2,6 +2,7 @@ package net.pickapack.web;
 
 import com.mysql.jdbc.StringUtils;
 import net.pickapack.dateTime.DateHelper;
+import org.apache.http.HttpStatus;
 import org.simpleframework.http.Request;
 import org.simpleframework.http.Response;
 import org.simpleframework.http.core.Container;
@@ -10,7 +11,6 @@ import org.simpleframework.transport.connect.SocketConnection;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Date;
@@ -58,7 +58,7 @@ public class NoticeContainer implements Container {
                    }
                }
 
-               response.setCode(HttpURLConnection.HTTP_OK);
+               response.setCode(HttpStatus.SC_OK);
            }
 
            body.close();

@@ -109,7 +109,8 @@ public class RapidGatorNoJSCrawler extends NoJSCrawler {
                 }
             }
 
-            RapidGatorNoJSCrawler crawler = new RapidGatorNoJSCrawler(NoJSSpider.FIREFOX_3_6);
+//            RapidGatorNoJSCrawler crawler = new RapidGatorNoJSCrawler(NoJSSpider.FIREFOX_3_6);
+            RapidGatorNoJSCrawler crawler = new RapidGatorNoJSCrawler(NoJSSpider.FIREFOX_3_6, "localhost", 8888);
 
             String userId = args[0];
             String password = args[1];

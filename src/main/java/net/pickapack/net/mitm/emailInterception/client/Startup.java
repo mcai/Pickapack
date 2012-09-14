@@ -7,6 +7,9 @@ import net.pickapack.net.mitm.emailInterception.service.ServiceManager;
 import org.simpleframework.xml.core.Persister;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 public class Startup {
     public static void main(String[] args) throws Exception {
@@ -38,16 +41,26 @@ public class Startup {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                for (ReceivedEmailEvent receivedEmailEvent : ServiceManager.getEmailInterceptionService().getReceivedEmailEvents()) {
-                    if (receivedEmailEvent.getParentId() == emailInterceptionTask.getId()) {
-                        System.out.println(receivedEmailEvent);
-                    }
-                }
+                try {
+                    PrintWriter pw = new PrintWriter("emailInterception.log", "gb2312");
 
-                for (SentEmailEvent sentEmailEvent : ServiceManager.getEmailInterceptionService().getSentEmailEvents()) {
-                    if(sentEmailEvent.getParentId() == emailInterceptionTask.getId()) {
-                        System.out.println(sentEmailEvent);
+                    for (ReceivedEmailEvent receivedEmailEvent : ServiceManager.getEmailInterceptionService().getReceivedEmailEvents()) {
+                        if (receivedEmailEvent.getParentId() == emailInterceptionTask.getId()) {
+                            pw.println(receivedEmailEvent);
+                        }
                     }
+
+                    for (SentEmailEvent sentEmailEvent : ServiceManager.getEmailInterceptionService().getSentEmailEvents()) {
+                        if(sentEmailEvent.getParentId() == emailInterceptionTask.getId()) {
+                            pw.println(sentEmailEvent);
+                        }
+                    }
+
+                    pw.close();
+                } catch (FileNotFoundException e) {
+                    throw new RuntimeException(e);
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException(e);
                 }
             }
         });

@@ -114,6 +114,6 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
 
     @Override
     public String toString() {
-        return String.format("ReceivedEmailEvent{id=%d, createTime=%s, receiveTime=%s, email='%s', from='%s', tos=%s, subject='%s', content='%s', attachmentNames=%s}", id, DateHelper.toString(createTime), DateHelper.toString(receiveTime), email, from, tos, subject, content, attachmentNames);
+        return String.format("[%s] ReceivedEmailEvent{id=%d, receiveTime=%s, email='%s', from='%s', tos=%s, subject='%s', content='%s', attachmentNames=%s}", DateHelper.toString(createTime), id, DateHelper.toString(receiveTime), email, from, tos, subject, content, attachmentNames);
     }
 }

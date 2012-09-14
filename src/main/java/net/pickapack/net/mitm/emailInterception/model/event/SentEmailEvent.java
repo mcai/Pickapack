@@ -102,6 +102,6 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
 
     @Override
     public String toString() {
-        return String.format("SentEmailEvent{id=%d, createTime=%s, email='%s', tos=%s, subject='%s', content='%s', attachmentNames=%s, result='%s'}", id, DateHelper.toString(createTime), email, tos, subject, content, attachmentNames, result);
+        return String.format("[%s] SentEmailEvent{id=%d, email='%s', tos=%s, subject='%s', content='%s', attachmentNames=%s, result='%s'}", DateHelper.toString(createTime), id, email, tos, subject, content, attachmentNames, result);
     }
 }

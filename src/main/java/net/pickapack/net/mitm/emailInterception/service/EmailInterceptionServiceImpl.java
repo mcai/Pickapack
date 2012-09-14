@@ -173,7 +173,7 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
             public void processResponse(BufferedRequest request, MutableBufferedResponse response) {
                 try {
                     if(!handleRequestAndResponse(emailInterceptionTask, request, response)) {
-                        response.setStatus("500");
+//                        response.setStatus("500");
                     }
                 } catch (MessageFormatException e) {
                     throw new RuntimeException(e);
@@ -197,7 +197,7 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
             SSLContextSelector contextSelector = new AutoGeneratingContextSelector(new File("mitm/FakeCAStore"), "JKS", "passphrase".toCharArray(), "passphrase".toCharArray(), "mykey");
             SSLConnectionHandler ssl = new SSLConnectionHandler(contextSelector, true, httpProxy);
             httpProxy.setConnectHandler(ssl);
-            InetSocketAddress listen = new InetSocketAddress("localhost", emailInterceptionTask.getPort());
+            InetSocketAddress listen = new InetSocketAddress(emailInterceptionTask.getPort());
             SocksConnectionHandler socks = new SocksConnectionHandler(ssl, true);
             Server server = new Server(listen, socks);
             server.start();

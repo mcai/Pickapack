@@ -2,10 +2,18 @@ package net.pickapack.spider.withJs.media.image;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.html.*;
+import net.pickapack.action.Function1;
 import net.pickapack.dateTime.DateHelper;
 import net.pickapack.net.url.URLHelper;
+import net.pickapack.notice.model.forum.Forum;
+import net.pickapack.notice.model.forum.ForumThread;
+import net.pickapack.notice.model.forum.ForumThreadMessage;
+import net.pickapack.notice.model.forum.ForumThreadMessageAccessType;
+import net.pickapack.notice.service.ServiceManager;
 import net.pickapack.spider.withJs.WebSpider;
+import net.pickapack.util.CollectionHelper;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +64,7 @@ public class ForumPostSpider extends WebSpider {
     @SuppressWarnings("unchecked")
     protected void visitForum(String forumId) throws IOException {
         String forumTitle = "";
+        Forum forum = null;
 
         for (int pagePostsNo = 1; ; pagePostsNo++) {
             HtmlPage pagePosts = this.getWebClient().getPage("http://www.ibaoyang.net/forum.php?mod=forumdisplay&fid=" + forumId + "&page=" + pagePostsNo);
@@ -64,6 +73,10 @@ public class ForumPostSpider extends WebSpider {
 
             if (pagePostsNo == 1) {
                 System.out.printf("[%s]   Visiting forum #%s %s\n", DateHelper.toString(new Date()), forumId, forumTitle);
+
+                forum = new Forum(null, forumId, forumTitle, true, DateHelper.toTick(new Date()));
+
+                ServiceManager.getForumSpriteService().addForum(forum);
 
                 String folder = SPIDER_HOME + forumTitle;
 
@@ -90,6 +103,9 @@ public class ForumPostSpider extends WebSpider {
 
                 System.out.printf("[%s]       Visiting post %s '%s' (%s)\n", DateHelper.toString(new Date()), forumTitle + "/" + pagePostsNo + "/" + postNo, postTitle, "http://www.ibaoyang.net/" + anchorPost.getHrefAttribute());
 
+                ForumThread forumThread = new ForumThread(forum, postNo + "", postTitle, DateHelper.toTick(new Date()));
+                ServiceManager.getForumSpriteService().addForumThread(forumThread);
+
                 HtmlPage pagePost = anchorPost.click();
 
                 String tid = URLHelper.getQueryParameterFromUrl(pagePost.getUrl() + "", "tid");
@@ -98,7 +114,7 @@ public class ForumPostSpider extends WebSpider {
                     throw new IllegalArgumentException();
                 }
 
-                Map<String, String> attributes = analyzePostAttributes(pagePost);
+                Map<String, String> attributes = analyzePostAttributes(forumThread, pagePost);
 
                 attributes.put("URL", "http://www.ibaoyang.net/forum.php?mod=viewthread&tid=" + tid);
 
@@ -139,8 +155,8 @@ public class ForumPostSpider extends WebSpider {
         }
     }
 
-    private Map<String, String> analyzePostAttributes(HtmlPage pagePost) {
-        Map<String, String> attributes = new LinkedHashMap<String, String>();
+    private Map<String, String> analyzePostAttributes(ForumThread forumThread, HtmlPage pagePost) {
+        final Map<String, String> attributes = new LinkedHashMap<String, String>();
 
         HtmlAnchor poster = pagePost.getFirstByXPath("//a[contains(@href, 'home.php?mod=')][@class='xw1']");
 
@@ -215,17 +231,30 @@ public class ForumPostSpider extends WebSpider {
             attributes.put("描述", div1.asText().trim());
         }
 
+        ForumThreadMessage forumThreadMessage = new ForumThreadMessage(forumThread, "", "", DateHelper.toTick(new Date()), ForumThreadMessageAccessType.PUBLIC, poster != null ? poster.getTextContent() : "", false);
+        forumThreadMessage.setBody(StringUtils.join(CollectionHelper.transform(new ArrayList<String>(attributes.keySet()), new Function1<String, String>() {
+            @Override
+            public String apply(String key) {
+                return key + ": " + attributes.get(key);
+            }
+        }), "\n"));
+        ServiceManager.getForumSpriteService().addForumThreadMessage(forumThreadMessage);
+
         return attributes;
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
+        for(Forum forum : ServiceManager.getForumSpriteService().getAllForums()) {
+            ServiceManager.getForumSpriteService().removeForumById(forum.getId());
+        }
+
         // "52", "54", "53", "55"
         if (args.length > 0) {
             for (String arg : args) {
                 ForumPostSpider spider = new ForumPostSpider();
-//                spider.setProxy("localhost", 8888);
+                spider.setProxy("localhost", 8888);
 
-                spider.run("itecgo", "bywwnss", arg);
+                spider.run("itecgo", "1026@ustc", arg);
             }
         }
     }

@@ -1,9 +1,6 @@
 package net.pickapack.notice.service;
 
-import net.pickapack.dateTime.DateHelper;
 import net.pickapack.notice.model.forum.*;
-
-import java.util.Date;
 
 public class ServiceManager {
     public static final String DATABASE_URL = "jdbc:mysql://localhost/forum_sprite?user=root&password=1026@ustc";
@@ -12,25 +9,6 @@ public class ServiceManager {
 
     static {
         forumSpriteService = new ForumSpriteServiceImpl();
-
-        for(Forum forum : forumSpriteService.getAllForums()) {
-            forumSpriteService.removeForumById(forum.getId());
-        }
-
-        for(int i = 0; i < 5; i++) {
-            Forum forum = new Forum(null, "论坛#" + i, "论坛标题#" + i, true, DateHelper.toTick(new Date()));
-            forumSpriteService.addForum(forum);
-
-            for(int j = 0; j < 5; j++) {
-                ForumThread forumThread = new ForumThread(forum, "主题#" + j, "主题标题#" + j, DateHelper.toTick(new Date()));
-                forumSpriteService.addForumThread(forumThread);
-
-                for(int k = 0; k < 2; k++) {
-                    ForumThreadMessage forumThreadMessage = new ForumThreadMessage(forumThread, "帖子#" + k, "帖子标题#" + k, DateHelper.toTick(new Date()), ForumThreadMessageAccessType.PUBLIC, "admin", false);
-                    forumSpriteService.addForumThreadMessage(forumThreadMessage);
-                }
-            }
-        }
     }
 
     public static ForumSpriteService getForumSpriteService() {

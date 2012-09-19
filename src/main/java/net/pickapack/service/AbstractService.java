@@ -1,5 +1,6 @@
 package net.pickapack.service;
 
+import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
@@ -53,10 +54,45 @@ public class AbstractService implements Service {
         }
     }
 
+    public <TItem extends ModelElement> List<TItem> getAllItems(Dao<TItem, Long> dao, long first, long count) {
+        try {
+            PreparedQuery<TItem> query = dao.queryBuilder().prepare();
+            return paging(dao, query, first, count);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public <TItem extends ModelElement> long getNumAllItems(Dao<TItem, Long> dao) {
+        try {
+            return dao.countOf();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public <TItem extends ModelElement, TItemDirectory extends ModelElement> List<TItem> getItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().where().eq("parentId", parent.getId()).prepare();
             return dao.query(query);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public <TItem extends ModelElement, TItemDirectory extends ModelElement> List<TItem> getItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent, long first, long count) {
+        try {
+            PreparedQuery<TItem> query = dao.queryBuilder().where().eq("parentId", parent.getId()).prepare();
+            return paging(dao, query, first, count);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public <TItem extends ModelElement, TItemDirectory extends ModelElement> long getNumItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent) {
+        try {
+            PreparedQuery<TItem> query = dao.queryBuilder().where().eq("parentId", parent.getId()).prepare();
+            return dao.countOf(query);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -106,6 +142,24 @@ public class AbstractService implements Service {
         }
     }
 
+    public <TItem extends ModelElement> List<TItem> getItemsByTitle(Dao<TItem, Long> dao, String title, long first, long count) {
+        try {
+            PreparedQuery<TItem> query = dao.queryBuilder().where().eq("title", title).prepare();
+            return paging(dao, query, first, count);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public <TItem extends ModelElement> long getNumItemsByTitle(Dao<TItem, Long> dao, String title) {
+        try {
+            PreparedQuery<TItem> query = dao.queryBuilder().where().eq("title", title).prepare();
+            return dao.countOf(query);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public <TItem extends ModelElement> TItem getFirstItem(Dao<TItem, Long> dao) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().prepare();
@@ -145,8 +199,8 @@ public class AbstractService implements Service {
 
     public <TItem extends ModelElement> void removeItems(Dao<TItem, Long> dao, Class<TItem> clz, List<TItem> items) {
         List<Long> ids = new ArrayList<Long>();
-        for (long id : ids) {
-            ids.add(id);
+        for (TItem item : items) {
+            ids.add(item.getId());
         }
         removeItemsByIds(dao, clz, ids);
     }
@@ -224,6 +278,23 @@ public class AbstractService implements Service {
             return DaoManager.createDao(this.connectionSource, clz);
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    protected <TItem extends ModelElement> List<TItem> paging(Dao<TItem, Long> dao, PreparedQuery<TItem> query, long first, long count) throws SQLException {
+        CloseableIterator<TItem> iterator = dao.iterator(query);
+
+        try {
+            List<TItem> result = new ArrayList<TItem>();
+            iterator.moveRelative((int) first);
+
+            for(int i = 0; iterator.hasNext() && i < count; i++) {
+                result.add(iterator.next());
+            }
+
+            return result;
+        } finally {
+            iterator.close();
         }
     }
 

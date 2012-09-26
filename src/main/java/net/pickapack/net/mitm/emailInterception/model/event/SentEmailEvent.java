@@ -18,6 +18,9 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
     private long id;
 
     @DatabaseField
+    private String no;
+
+    @DatabaseField
     private long parentId;
 
     @DatabaseField
@@ -32,7 +35,7 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
     @DatabaseField
     private String subject;
 
-    @DatabaseField
+    @DatabaseField(dataType = DataType.LONG_STRING)
     private String content;
 
     @DatabaseField(dataType = DataType.SERIALIZABLE)
@@ -43,9 +46,9 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
     public SentEmailEvent() {
     }
 
-    public SentEmailEvent(EmailInterceptionTask parent, long id, String email, List<String> tos, String subject, String content, List<String> attachmentNames, String result) {
+    public SentEmailEvent(EmailInterceptionTask parent, String no, String email, List<String> tos, String subject, String content, List<String> attachmentNames, String result) {
         this.parentId = parent.getId();
-        this.id = id;
+        this.no = no;
         this.createTime = DateHelper.toTick(new Date());
         this.email = email;
         this.tos = new ArrayList<String>(tos);
@@ -59,13 +62,17 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
         return id;
     }
 
+    public String getNo() {
+        return no;
+    }
+
     public long getParentId() {
         return parentId;
     }
 
     @Override
     public String getTitle() {
-        return "sent email event #" + id + " @ " + DateHelper.toString(this.createTime);
+        return no;
     }
 
     public long getCreateTime() {
@@ -102,6 +109,6 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
 
     @Override
     public String toString() {
-        return String.format("[%s] SentEmailEvent{id=%d, email='%s', tos=%s, subject='%s', content='%s', attachmentNames=%s, result='%s'}", DateHelper.toString(createTime), id, email, tos, subject, content, attachmentNames, result);
+        return String.format("[%s] SentEmailEvent{no=%s, email='%s', tos=%s, subject='%s', content='%s', attachmentNames=%s, result='%s'}", DateHelper.toString(createTime), no, email, tos, subject, content, attachmentNames, result);
     }
 }

@@ -14,8 +14,11 @@ import java.util.List;
 
 @DatabaseTable(tableName = "ReceivedEmailEvent")
 public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent {
-    @DatabaseField(id = true)
+    @DatabaseField(generatedId = true)
     private long id;
+
+    @DatabaseField
+    private String no;
 
     @DatabaseField
     private long parentId;
@@ -38,7 +41,7 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
     @DatabaseField
     private String subject;
 
-    @DatabaseField
+    @DatabaseField(dataType = DataType.LONG_STRING)
     private String content;
 
     @DatabaseField(dataType = DataType.SERIALIZABLE)
@@ -47,10 +50,10 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
     public ReceivedEmailEvent() {
     }
 
-    public ReceivedEmailEvent(EmailInterceptionTask parent, long id, String email, String from, List<String> tos, String subject, String content, List<String> attachmentNames) {
+    public ReceivedEmailEvent(EmailInterceptionTask parent, String no, String email, String from, List<String> tos, String subject, String content, List<String> attachmentNames) {
         this.tos = new ArrayList<String>(tos);
         this.parentId = parent.getId();
-        this.id = id;
+        this.no = no;
         this.createTime = DateHelper.toTick(new Date());
         this.email = email;
         this.from = from;
@@ -63,13 +66,17 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
         return id;
     }
 
+    public String getNo() {
+        return no;
+    }
+
     public long getParentId() {
         return parentId;
     }
 
     @Override
     public String getTitle() {
-        return "received email event #" + id + " @ " + DateHelper.toString(this.receiveTime);
+        return no;
     }
 
     public long getCreateTime() {
@@ -114,6 +121,6 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
 
     @Override
     public String toString() {
-        return String.format("[%s] ReceivedEmailEvent{id=%d, receiveTime=%s, email='%s', from='%s', tos=%s, subject='%s', content='%s', attachmentNames=%s}", DateHelper.toString(createTime), id, DateHelper.toString(receiveTime), email, from, tos, subject, content, attachmentNames);
+        return String.format("[%s] ReceivedEmailEvent{no=%s, receiveTime=%s, email='%s', from='%s', tos=%s, subject='%s', content='%s', attachmentNames=%s}", DateHelper.toString(createTime), no, DateHelper.toString(receiveTime), email, from, tos, subject, content, attachmentNames);
     }
 }

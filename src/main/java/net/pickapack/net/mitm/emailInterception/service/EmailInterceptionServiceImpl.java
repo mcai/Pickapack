@@ -2,6 +2,8 @@ package net.pickapack.net.mitm.emailInterception.service;
 
 import com.j256.ormlite.dao.Dao;
 import com.jayway.jsonpath.JsonPath;
+import net.minidev.json.JSONArray;
+import net.pickapack.JsonSerializationHelper;
 import net.pickapack.dateTime.DateHelper;
 import net.pickapack.model.ModelElement;
 import net.pickapack.net.IOHelper;
@@ -94,6 +96,11 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
     }
 
     @Override
+    public ReceivedEmailEvent getReceivedEmailEventByNo(String no) {
+        return this.getFirstItemByTitle(this.receivedEmailEvents, no);
+    }
+
+    @Override
     public void addReceivedEmailEvent(ReceivedEmailEvent receivedEmailEvent) {
         this.addItem(this.receivedEmailEvents, ReceivedEmailEvent.class, receivedEmailEvent);
     }
@@ -116,6 +123,11 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
     @Override
     public SentEmailEvent getSentEmailEventById(long id) {
         return this.getItemById(this.sentEmailEvents, id);
+    }
+
+    @Override
+    public SentEmailEvent getSentEmailEventByNo(String no) {
+        return this.getFirstItemByTitle(this.sentEmailEvents, no);
     }
 
     @Override
@@ -163,8 +175,13 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
 
                     return Action.IGNORE;
                 } catch (MessageFormatException e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                } catch (Exception e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 }
             }
@@ -173,17 +190,25 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
             public void processResponse(BufferedRequest request, MutableBufferedResponse response) {
                 try {
                     if(!handleRequestAndResponse(emailInterceptionTask, request, response)) {
-//                        response.setStatus("500");
+                        response.setStatus("404");
                     }
                 } catch (MessageFormatException e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 } catch (IOException e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 } catch (XPathExpressionException e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 } catch (TransformerException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                } catch (Exception e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 }
             }
@@ -270,55 +295,80 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
     }
 
     private static boolean handleReceivedEmail(EmailInterceptionTask emailInterceptionTask, Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
-        String email = ""; //TODO
-        List<String> attachmentNames = null; //TODO
-
-        for (Object row : JsonPath.<List<Object>>read(extractJson(pageResponse), "$[0][*]")) {
-            if (row.toString().contains("[\"ms\"")) {
-                long id = Long.parseLong(JsonPath.read(row.toString(), "$[1]").toString());
-
-                String from = JsonPath.read(row.toString(), "$[6]").toString();
-
-                List<String> tos = JsonPath.read(row.toString(), "$[13][1]");
-
-                String subject = JsonPath.read(row.toString(), "$[13][5]").toString();
-
-                Long receiveTime = JsonPath.read(row.toString(), "$[7]");
-
-                String content = JsonPath.read(row.toString(), "$[13][6]").toString();
-
-                ReceivedEmailEvent receivedEmailEvent = new ReceivedEmailEvent(emailInterceptionTask, id, email, from, tos, subject, content, attachmentNames);
-                receivedEmailEvent.setReceiveTime(receiveTime);
-                ServiceManager.getEmailInterceptionService().addReceivedEmailEvent(receivedEmailEvent);
-
-                return emailInterceptionTask.getReceivedEmailRule().apply(receivedEmailEvent);
+        JSONArray container = JsonPath.read(extractJson(pageResponse), "$[*]");
+        for(Object childObj : container) {
+            JSONArray child = (JSONArray) childObj;
+            if(JsonPath.read(child, "$[0]").equals("ms")) {
+                System.out.println(JsonSerializationHelper.prettyPrint(child.toString()));
+                System.out.println();
             }
         }
 
-        throw new IllegalArgumentException();
+        List<Object> json = JsonPath.read(extractJson(pageResponse), "$[0][0][*]");
+
+        boolean doNotTerminate = true;
+
+        String email = ""; //TODO
+        List<String> attachmentNames = new ArrayList<String>(); //TODO
+
+        for (Object row : json) {
+            if (JsonPath.read(row.toString(), "$[0]").equals("ms")) {
+                System.out.println(JsonSerializationHelper.prettyPrint(row.toString()));
+                System.out.println();
+//                try {
+//                    String id = JsonPath.read(row.toString(), "$[1]").toString();
+//
+//                    String from = JsonPath.read(row.toString(), "$[6]").toString();
+//
+//                    String subject = JsonPath.read(row.toString(), "$[12]").toString();
+//
+//                    Long receiveTime = JsonPath.read(row.toString(), "$[7]");
+//
+//                    String content = JsonPath.read(row.toString(), "$[13][6]").toString();
+//
+//                    ReceivedEmailEvent receivedEmailEvent = new ReceivedEmailEvent(emailInterceptionTask, id, email, from, subject, content, attachmentNames);
+//                    receivedEmailEvent.setReceiveTime(receiveTime);
+//                    ServiceManager.getEmailInterceptionService().addReceivedEmailEvent(receivedEmailEvent);
+//
+//                    doNotTerminate &= emailInterceptionTask.getReceivedEmailRule().apply(receivedEmailEvent);
+//                } catch (Exception e) {
+//                    System.out.println(row.toString());
+//                    e.printStackTrace();
+//                }
+            }
+        }
+
+        return doNotTerminate;
     }
 
     private static boolean handleSentMail(EmailInterceptionTask emailInterceptionTask, Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
+        List<Object> json = JsonPath.read(extractJson(pageResponse), "$[*]");
+
         String requestBody = pageRequest.getText().trim();
         String sendMailParameters = pageRequest.getUrl().getProtocol() + "://" + pageRequest.getUrl().getHost() + "/?" + requestBody;
 
         String email = ""; //TODO
-        List<String> attachmentNames = null; //TODO
+        List<String> attachmentNames = new ArrayList<String>(); //TODO
 
-        for (Object row : JsonPath.<List<Object>>read(extractJson(pageResponse), "$[*]")) {
-            if (row.toString().contains("[\"a\"")) {
-                long id = Long.parseLong(JsonPath.read(row.toString(), "$[3][0]").toString());
+        for (Object row : json) {
+            if (row.toString().startsWith(",[[\"a\"")) {
+                try {
+                    String id = JsonPath.read(row.toString(), "$[3][0]").toString();
 
-                String to = URLHelper.getQueryParameterFromUrl(sendMailParameters, "to");
-                String subject = URLHelper.getQueryParameterFromUrl(sendMailParameters, "subject");
-                String content = URLHelper.getQueryParameterFromUrl(sendMailParameters, "body");
+                    String to = URLHelper.getQueryParameterFromUrl(sendMailParameters, "to");
+                    String subject = URLHelper.getQueryParameterFromUrl(sendMailParameters, "subject");
+                    String content = URLHelper.getQueryParameterFromUrl(sendMailParameters, "body");
 
-                String result = JsonPath.read(row.toString(), "$[2]").toString();
+                    String result = JsonPath.read(row.toString(), "$[2]").toString();
 
-                SentEmailEvent sentEmailEvent = new SentEmailEvent(emailInterceptionTask, id, email, Arrays.asList(to), subject, content, attachmentNames, result);
-                ServiceManager.getEmailInterceptionService().addSentEmailEvent(sentEmailEvent);
+                    SentEmailEvent sentEmailEvent = new SentEmailEvent(emailInterceptionTask, id, email, Arrays.asList(to), subject, content, attachmentNames, result);
+                    ServiceManager.getEmailInterceptionService().addSentEmailEvent(sentEmailEvent);
 
-                return emailInterceptionTask.getSentEmailRule().apply(sentEmailEvent);
+                    return emailInterceptionTask.getSentEmailRule().apply(sentEmailEvent);
+                } catch (Exception e) {
+                    System.out.println(row.toString());
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -336,12 +386,19 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
 
         List<String> resultLines = new ArrayList<String>();
 
+        int i = 0;
+
         for(String line : lines) {
             if(!StringUtils.isNumeric(line.trim())) {
+                if(i > 0 && line.trim().startsWith("[[")) {
+                    line = "," + line.trim();
+                }
+
                 resultLines.add(line);
+                i++;
             }
         }
 
-        return StringUtils.join(resultLines, "\n");
+        return "[" + StringUtils.join(resultLines, "\n") + "]";
     }
 }

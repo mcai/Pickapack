@@ -46,15 +46,14 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
     public SentEmailEvent() {
     }
 
-    public SentEmailEvent(EmailInterceptionTask parent, String no, String email, List<String> tos, String subject, String content, List<String> attachmentNames, String result) {
-        this.parentId = parent.getId();
+    public SentEmailEvent(EmailInterceptionTask parent, String no, String email, List<String> tos, String subject, String content, String result) {
+        this.parentId = parent == null ? -1 : parent.getId();
         this.no = no;
         this.createTime = DateHelper.toTick(new Date());
         this.email = email;
         this.tos = new ArrayList<String>(tos);
         this.subject = subject;
         this.content = content;
-        this.attachmentNames = new ArrayList<String>(attachmentNames);
         this.result = result;
     }
 
@@ -97,6 +96,10 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
 
     public List<String> getAttachmentNames() {
         return attachmentNames;
+    }
+
+    public void setAttachmentNames(List<String> attachmentNames) {
+        this.attachmentNames = new ArrayList<String>(attachmentNames);
     }
 
     public String getResult() {

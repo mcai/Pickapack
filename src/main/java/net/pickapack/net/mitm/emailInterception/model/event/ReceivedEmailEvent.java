@@ -35,9 +35,6 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
     @DatabaseField
     private String from;
 
-    @DatabaseField(dataType = DataType.SERIALIZABLE)
-    private ArrayList<String> tos;
-
     @DatabaseField
     private String subject;
 
@@ -50,9 +47,8 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
     public ReceivedEmailEvent() {
     }
 
-    public ReceivedEmailEvent(EmailInterceptionTask parent, String no, String email, String from, List<String> tos, String subject, String content, List<String> attachmentNames) {
-        this.tos = new ArrayList<String>(tos);
-        this.parentId = parent.getId();
+    public ReceivedEmailEvent(EmailInterceptionTask parent, String no, String email, String from, String subject, String content, List<String> attachmentNames) {
+        this.parentId = parent == null ? -1 : parent.getId();
         this.no = no;
         this.createTime = DateHelper.toTick(new Date());
         this.email = email;
@@ -99,10 +95,6 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
         return from;
     }
 
-    public List<String> getTos() {
-        return tos;
-    }
-
     public String getSubject() {
         return subject;
     }
@@ -121,6 +113,6 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
 
     @Override
     public String toString() {
-        return String.format("[%s] ReceivedEmailEvent{no=%s, receiveTime=%s, email='%s', from='%s', tos=%s, subject='%s', content='%s', attachmentNames=%s}", DateHelper.toString(createTime), no, DateHelper.toString(receiveTime), email, from, tos, subject, content, attachmentNames);
+        return String.format("[%s] ReceivedEmailEvent{no=%s, receiveTime=%s, email='%s', from='%s', subject='%s', content='%s', attachmentNames=%s}", DateHelper.toString(createTime), no, DateHelper.toString(receiveTime), email, from, subject, content, attachmentNames);
     }
 }

@@ -1,9 +1,6 @@
 package net.pickapack.net.mitm.emailInterception.service;
 
 import com.j256.ormlite.dao.Dao;
-import com.jayway.jsonpath.JsonPath;
-import net.minidev.json.JSONArray;
-import net.pickapack.JsonSerializationHelper;
 import net.pickapack.dateTime.DateHelper;
 import net.pickapack.model.ModelElement;
 import net.pickapack.net.IOHelper;
@@ -15,8 +12,6 @@ import net.pickapack.service.AbstractService;
 import net.pickapack.spider.noJs.spider.DownloadedContent;
 import net.pickapack.spider.noJs.spider.Page;
 import net.pickapack.spider.noJs.spider.WebResponse;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.StatusLine;
@@ -35,16 +30,12 @@ import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class EmailInterceptionServiceImpl extends AbstractService implements EmailInterceptionService {
     private Dao<EmailInterceptionTask, Long> emailInterceptionTasks;
@@ -52,7 +43,7 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
     private Dao<SentEmailEvent, Long> sentEmailEvents;
 
     @SuppressWarnings("unchecked")
-    public EmailInterceptionServiceImpl(){
+    public EmailInterceptionServiceImpl() {
         super(ServiceManager.getDatabaseUrl(), Arrays.<Class<? extends ModelElement>>asList(EmailInterceptionTask.class, ReceivedEmailEvent.class, SentEmailEvent.class));
 
         this.emailInterceptionTasks = createDao(EmailInterceptionTask.class);
@@ -156,23 +147,25 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
             @Override
             public Action directResponse(RequestHeader request, MutableResponseHeader response) {
                 try {
-                    String url = getUrl(request).toString();
-                    System.out.println(url);
+                    String url = getUrlFromRequestHeader(request);
 
-                    if(url.contains("https://mail.google.com/mail/")) {
+                    if (url.contains("https://mail.google.com/mail/")) {
                         String view = URLHelper.getQueryParameterFromUrl(url, "view");
                         String search = URLHelper.getQueryParameterFromUrl(url, "search");
                         String action = URLHelper.getQueryParameterFromUrl(url, "act");
 
-                        if(search != null && search.equals("inbox") && view != null && (view.equals("tl") || view.equals("cv"))) {
+                        if (search != null && search.equals("inbox") && view != null && (view.equals("tl") || view.equals("cv"))) {
+                            System.out.println("buffered: " + url);
                             return Action.BUFFER;
                         }
 
-                        if(action != null && action.equals("sm")) {
+                        if (action != null && (action.equals("fup") || action.equals("sm"))) {
+                            System.out.println("buffered: " + url);
                             return Action.BUFFER;
                         }
                     }
 
+                    System.out.println("ignored: " + url);
                     return Action.IGNORE;
                 } catch (MessageFormatException e) {
                     e.printStackTrace();
@@ -189,7 +182,7 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
             @Override
             public void processResponse(BufferedRequest request, MutableBufferedResponse response) {
                 try {
-                    if(!handleRequestAndResponse(emailInterceptionTask, request, response)) {
+                    if (!handleRequestAndResponse(emailInterceptionTask, request, response)) {
                         response.setStatus("404");
                     }
                 } catch (MessageFormatException e) {
@@ -266,7 +259,7 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
             contentEncoding = "UTF-8";
         }
 
-        URL url = getUrl(request);
+        URL url = new URL(getUrlFromRequestHeader(request));
 
         Page pageRequest = new Page(url, new WebResponse(new DownloadedContent.InMemory(request.getDecodedContent()), -1, "", requestHeaders, null));
 
@@ -278,15 +271,16 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
     private static boolean handleGmailRequestAndResponse(EmailInterceptionTask emailInterceptionTask, Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
         String url = pageResponse.getUrl().toString();
 
-        if(url.contains("https://mail.google.com/mail/")) {
+        if (url.contains("https://mail.google.com/mail/")) {
             String view = URLHelper.getQueryParameterFromUrl(url, "view");
             String search = URLHelper.getQueryParameterFromUrl(url, "search");
             String action = URLHelper.getQueryParameterFromUrl(url, "act");
 
             if (search != null && search.equals("inbox") && view != null && view.equals("cv")) {
                 return handleReceivedEmail(emailInterceptionTask, pageRequest, pageResponse);
-            }
-            else if(action != null && action.equals("sm")) {
+            } else if (action != null && action.equals("fup")) {
+                return handleAttachmentUploaded(emailInterceptionTask, pageRequest, pageResponse);
+            } else if (action != null && action.equals("sm")) {
                 return handleSentMail(emailInterceptionTask, pageRequest, pageResponse);
             }
         }
@@ -295,110 +289,114 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
     }
 
     private static boolean handleReceivedEmail(EmailInterceptionTask emailInterceptionTask, Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
-        JSONArray container = JsonPath.read(extractJson(pageResponse), "$[*]");
-        for(Object childObj : container) {
-            JSONArray child = (JSONArray) childObj;
-            if(JsonPath.read(child, "$[0]").equals("ms")) {
-                System.out.println(JsonSerializationHelper.prettyPrint(child.toString()));
-                System.out.println();
+        String rawCookie = pageResponse.getResponse().getHeader("set-cookie");
+
+        String email = "";
+
+        if (rawCookie != null) {
+            for (String pair : rawCookie.split(";")) {
+                String[] parts = pair.split("=");
+                if (parts.length == 2 && parts[0].equals("gmailchat")) {
+                    email = parts[1].substring(0, parts[1].lastIndexOf("/"));
+                    break;
+                }
             }
         }
 
-        List<Object> json = JsonPath.read(extractJson(pageResponse), "$[0][0][*]");
+        String json = GmailJsonParser.extractJson(pageResponse.getText());
 
-        boolean doNotTerminate = true;
+        List<ReceivedEmailEvent> receivedEmailEvents = GmailJsonParser.parseReceivedEmails(emailInterceptionTask, email, json);
 
-        String email = ""; //TODO
-        List<String> attachmentNames = new ArrayList<String>(); //TODO
+        for (ReceivedEmailEvent receivedEmailEvent : receivedEmailEvents) {
+            ServiceManager.getEmailInterceptionService().addReceivedEmailEvent(receivedEmailEvent);
+        }
 
-        for (Object row : json) {
-            if (JsonPath.read(row.toString(), "$[0]").equals("ms")) {
-                System.out.println(JsonSerializationHelper.prettyPrint(row.toString()));
-                System.out.println();
-//                try {
-//                    String id = JsonPath.read(row.toString(), "$[1]").toString();
-//
-//                    String from = JsonPath.read(row.toString(), "$[6]").toString();
-//
-//                    String subject = JsonPath.read(row.toString(), "$[12]").toString();
-//
-//                    Long receiveTime = JsonPath.read(row.toString(), "$[7]");
-//
-//                    String content = JsonPath.read(row.toString(), "$[13][6]").toString();
-//
-//                    ReceivedEmailEvent receivedEmailEvent = new ReceivedEmailEvent(emailInterceptionTask, id, email, from, subject, content, attachmentNames);
-//                    receivedEmailEvent.setReceiveTime(receiveTime);
-//                    ServiceManager.getEmailInterceptionService().addReceivedEmailEvent(receivedEmailEvent);
-//
-//                    doNotTerminate &= emailInterceptionTask.getReceivedEmailRule().apply(receivedEmailEvent);
-//                } catch (Exception e) {
-//                    System.out.println(row.toString());
-//                    e.printStackTrace();
-//                }
+        for (ReceivedEmailEvent receivedEmailEvent : receivedEmailEvents) {
+            if (!emailInterceptionTask.getReceivedEmailRule().apply(receivedEmailEvent)) {
+                return false;
             }
         }
 
-        return doNotTerminate;
+        return true;
+    }
+
+    private static Map<String, List<String>> attachments = new LinkedHashMap<String, List<String>>();
+
+    private static boolean handleAttachmentUploaded(EmailInterceptionTask emailInterceptionTask, Page pageRequest, Page pageResponse) throws IOException {
+        String headerContentDisposition = pageRequest.getResponse().getHeader("Content-Disposition");
+        String[] parts = headerContentDisposition.split(";");
+
+        String attachmentName = null;
+
+        if (parts.length == 2 && parts[0].equals("attachment")) {
+            attachmentName = parts[1].split("=")[1];
+            attachmentName = attachmentName.substring(attachmentName.indexOf("\""), attachmentName.lastIndexOf("\""));
+        }
+
+        if (attachmentName == null) {
+            return true;
+        }
+
+        String json = GmailJsonParser.extractJson(pageResponse.getText());
+
+        String id = GmailJsonParser.parseAttachmentUploaded(emailInterceptionTask, json);
+
+        if (id == null) {
+            return true;
+        }
+
+        if (!attachments.containsKey(id)) {
+            attachments.put(id, new ArrayList<String>());
+        }
+
+        attachments.get(id).add(attachmentName);
+
+        return true;
     }
 
     private static boolean handleSentMail(EmailInterceptionTask emailInterceptionTask, Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
-        List<Object> json = JsonPath.read(extractJson(pageResponse), "$[*]");
+        String rawCookie = pageResponse.getResponse().getHeader("set-cookie");
 
-        String requestBody = pageRequest.getText().trim();
-        String sendMailParameters = pageRequest.getUrl().getProtocol() + "://" + pageRequest.getUrl().getHost() + "/?" + requestBody;
+        String email = "";
 
-        String email = ""; //TODO
-        List<String> attachmentNames = new ArrayList<String>(); //TODO
-
-        for (Object row : json) {
-            if (row.toString().startsWith(",[[\"a\"")) {
-                try {
-                    String id = JsonPath.read(row.toString(), "$[3][0]").toString();
-
-                    String to = URLHelper.getQueryParameterFromUrl(sendMailParameters, "to");
-                    String subject = URLHelper.getQueryParameterFromUrl(sendMailParameters, "subject");
-                    String content = URLHelper.getQueryParameterFromUrl(sendMailParameters, "body");
-
-                    String result = JsonPath.read(row.toString(), "$[2]").toString();
-
-                    SentEmailEvent sentEmailEvent = new SentEmailEvent(emailInterceptionTask, id, email, Arrays.asList(to), subject, content, attachmentNames, result);
-                    ServiceManager.getEmailInterceptionService().addSentEmailEvent(sentEmailEvent);
-
-                    return emailInterceptionTask.getSentEmailRule().apply(sentEmailEvent);
-                } catch (Exception e) {
-                    System.out.println(row.toString());
-                    e.printStackTrace();
+        if (rawCookie != null) {
+            for (String pair : rawCookie.split(";")) {
+                String[] parts = pair.split("=");
+                if (parts.length == 2 && parts[0].equals("gmailchat")) {
+                    email = parts[1].substring(0, parts[1].lastIndexOf("/"));
+                    break;
                 }
             }
         }
 
-        throw new IllegalArgumentException();
-    }
+        final String urlFromQueryString = getUrlFromQueryString(pageRequest.getText().trim());
 
-    private static URL getUrl(RequestHeader requestHeader) throws MalformedURLException, MessageFormatException {
-        return new URL((requestHeader.isSsl() ? "https://" : "http://") + requestHeader.getHeader("Host") + requestHeader.getResource());
-    }
+        final String json = GmailJsonParser.extractJson(pageResponse.getText());
 
-    private static String extractJson(Page page) throws IOException {
-        String text = StringUtils.substringAfter(page.getText(), "while(1);").trim();
+        List<String> tos = new ArrayList<String>() {{
+            addAll(Arrays.asList(URLHelper.getQueryParameterFromUrl(urlFromQueryString, "to").split(",")));
+        }};
+        String subject = URLHelper.getQueryParameterFromUrl(urlFromQueryString, "subject");
+        String content = URLHelper.getQueryParameterFromUrl(urlFromQueryString, "body");
 
-        List<String> lines = IOUtils.readLines(new StringReader(text));
+        SentEmailEvent sentEmailEvent = GmailJsonParser.parseSentEmails(emailInterceptionTask, email, json, tos, subject, content);
+        if(sentEmailEvent != null) {
+            sentEmailEvent.setAttachmentNames(attachments.containsKey(sentEmailEvent.getNo()) ? attachments.get(sentEmailEvent.getNo()) : new ArrayList<String>());
 
-        List<String> resultLines = new ArrayList<String>();
-
-        int i = 0;
-
-        for(String line : lines) {
-            if(!StringUtils.isNumeric(line.trim())) {
-                if(i > 0 && line.trim().startsWith("[[")) {
-                    line = "," + line.trim();
-                }
-
-                resultLines.add(line);
-                i++;
+            ServiceManager.getEmailInterceptionService().addSentEmailEvent(sentEmailEvent);
+            if (!emailInterceptionTask.getSentEmailRule().apply(sentEmailEvent)) {
+                return false;
             }
         }
 
-        return "[" + StringUtils.join(resultLines, "\n") + "]";
+        return true;
+    }
+
+    private static String getUrlFromRequestHeader(RequestHeader requestHeader) throws MalformedURLException, MessageFormatException {
+        return (requestHeader.isSsl() ? "https://" : "http://") + requestHeader.getHeader("Host") + requestHeader.getResource();
+    }
+
+    private static String getUrlFromQueryString(String queryString) {
+        return "http://gmail.com?" + queryString;
     }
 }

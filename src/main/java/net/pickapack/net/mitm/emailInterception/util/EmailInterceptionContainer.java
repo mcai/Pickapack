@@ -26,12 +26,10 @@ public class EmailInterceptionContainer implements Container {
 
             long time = System.currentTimeMillis();
 
-            response.set("Content-Type", "text/html;charset=utf-8");
+            response.set("Content-Type", "text/plain;charset=utf-8");
             response.set("Server", "Notice/1.0");
             response.setDate("Date", time);
             response.setDate("Last-Modified", time);
-
-            body.println("<html><head><title>Welcome to Gmail Interception Service</title></head><body><pre>");
 
             body.printf("[%s] Welcome to Gmail Interception Service!%n", DateHelper.toString(new Date()));
 
@@ -86,8 +84,6 @@ public class EmailInterceptionContainer implements Container {
 
                 body.println();
                 body.println("########################");
-
-                body.println("</pre></body></html>");
             } catch (Exception e) {
                 e.printStackTrace(body);
             }

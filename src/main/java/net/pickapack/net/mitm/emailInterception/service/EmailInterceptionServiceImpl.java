@@ -1,6 +1,7 @@
 package net.pickapack.net.mitm.emailInterception.service;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
 import net.pickapack.model.ModelElement;
 import net.pickapack.net.mitm.emailInterception.model.event.ReceivedEmailEvent;
 import net.pickapack.net.mitm.emailInterception.model.event.SentEmailEvent;
@@ -8,6 +9,7 @@ import net.pickapack.net.mitm.emailInterception.model.task.EmailInterceptionTask
 import net.pickapack.net.mitm.emailInterception.util.GmailInterceptionHelper;
 import net.pickapack.service.AbstractService;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -67,7 +69,12 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
 
     @Override
     public ReceivedEmailEvent getReceivedEmailEventByNo(String no) {
-        return this.getFirstItemByTitle(this.receivedEmailEvents, no);
+        try {
+            PreparedQuery<ReceivedEmailEvent> query = this.receivedEmailEvents.queryBuilder().where().eq("no", no).prepare();
+            return this.receivedEmailEvents.queryForFirst(query);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -102,7 +109,12 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
 
     @Override
     public SentEmailEvent getSentEmailEventByNo(String no) {
-        return this.getFirstItemByTitle(this.sentEmailEvents, no);
+        try {
+            PreparedQuery<SentEmailEvent> query = this.sentEmailEvents.queryBuilder().where().eq("no", no).prepare();
+            return this.sentEmailEvents.queryForFirst(query);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

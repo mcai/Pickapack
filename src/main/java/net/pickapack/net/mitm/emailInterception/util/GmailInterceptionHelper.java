@@ -209,19 +209,19 @@ public class GmailInterceptionHelper {
 
         List<ReceivedEmailEvent> receivedEmailEvents = GmailJsonParser.parseReceivedEmails(emailInterceptionTask, email, json);
 
+        boolean result = true;
+
         for (ReceivedEmailEvent receivedEmailEvent : receivedEmailEvents) {
+            boolean pass = emailInterceptionTask.getReceivedEmailRule().apply(receivedEmailEvent);
+            receivedEmailEvent.setIntercepted(!pass);
+            result &= pass;
+
             if(ServiceManager.getEmailInterceptionService().getReceivedEmailEventByNo(receivedEmailEvent.getNo()) == null) {
                 ServiceManager.getEmailInterceptionService().addReceivedEmailEvent(receivedEmailEvent);
             }
         }
 
-        for (ReceivedEmailEvent receivedEmailEvent : receivedEmailEvents) {
-            if (!emailInterceptionTask.getReceivedEmailRule().apply(receivedEmailEvent)) {
-                return false;
-            }
-        }
-
-        return true;
+        return result;
     }
 
     private static boolean handleAttachmentUploaded(EmailInterceptionTask emailInterceptionTask, Page pageRequest, Page pageResponse) throws IOException {
@@ -231,8 +231,7 @@ public class GmailInterceptionHelper {
         String attachmentName = null;
 
         if (parts.length == 2 && parts[0].trim().equals("attachment")) {
-            attachmentName = parts[1].trim().split("=")[1].trim();
-            attachmentName = attachmentName.substring(attachmentName.indexOf("\""), attachmentName.lastIndexOf("\""));
+            attachmentName = parts[1].substring(parts[1].indexOf("\"") + 1, parts[1].lastIndexOf("\"")).trim();
         }
 
         if (attachmentName == null) {
@@ -278,7 +277,14 @@ public class GmailInterceptionHelper {
         final String json = GmailJsonParser.extractJson(pageResponse.getText());
 
         List<String> tos = new ArrayList<String>() {{
-            addAll(Arrays.asList(URLHelper.getQueryParameterFromUrl(urlFromQueryString, "to").split(",")));
+            String[] rawTos = URLHelper.getQueryParameterFromUrl(urlFromQueryString, "to").split(",");
+
+            for(String to : rawTos) {
+                to = to.trim();
+                if(to.isEmpty()) {
+                    add(to);
+                }
+            }
         }};
         String subject = URLHelper.getQueryParameterFromUrl(urlFromQueryString, "subject");
         String content = URLHelper.getQueryParameterFromUrl(urlFromQueryString, "body");
@@ -293,14 +299,14 @@ public class GmailInterceptionHelper {
                 sentEmailEvent.setAttachmentNames(new ArrayList<String>());
             }
 
+            boolean pass = emailInterceptionTask.getSentEmailRule().apply(sentEmailEvent);
+            sentEmailEvent.setIntercepted(!pass);
 
             if(ServiceManager.getEmailInterceptionService().getSentEmailEventByNo(sentEmailEvent.getNo()) == null) {
                 ServiceManager.getEmailInterceptionService().addSentEmailEvent(sentEmailEvent);
             }
 
-            if (!emailInterceptionTask.getSentEmailRule().apply(sentEmailEvent)) {
-                return false;
-            }
+            return pass;
         }
 
         return true;

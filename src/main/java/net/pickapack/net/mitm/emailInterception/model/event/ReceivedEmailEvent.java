@@ -29,20 +29,23 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
     @DatabaseField
     private long receiveTime;
 
-    @DatabaseField(dataType = DataType.STRING_BYTES)
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
     private String email;
 
-    @DatabaseField(dataType = DataType.STRING_BYTES)
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
     private String from;
 
-    @DatabaseField(dataType = DataType.STRING_BYTES)
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
     private String subject;
 
-    @DatabaseField(dataType = DataType.STRING_BYTES)
+    @DatabaseField(dataType = DataType.SERIALIZABLE)
     private String content;
 
     @DatabaseField(dataType = DataType.SERIALIZABLE)
     private ArrayList<String> attachmentNames;
+
+    @DatabaseField
+    private boolean intercepted;
 
     public ReceivedEmailEvent() {
     }
@@ -107,12 +110,20 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
         return attachmentNames;
     }
 
+    public boolean isIntercepted() {
+        return intercepted;
+    }
+
+    public void setIntercepted(boolean intercepted) {
+        this.intercepted = intercepted;
+    }
+
     public EmailInterceptionTask getParent() {
         return ServiceManager.getEmailInterceptionService().getEmailInterceptionTaskById(this.parentId);
     }
 
     @Override
     public String toString() {
-        return String.format("[%s] ReceivedEmailEvent{no=%s, receiveTime='%s', email='%s', from='%s', subject='%s', content='%s', attachmentNames=%s}", DateHelper.toString(createTime), no, DateHelper.toString(receiveTime), email, from, subject, content, attachmentNames);
+        return String.format("[%s] ReceivedEmailEvent{no='%s', receiveTime='%s', email='%s', from='%s', subject='%s', content='%s', attachmentNames=%s, intercepted='%s'}", DateHelper.toString(createTime), no, DateHelper.toString(receiveTime), email, from, subject, content, attachmentNames, intercepted);
     }
 }

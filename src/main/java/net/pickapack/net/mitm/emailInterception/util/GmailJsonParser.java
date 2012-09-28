@@ -47,12 +47,12 @@ public class GmailJsonParser {
                             String from = childNode.get(6).asText();
                             String subject = childNode.get(12).asText();
                             long receiveTime = childNode.get(7).asLong();
-                            String content = childNode.get(13).isNull() || StringUtils.isBlank(childNode.get(13).asText()) ? "" : childNode.get(13).get(6).asText();
-                            List<String> attachmentNames = childNode.get(21).isNull() || StringUtils.isBlank(childNode.get(21).asText()) ? new ArrayList<String>() : new ArrayList<String>() {{
-                                for(String attachmentName : childNode.get(21).asText().split(",")) {
+                            String content = !childNode.get(13).isNull() && childNode.get(13).size() >= 7 ? childNode.get(13).get(6).asText() : "";
+                            List<String> attachmentNames = !childNode.get(21).isNull() && !StringUtils.isBlank(childNode.get(21).asText()) ? new ArrayList<String>() {{
+                                for (String attachmentName : childNode.get(21).asText().split(",")) {
                                     add(attachmentName);
                                 }
-                            }};
+                            }} : new ArrayList<String>();
 
                             ReceivedEmailEvent receivedEmailEvent = new ReceivedEmailEvent(emailInterceptionTask, no, email, from, subject, content, attachmentNames);
                             receivedEmailEvent.setReceiveTime(receiveTime);

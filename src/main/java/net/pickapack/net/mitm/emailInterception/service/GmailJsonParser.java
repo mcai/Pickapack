@@ -43,7 +43,7 @@ public class GmailJsonParser {
                         System.out.println(childNode.size());
 
                         if (childNode.size() == 47 || childNode.size() == 48) {
-                            String id = childNode.get(1).asText();
+                            String no = childNode.get(1).asText();
                             String from = childNode.get(6).asText();
                             String subject = childNode.get(12).asText();
                             long receiveTime = childNode.get(7).asLong();
@@ -54,7 +54,7 @@ public class GmailJsonParser {
                                 }
                             }};
 
-                            ReceivedEmailEvent receivedEmailEvent = new ReceivedEmailEvent(emailInterceptionTask, id, email, from, subject, content, attachmentNames);
+                            ReceivedEmailEvent receivedEmailEvent = new ReceivedEmailEvent(emailInterceptionTask, no, email, from, subject, content, attachmentNames);
                             receivedEmailEvent.setReceiveTime(receiveTime);
                             receivedEmailEvents.add(receivedEmailEvent);
                         }
@@ -91,7 +91,7 @@ public class GmailJsonParser {
         ObjectMapper m = new ObjectMapper();
         JsonNode rootNode = m.readValue(json, JsonNode.class);
 
-        String id = null;
+        String no = null;
         String result = null;
 
         for(JsonNode node1 : rootNode) {
@@ -102,7 +102,7 @@ public class GmailJsonParser {
                         System.out.println(childNode.size());
 
                         if (childNode.size() == 4) {
-                            id = childNode.get(3).asText();
+                            no = childNode.get(3).asText();
                         }
                     }
                     else if (childNode.size() > 0 && childNode.get(0).asText().equals("a")) {
@@ -117,8 +117,8 @@ public class GmailJsonParser {
             }
         }
 
-        if(id != null && result != null) {
-            return new SentEmailEvent(emailInterceptionTask, id, email, tos, subject, content, result);
+        if(no != null && result != null) {
+            return new SentEmailEvent(emailInterceptionTask, no, email, tos, subject, content, result);
         }
 
         return null;

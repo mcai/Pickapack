@@ -339,17 +339,17 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
 
         String json = GmailJsonParser.extractJson(pageResponse.getText());
 
-        String id = GmailJsonParser.parseAttachmentUploaded(emailInterceptionTask, json);
+        String no = GmailJsonParser.parseAttachmentUploaded(emailInterceptionTask, json);
 
-        if (id == null) {
+        if (no == null) {
             return true;
         }
 
-        if (!attachments.containsKey(id)) {
-            attachments.put(id, new ArrayList<String>());
+        if (!attachments.containsKey(no)) {
+            attachments.put(no, new ArrayList<String>());
         }
 
-        attachments.get(id).add(attachmentName);
+        attachments.get(no).add(attachmentName);
 
         return true;
     }
@@ -381,7 +381,13 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
 
         SentEmailEvent sentEmailEvent = GmailJsonParser.parseSentEmails(emailInterceptionTask, email, json, tos, subject, content);
         if(sentEmailEvent != null) {
-            sentEmailEvent.setAttachmentNames(attachments.containsKey(sentEmailEvent.getNo()) ? attachments.get(sentEmailEvent.getNo()) : new ArrayList<String>());
+            if (attachments.containsKey(sentEmailEvent.getNo())) {
+                sentEmailEvent.setAttachmentNames(attachments.get(sentEmailEvent.getNo()));
+                attachments.remove(sentEmailEvent.getNo());
+            }
+            else {
+                sentEmailEvent.setAttachmentNames(new ArrayList<String>());
+            }
 
             ServiceManager.getEmailInterceptionService().addSentEmailEvent(sentEmailEvent);
             if (!emailInterceptionTask.getSentEmailRule().apply(sentEmailEvent)) {

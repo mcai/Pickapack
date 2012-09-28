@@ -37,4 +37,9 @@ public class SentEmailAndRule implements AndRule, SentEmailRule {
     public List<SentEmailRule> getRules() {
         return rules;
     }
+
+    @Override
+    public String toString() {
+        return String.format("SentEmailAndRule{rules=%s}", rules);
+    }
 }

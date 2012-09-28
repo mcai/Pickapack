@@ -32,4 +32,9 @@ public class ReceivedEmailSubjectRule implements ReceivedEmailRule {
     public String getSubject() {
         return subject;
     }
+
+    @Override
+    public String toString() {
+        return String.format("ReceivedEmailSubjectRule{matchType=%s, subject='%s'}", matchType, subject);
+    }
 }

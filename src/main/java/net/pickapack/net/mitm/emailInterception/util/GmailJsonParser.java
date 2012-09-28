@@ -1,4 +1,4 @@
-package net.pickapack.net.mitm.emailInterception.service;
+package net.pickapack.net.mitm.emailInterception.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

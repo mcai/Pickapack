@@ -38,4 +38,9 @@ public class SentEmailAttachmentNameRule implements SentEmailRule {
     public String getAttachmentName() {
         return attachmentName;
     }
+
+    @Override
+    public String toString() {
+        return String.format("SentEmailAttachmentNameRule{matchType=%s, attachmentName='%s'}", matchType, attachmentName);
+    }
 }

@@ -33,4 +33,9 @@ public class ReceivedEmailFromDomainRule implements ReceivedEmailRule {
     public String getFromDomain() {
         return fromDomain;
     }
+
+    @Override
+    public String toString() {
+        return String.format("ReceivedEmailFromDomainRule{matchType=%s, fromDomain='%s'}", matchType, fromDomain);
+    }
 }

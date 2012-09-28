@@ -39,4 +39,9 @@ public class SentEmailToDomainRule implements SentEmailRule {
     public String getToDomain() {
         return toDomain;
     }
+
+    @Override
+    public String toString() {
+        return String.format("SentEmailToDomainRule{matchType=%s, toDomain='%s'}", matchType, toDomain);
+    }
 }

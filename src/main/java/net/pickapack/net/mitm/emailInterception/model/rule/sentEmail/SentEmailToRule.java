@@ -38,4 +38,9 @@ public class SentEmailToRule implements SentEmailRule {
     public String getTo() {
         return to;
     }
+
+    @Override
+    public String toString() {
+        return String.format("SentEmailToRule{matchType=%s, to='%s'}", matchType, to);
+    }
 }

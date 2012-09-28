@@ -32,4 +32,9 @@ public class ReceivedEmailContentRule implements ReceivedEmailRule {
     public String getContent() {
         return content;
     }
+
+    @Override
+    public String toString() {
+        return String.format("ReceivedEmailContentRule{matchType=%s, content='%s'}", matchType, content);
+    }
 }

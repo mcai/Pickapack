@@ -7,4 +7,9 @@ public class SentEmailSubjectIsNullOrEmptyRule implements SentEmailRule {
     public boolean apply(SentEmailEvent sentEmailEvent) {
         return sentEmailEvent.getSubject() != null && !sentEmailEvent.getSubject().isEmpty();
     }
+
+    @Override
+    public String toString() {
+        return String.format("SentEmailSubjectIsNullOrEmptyRule");
+    }
 }

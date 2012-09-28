@@ -29,16 +29,16 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
     @DatabaseField
     private long receiveTime;
 
-    @DatabaseField
+    @DatabaseField(dataType = DataType.STRING_BYTES)
     private String email;
 
-    @DatabaseField
+    @DatabaseField(dataType = DataType.STRING_BYTES)
     private String from;
 
-    @DatabaseField
+    @DatabaseField(dataType = DataType.STRING_BYTES)
     private String subject;
 
-    @DatabaseField(dataType = DataType.LONG_STRING)
+    @DatabaseField(dataType = DataType.STRING_BYTES)
     private String content;
 
     @DatabaseField(dataType = DataType.SERIALIZABLE)
@@ -113,6 +113,6 @@ public class ReceivedEmailEvent implements ModelElement, EmailInterceptionEvent 
 
     @Override
     public String toString() {
-        return String.format("[%s] ReceivedEmailEvent{no=%s, receiveTime=%s, email='%s', from='%s', subject='%s', content='%s', attachmentNames=%s}", DateHelper.toString(createTime), no, DateHelper.toString(receiveTime), email, from, subject, content, attachmentNames);
+        return String.format("[%s] ReceivedEmailEvent{no=%s, receiveTime='%s', email='%s', from='%s', subject='%s', content='%s', attachmentNames=%s}", DateHelper.toString(createTime), no, DateHelper.toString(receiveTime), email, from, subject, content, attachmentNames);
     }
 }

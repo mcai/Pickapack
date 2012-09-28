@@ -1,15 +1,18 @@
 package net.pickapack.net.mitm.emailInterception.client;
 
+import net.pickapack.dateTime.DateHelper;
 import net.pickapack.net.mitm.emailInterception.model.event.ReceivedEmailEvent;
 import net.pickapack.net.mitm.emailInterception.model.event.SentEmailEvent;
 import net.pickapack.net.mitm.emailInterception.model.task.EmailInterceptionTask;
 import net.pickapack.net.mitm.emailInterception.service.ServiceManager;
+import net.pickapack.net.mitm.emailInterception.util.EmailInterceptionContainer;
 import org.simpleframework.xml.core.Persister;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 
 public class Startup {
     public static void main(String[] args) throws Exception {
@@ -38,10 +41,26 @@ public class Startup {
 
         ServiceManager.getEmailInterceptionService().addEmailInterceptionTask(emailInterceptionTask);
 
+        Thread threadRunContainer = new Thread(){
+            @Override
+            public void run() {
+                try {
+                    EmailInterceptionContainer.main(null);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
+        threadRunContainer.setDaemon(true);
+        threadRunContainer.start();
+
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
                 try {
+                    emailInterceptionTask.setEndTime(DateHelper.toTick(new Date()));
+                    ServiceManager.getEmailInterceptionService().updateEmailInterceptionTask(emailInterceptionTask);
+
                     PrintWriter pw = new PrintWriter("emailInterception.log", "gb2312");
 
                     for (ReceivedEmailEvent receivedEmailEvent : ServiceManager.getEmailInterceptionService().getReceivedEmailEvents()) {
@@ -64,6 +83,10 @@ public class Startup {
                 }
             }
         });
+
+        emailInterceptionTask.setBeginTime(DateHelper.toTick(new Date()));
+        ServiceManager.getEmailInterceptionService().updateEmailInterceptionTask(emailInterceptionTask);
+
         ServiceManager.getEmailInterceptionService().runEmailInterceptionTask(emailInterceptionTask);
     }
 }

@@ -32,4 +32,9 @@ public class SentEmailSubjectRule implements SentEmailRule {
     public String getSubject() {
         return subject;
     }
+
+    @Override
+    public String toString() {
+        return String.format("SentEmailSubjectRule{matchType=%s, subject='%s'}", matchType, subject);
+    }
 }

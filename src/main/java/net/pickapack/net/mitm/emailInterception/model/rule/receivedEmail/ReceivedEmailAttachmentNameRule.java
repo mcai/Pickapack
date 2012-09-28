@@ -38,4 +38,9 @@ public class ReceivedEmailAttachmentNameRule implements ReceivedEmailRule {
     public String getAttachmentName() {
         return attachmentName;
     }
+
+    @Override
+    public String toString() {
+        return String.format("ReceivedEmailAttachmentNameRule{matchType=%s, attachmentName='%s'}", matchType, attachmentName);
+    }
 }

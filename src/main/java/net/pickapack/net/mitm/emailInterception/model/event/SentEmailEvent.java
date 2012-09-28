@@ -26,21 +26,22 @@ public class SentEmailEvent implements ModelElement, EmailInterceptionEvent {
     @DatabaseField
     private long createTime;
 
-    @DatabaseField
+    @DatabaseField(dataType = DataType.STRING_BYTES)
     private String email;
 
     @DatabaseField(dataType = DataType.SERIALIZABLE)
     private ArrayList<String> tos;
 
-    @DatabaseField
+    @DatabaseField(dataType = DataType.STRING_BYTES)
     private String subject;
 
-    @DatabaseField(dataType = DataType.LONG_STRING)
+    @DatabaseField(dataType = DataType.STRING_BYTES)
     private String content;
 
     @DatabaseField(dataType = DataType.SERIALIZABLE)
     private ArrayList<String> attachmentNames;
 
+    @DatabaseField(dataType = DataType.STRING_BYTES)
     private String result;
 
     public SentEmailEvent() {

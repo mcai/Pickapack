@@ -37,4 +37,9 @@ public class ReceivedEmailOrRule implements OrRule, ReceivedEmailRule {
     public List<ReceivedEmailRule> getRules() {
         return rules;
     }
+
+    @Override
+    public String toString() {
+        return String.format("ReceivedEmailOrRule{rules=%s}", rules);
+    }
 }

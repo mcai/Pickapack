@@ -37,4 +37,9 @@ public class SentEmailOrRule implements OrRule, SentEmailRule {
     public List<SentEmailRule> getRules() {
         return rules;
     }
+
+    @Override
+    public String toString() {
+        return String.format("SentEmailOrRule{rules=%s}", rules);
+    }
 }

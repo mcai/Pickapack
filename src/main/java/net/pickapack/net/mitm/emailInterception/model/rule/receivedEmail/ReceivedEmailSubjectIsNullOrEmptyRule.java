@@ -8,4 +8,9 @@ public class ReceivedEmailSubjectIsNullOrEmptyRule implements ReceivedEmailRule 
         String subject = receivedEmailEvent.getSubject();
         return subject != null && !subject.isEmpty();
     }
+
+    @Override
+    public String toString() {
+        return String.format("ReceivedEmailSubjectIsNullOrEmptyRule");
+    }
 }

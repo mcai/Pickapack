@@ -20,6 +20,8 @@ public interface EmailInterceptionService extends Service {
 
     List<ReceivedEmailEvent> getReceivedEmailEvents();
 
+    List<ReceivedEmailEvent> getReceivedEmailEventsByParent(EmailInterceptionTask parent);
+
     ReceivedEmailEvent getReceivedEmailEventById(long id);
 
     ReceivedEmailEvent getReceivedEmailEventByNo(String no);
@@ -31,6 +33,8 @@ public interface EmailInterceptionService extends Service {
     void updateReceivedEmailEvent(ReceivedEmailEvent receivedEmailEvent);
 
     List<SentEmailEvent> getSentEmailEvents();
+
+    List<SentEmailEvent> getSentEmailEventsByParent(EmailInterceptionTask parent);
 
     SentEmailEvent getSentEmailEventById(long id);
 

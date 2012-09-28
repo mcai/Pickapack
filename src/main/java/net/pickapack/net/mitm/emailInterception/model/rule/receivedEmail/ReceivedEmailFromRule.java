@@ -32,4 +32,9 @@ public class ReceivedEmailFromRule implements ReceivedEmailRule {
     public String getFrom() {
         return from;
     }
+
+    @Override
+    public String toString() {
+        return String.format("ReceivedEmailFromRule{matchType=%s, from='%s'}", matchType, from);
+    }
 }

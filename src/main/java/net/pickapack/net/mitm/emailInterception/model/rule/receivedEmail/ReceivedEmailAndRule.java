@@ -37,4 +37,9 @@ public class ReceivedEmailAndRule implements AndRule, ReceivedEmailRule {
     public List<ReceivedEmailRule> getRules() {
         return rules;
     }
+
+    @Override
+    public String toString() {
+        return String.format("ReceivedEmailAndRule{rules=%s}", rules);
+    }
 }

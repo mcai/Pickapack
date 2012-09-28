@@ -32,4 +32,9 @@ public class SentEmailContentRule implements SentEmailRule {
     public String getContent() {
         return content;
     }
+
+    @Override
+    public String toString() {
+        return String.format("SentEmailContentRule{matchType=%s, content='%s'}", matchType, content);
+    }
 }

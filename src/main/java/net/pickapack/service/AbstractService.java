@@ -298,6 +298,10 @@ public class AbstractService implements Service {
         }
     }
 
+    protected JdbcPooledConnectionSource getConnectionSource() {
+        return connectionSource;
+    }
+
     public BlockingEventDispatcher<ServiceEvent> getBlockingEventDispatcher() {
         return blockingEventDispatcher;
     }

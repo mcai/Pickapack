@@ -64,13 +64,11 @@ public enum StorageUnit {
         return of(number).format(number);
     }
 
-    private static java.text.NumberFormat nf
-            = java.text.NumberFormat.getInstance();
+    private static final java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
 
     static {
         nf.setGroupingUsed(false);
         nf.setMinimumFractionDigits(0);
         nf.setMaximumFractionDigits(1);
     }
-
 }

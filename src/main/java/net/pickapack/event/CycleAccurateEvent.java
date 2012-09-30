@@ -27,8 +27,8 @@ public class CycleAccurateEvent implements Comparable<CycleAccurateEvent> {
     private long when;
     private long id;
 
-    public CycleAccurateEvent(Object sender, Action action, long when) {
-        this.id = currentId++;
+    public CycleAccurateEvent(CycleAccurateEventQueue parent, Object sender, Action action, long when) {
+        this.id = parent.currentId++;
         this.sender = sender;
         this.action = action;
         this.when = when;
@@ -97,6 +97,4 @@ public class CycleAccurateEvent implements Comparable<CycleAccurateEvent> {
     public String toString() {
         return String.format("[%d] %s: %s", when, sender, action);
     }
-
-    private static long currentId = 0;
 }

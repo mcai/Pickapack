@@ -105,7 +105,7 @@ public class Win32Helper {
 
         void SetFocus(int hwnd);
 
-        public static User32 INSTANCE = (User32) Native.loadLibrary("user32", User32.class, DEFAULT_OPTIONS);
+        public static final User32 INSTANCE = (User32) Native.loadLibrary("user32", User32.class, DEFAULT_OPTIONS);
     }
 
     public static class WindowInfo {

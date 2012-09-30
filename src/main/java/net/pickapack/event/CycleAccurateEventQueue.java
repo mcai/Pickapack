@@ -54,7 +54,7 @@ public class CycleAccurateEventQueue {
     }
 
     public CycleAccurateEventQueue schedule(Object sender, Action action, int delay) {
-        this.schedule(new CycleAccurateEvent(sender, action, this.currentCycle + delay));
+        this.schedule(new CycleAccurateEvent(this, sender, action, this.currentCycle + delay));
         return this;
     }
 
@@ -83,4 +83,6 @@ public class CycleAccurateEventQueue {
     public String toString() {
         return String.format("CycleAccurateEventQueue{currentCycle=%d, events=%s}", currentCycle, events);
     }
+
+    public long currentId = 0;
 }

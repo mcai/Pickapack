@@ -8,9 +8,13 @@
     <name>pickapack</name>
     <url>http://www.pickapack.net</url>
 
+    <prerequisites>
+        <maven>3.0.4</maven>
+    </prerequisites>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jetty.version>7.6.5.v20120716</jetty.version>
+        <jetty.version>8.1.7.v20120910</jetty.version>
     </properties>
 
     <!--<repositories>-->
@@ -74,7 +78,7 @@
         <dependency>
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
-            <version>1.8</version>
+            <version>1.9</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -95,7 +99,7 @@
         <dependency>
             <groupId>com.j256.ormlite</groupId>
             <artifactId>ormlite-jdbc</artifactId>
-            <version>4.41</version>
+            <version>4.42</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -155,12 +159,12 @@
         <dependency>
             <groupId>org.parboiled</groupId>
             <artifactId>parboiled-core</artifactId>
-            <version>1.0.2</version>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.parboiled</groupId>
             <artifactId>parboiled-java</artifactId>
-            <version>1.0.2</version>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.jfree</groupId>
@@ -242,7 +246,7 @@
         <dependency>
             <groupId>de.agilecoders.wicket</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>0.6.1</version>
+            <version>0.6.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -307,7 +311,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>2.4</version>
                 <configuration>
                     <archive>
                         <manifest>

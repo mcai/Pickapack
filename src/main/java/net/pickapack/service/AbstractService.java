@@ -1,10 +1,10 @@
 package net.pickapack.service;
 
-import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.TableUtils;
 import net.pickapack.Pair;
 import net.pickapack.event.BlockingEventDispatcher;
@@ -56,8 +56,8 @@ public class AbstractService implements Service {
 
     public <TItem extends ModelElement> List<TItem> getAllItems(Dao<TItem, Long> dao, long first, long count) {
         try {
-            PreparedQuery<TItem> query = dao.queryBuilder().prepare();
-            return paging(dao, query, first, count);
+            PreparedQuery<TItem> query = dao.queryBuilder().offset(first).limit(count).prepare();
+            return dao.query(query);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -82,8 +82,11 @@ public class AbstractService implements Service {
 
     public <TItem extends ModelElement, TItemDirectory extends ModelElement> List<TItem> getItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent, long first, long count) {
         try {
-            PreparedQuery<TItem> query = dao.queryBuilder().where().eq("parentId", parent.getId()).prepare();
-            return paging(dao, query, first, count);
+            QueryBuilder<TItem, Long> queryBuilder = dao.queryBuilder();
+            queryBuilder.offset(first).limit(count);
+            queryBuilder.where().eq("parentId", parent.getId());
+            PreparedQuery<TItem> query = queryBuilder.prepare();
+            return dao.query(query);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -144,8 +147,10 @@ public class AbstractService implements Service {
 
     public <TItem extends ModelElement> List<TItem> getItemsByTitle(Dao<TItem, Long> dao, String title, long first, long count) {
         try {
-            PreparedQuery<TItem> query = dao.queryBuilder().where().eq("title", title).prepare();
-            return paging(dao, query, first, count);
+            QueryBuilder<TItem,Long> queryBuilder = dao.queryBuilder();
+            queryBuilder.where().eq("title", title);
+            queryBuilder.offset(first).limit(count);
+            return dao.query(queryBuilder.prepare());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -278,23 +283,6 @@ public class AbstractService implements Service {
             return DaoManager.createDao(this.connectionSource, clz);
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    protected <TItem extends ModelElement> List<TItem> paging(Dao<TItem, Long> dao, PreparedQuery<TItem> query, long first, long count) throws SQLException {
-        CloseableIterator<TItem> iterator = dao.iterator(query);
-
-        try {
-            List<TItem> result = new ArrayList<TItem>();
-            iterator.moveRelative((int) first);
-
-            for(int i = 0; iterator.hasNext() && i < count; i++) {
-                result.add(iterator.next());
-            }
-
-            return result;
-        } finally {
-            iterator.close();
         }
     }
 

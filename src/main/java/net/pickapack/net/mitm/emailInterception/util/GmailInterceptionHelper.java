@@ -1,39 +1,31 @@
 package net.pickapack.net.mitm.emailInterception.util;
 
-import net.pickapack.dateTime.DateHelper;
 import net.pickapack.net.IOHelper;
 import net.pickapack.net.mitm.emailInterception.model.event.ReceivedEmailEvent;
 import net.pickapack.net.mitm.emailInterception.model.event.SentEmailEvent;
 import net.pickapack.net.mitm.emailInterception.model.task.EmailInterceptionTask;
 import net.pickapack.net.mitm.emailInterception.service.ServiceManager;
 import net.pickapack.net.url.URLHelper;
-import net.pickapack.spider.noJs.spider.DownloadedContent;
 import net.pickapack.spider.noJs.spider.Page;
-import net.pickapack.spider.noJs.spider.WebResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolVersion;
-import org.apache.http.StatusLine;
-import org.apache.http.entity.ContentType;
 import org.apache.http.message.BasicLineParser;
-import org.apache.http.message.BasicNameValuePair;
-import org.owasp.proxy.daemon.Server;
-import org.owasp.proxy.http.*;
-import org.owasp.proxy.http.server.*;
-import org.owasp.proxy.socks.SocksConnectionHandler;
-import org.owasp.proxy.ssl.AutoGeneratingContextSelector;
-import org.owasp.proxy.ssl.SSLConnectionHandler;
-import org.owasp.proxy.ssl.SSLContextSelector;
 
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.GeneralSecurityException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+//TODO: commented for the moment
+//import org.owasp.proxy.daemon.Server;
+//import org.owasp.proxy.http.*;
+//import org.owasp.proxy.http.server.*;
+//import org.owasp.proxy.socks.SocksConnectionHandler;
+//import org.owasp.proxy.ssl.AutoGeneratingContextSelector;
+//import org.owasp.proxy.ssl.SSLConnectionHandler;
+//import org.owasp.proxy.ssl.SSLContextSelector;
 
 public class GmailInterceptionHelper {
     private static final BasicLineParser LINE_PARSER = new BasicLineParser(new ProtocolVersion("HTTP", 1, 1));
@@ -43,130 +35,131 @@ public class GmailInterceptionHelper {
         IOHelper.extractResource("mitm/FakeCA.cer");
         IOHelper.extractResource("mitm/FakeCAStore");
 
-        HttpRequestHandler requestHandler = new DefaultHttpRequestHandler();
-
-        BufferedMessageInterceptor interceptor = new BufferedMessageInterceptor() {
-            @Override
-            public Action directResponse(RequestHeader request, MutableResponseHeader response) {
-                try {
-                    String url = getUrlFromRequestHeader(request);
-
-                    if (url.contains("https://mail.google.com/mail/")) {
-                        String view = URLHelper.getQueryParameterFromUrl(url, "view");
-                        String search = URLHelper.getQueryParameterFromUrl(url, "search");
-                        String action = URLHelper.getQueryParameterFromUrl(url, "act");
-
-                        if (search != null && search.equals("inbox") && view != null && (view.equals("tl") || view.equals("cv"))) {
-                            System.out.printf("[%s BUFFERED] %s%n", DateHelper.toString(new Date()), url);
-                            return Action.BUFFER;
-                        }
-
-                        if (action != null && (action.equals("fup") || action.equals("sm"))) {
-                            System.out.printf("[%s BUFFERED] %s%n", DateHelper.toString(new Date()), url);
-                            return Action.BUFFER;
-                        }
-                    }
-
-                    System.out.printf("[%s IGNORED] %s%n", DateHelper.toString(new Date()), url);
-                    return Action.IGNORE;
-                } catch (MessageFormatException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
-            }
-
-            @Override
-            public void processResponse(BufferedRequest request, MutableBufferedResponse response) {
-                try {
-                    if (!handleRequestAndResponse(emailInterceptionTask, request, response)) {
-                        response.setStatus("404");
-                    }
-                } catch (MessageFormatException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                } catch (XPathExpressionException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                } catch (TransformerException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
-            }
-        };
-
-        requestHandler = new BufferingHttpRequestHandler(requestHandler, interceptor, 10240);
-
-        HttpProxyConnectionHandler httpProxy = new HttpProxyConnectionHandler(requestHandler);
-
-        try {
-            SSLContextSelector contextSelector = new AutoGeneratingContextSelector(new File("mitm/FakeCAStore"), "JKS", "passphrase".toCharArray(), "passphrase".toCharArray(), "mykey");
-            SSLConnectionHandler ssl = new SSLConnectionHandler(contextSelector, true, httpProxy);
-            httpProxy.setConnectHandler(ssl);
-            InetSocketAddress listen = new InetSocketAddress(emailInterceptionTask.getPort());
-            SocksConnectionHandler socks = new SocksConnectionHandler(ssl, true);
-            Server server = new Server(listen, socks);
-            server.start();
-            System.out.printf("[%s] Gmail interception http/https proxy server started listening at: %s\n", DateHelper.toString(new Date()), listen.toString());
-            System.in.read();
-        } catch (GeneralSecurityException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//TODO: commented for the moment
+//        HttpRequestHandler requestHandler = new DefaultHttpRequestHandler();
+//
+//        BufferedMessageInterceptor interceptor = new BufferedMessageInterceptor() {
+//            @Override
+//            public Action directResponse(RequestHeader request, MutableResponseHeader response) {
+//                try {
+//                    String url = getUrlFromRequestHeader(request);
+//
+//                    if (url.contains("https://mail.google.com/mail/")) {
+//                        String view = URLHelper.getQueryParameterFromUrl(url, "view");
+//                        String search = URLHelper.getQueryParameterFromUrl(url, "search");
+//                        String action = URLHelper.getQueryParameterFromUrl(url, "act");
+//
+//                        if (search != null && search.equals("inbox") && view != null && (view.equals("tl") || view.equals("cv"))) {
+//                            System.out.printf("[%s BUFFERED] %s%n", DateHelper.toString(new Date()), url);
+//                            return Action.BUFFER;
+//                        }
+//
+//                        if (action != null && (action.equals("fup") || action.equals("sm"))) {
+//                            System.out.printf("[%s BUFFERED] %s%n", DateHelper.toString(new Date()), url);
+//                            return Action.BUFFER;
+//                        }
+//                    }
+//
+//                    System.out.printf("[%s IGNORED] %s%n", DateHelper.toString(new Date()), url);
+//                    return Action.IGNORE;
+//                } catch (MessageFormatException e) {
+//                    e.printStackTrace();
+//                    throw new RuntimeException(e);
+//                } catch (MalformedURLException e) {
+//                    e.printStackTrace();
+//                    throw new RuntimeException(e);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//
+//            @Override
+//            public void processResponse(BufferedRequest request, MutableBufferedResponse response) {
+//                try {
+//                    if (!handleRequestAndResponse(emailInterceptionTask, request, response)) {
+//                        response.setStatus("404");
+//                    }
+//                } catch (MessageFormatException e) {
+//                    e.printStackTrace();
+//                    throw new RuntimeException(e);
+//                } catch (UnsupportedEncodingException e) {
+//                    e.printStackTrace();
+//                    throw new RuntimeException(e);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    throw new RuntimeException(e);
+//                } catch (XPathExpressionException e) {
+//                    e.printStackTrace();
+//                    throw new RuntimeException(e);
+//                } catch (TransformerException e) {
+//                    e.printStackTrace();
+//                    throw new RuntimeException(e);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//        };
+//
+//        requestHandler = new BufferingHttpRequestHandler(requestHandler, interceptor, 10240);
+//
+//        HttpProxyConnectionHandler httpProxy = new HttpProxyConnectionHandler(requestHandler);
+//
+//        try {
+//            SSLContextSelector contextSelector = new AutoGeneratingContextSelector(new File("mitm/FakeCAStore"), "JKS", "passphrase".toCharArray(), "passphrase".toCharArray(), "mykey");
+//            SSLConnectionHandler ssl = new SSLConnectionHandler(contextSelector, true, httpProxy);
+//            httpProxy.setConnectHandler(ssl);
+//            InetSocketAddress listen = new InetSocketAddress(emailInterceptionTask.getPort());
+//            SocksConnectionHandler socks = new SocksConnectionHandler(ssl, true);
+//            Server server = new Server(listen, socks);
+//            server.start();
+//            System.out.printf("[%s] Gmail interception http/https proxy server started listening at: %s\n", DateHelper.toString(new Date()), listen.toString());
+//            System.in.read();
+//        } catch (GeneralSecurityException e) {
+//            throw new RuntimeException(e);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
-    private static boolean handleRequestAndResponse(EmailInterceptionTask emailInterceptionTask, BufferedRequest request, MutableBufferedResponse response) throws MessageFormatException, IOException, TransformerException, XPathExpressionException {
-        String responseHeaderContentType = response.getHeader("Content-Type");
-
-        ContentType responseContentType = responseHeaderContentType == null ? null : ContentType.parse(responseHeaderContentType);
-
-        StatusLine statusLine = BasicLineParser.parseStatusLine(response.getStartLine(), LINE_PARSER);
-
-        List<NameValuePair> requestHeaders = new ArrayList<NameValuePair>();
-
-        for (NamedValue header : request.getHeaders()) {
-            requestHeaders.add(new BasicNameValuePair(header.getName(), header.getValue()));
-        }
-
-        List<NameValuePair> responseHeaders = new ArrayList<NameValuePair>();
-
-        for (NamedValue header : response.getHeaders()) {
-            responseHeaders.add(new BasicNameValuePair(header.getName(), header.getValue()));
-        }
-
-        String contentEncoding = null;
-
-        if (responseContentType != null && responseContentType.getCharset() != null) {
-            contentEncoding = responseContentType.getCharset().name();
-        }
-
-        if (contentEncoding == null) {
-            contentEncoding = "UTF-8";
-        }
-
-        URL url = new URL(getUrlFromRequestHeader(request));
-
-        Page pageRequest = new Page(url, new WebResponse(new DownloadedContent.InMemory(request.getDecodedContent()), -1, "", requestHeaders, null));
-
-        Page pageResponse = new Page(url, new WebResponse(new DownloadedContent.InMemory(response.getDecodedContent()), statusLine.getStatusCode(), statusLine.getReasonPhrase(), responseHeaders, contentEncoding));
-
-        return handleGmailRequestAndResponse(emailInterceptionTask, pageRequest, pageResponse);
-    }
+//    private static boolean handleRequestAndResponse(EmailInterceptionTask emailInterceptionTask, BufferedRequest request, MutableBufferedResponse response) throws MessageFormatException, IOException, TransformerException, XPathExpressionException {
+//        String responseHeaderContentType = response.getHeader("Content-Type");
+//
+//        ContentType responseContentType = responseHeaderContentType == null ? null : ContentType.parse(responseHeaderContentType);
+//
+//        StatusLine statusLine = BasicLineParser.parseStatusLine(response.getStartLine(), LINE_PARSER);
+//
+//        List<NameValuePair> requestHeaders = new ArrayList<NameValuePair>();
+//
+//        for (NamedValue header : request.getHeaders()) {
+//            requestHeaders.add(new BasicNameValuePair(header.getName(), header.getValue()));
+//        }
+//
+//        List<NameValuePair> responseHeaders = new ArrayList<NameValuePair>();
+//
+//        for (NamedValue header : response.getHeaders()) {
+//            responseHeaders.add(new BasicNameValuePair(header.getName(), header.getValue()));
+//        }
+//
+//        String contentEncoding = null;
+//
+//        if (responseContentType != null && responseContentType.getCharset() != null) {
+//            contentEncoding = responseContentType.getCharset().name();
+//        }
+//
+//        if (contentEncoding == null) {
+//            contentEncoding = "UTF-8";
+//        }
+//
+//        URL url = new URL(getUrlFromRequestHeader(request));
+//
+//        Page pageRequest = new Page(url, new WebResponse(new DownloadedContent.InMemory(request.getDecodedContent()), -1, "", requestHeaders, null));
+//
+//        Page pageResponse = new Page(url, new WebResponse(new DownloadedContent.InMemory(response.getDecodedContent()), statusLine.getStatusCode(), statusLine.getReasonPhrase(), responseHeaders, contentEncoding));
+//
+//        return handleGmailRequestAndResponse(emailInterceptionTask, pageRequest, pageResponse);
+//    }
 
     private static boolean handleGmailRequestAndResponse(EmailInterceptionTask emailInterceptionTask, Page pageRequest, Page pageResponse) throws IOException, TransformerException, XPathExpressionException {
         String url = pageResponse.getUrl().toString();
@@ -312,9 +305,10 @@ public class GmailInterceptionHelper {
         return true;
     }
 
-    private static String getUrlFromRequestHeader(RequestHeader requestHeader) throws MalformedURLException, MessageFormatException {
-        return (requestHeader.isSsl() ? "https://" : "http://") + requestHeader.getHeader("Host") + requestHeader.getResource();
-    }
+//TODO: commented for the moment
+//    private static String getUrlFromRequestHeader(RequestHeader requestHeader) throws MalformedURLException, MessageFormatException {
+//        return (requestHeader.isSsl() ? "https://" : "http://") + requestHeader.getHeader("Host") + requestHeader.getResource();
+//    }
 
     private static String getUrlFromQueryString(String queryString) {
         return "http://gmail.com?" + queryString;

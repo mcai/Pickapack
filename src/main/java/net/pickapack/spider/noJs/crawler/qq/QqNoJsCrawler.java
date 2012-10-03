@@ -377,7 +377,8 @@ public class QqNoJsCrawler extends NoJSCrawler {
     public static void main(String[] args) throws IOException, InterruptedException {
         boolean useProxy = true;
 
-        QqNoJsCrawler crawler = useProxy ? new QqNoJsCrawler("2437106554", "1026@ustc", NoJSSpider.FIREFOX_3_6, "localhost", 8888) : new QqNoJsCrawler("2437106554", "1026@ustc", NoJSSpider.FIREFOX_3_6);
+        //TODO: supply password here
+        QqNoJsCrawler crawler = useProxy ? new QqNoJsCrawler("222222", "######", NoJSSpider.FIREFOX_3_6, "localhost", 8888) : new QqNoJsCrawler("222222", "######", NoJSSpider.FIREFOX_3_6);
 
         crawler.getEventDispatcher().addListener(CrawlerLoggingEvent.class, new Action1<CrawlerLoggingEvent>() {
             @Override

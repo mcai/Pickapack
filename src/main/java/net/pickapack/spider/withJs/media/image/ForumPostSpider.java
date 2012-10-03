@@ -254,7 +254,8 @@ public class ForumPostSpider extends WebSpider {
                 ForumPostSpider spider = new ForumPostSpider();
                 spider.setProxy("localhost", 8888);
 
-                spider.run("itecgo", "1026@ustc", arg);
+                //TODO: supply password here
+                spider.run("$$$$$$", "######", arg);
             }
         }
     }

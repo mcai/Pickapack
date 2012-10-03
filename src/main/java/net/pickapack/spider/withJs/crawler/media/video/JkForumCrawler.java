@@ -167,6 +167,6 @@ public class JkForumCrawler extends WebCrawler {
 
         JkForumCrawler crawler = new JkForumCrawler("/OOXXPicsSpider/JkForumNoJSCrawler");
         crawler.setProxy("10.26.27.29", 3128);
-        crawler.run(url, "itecgo", "bywwnss");
+        crawler.run(url, "$$$", "###");//TODO: supply password here
     }
 }

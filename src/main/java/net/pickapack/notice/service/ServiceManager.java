@@ -3,7 +3,7 @@ package net.pickapack.notice.service;
 import net.pickapack.notice.model.forum.*;
 
 public class ServiceManager {
-    public static final String DATABASE_URL = "jdbc:mysql://localhost/forum_sprite?user=root&password=1026@ustc";
+    public static final String DATABASE_URL = "jdbc:mysql://localhost/forum_sprite?user=root&password=######"; //TODO: supply password here
 
     private static ForumSpriteService forumSpriteService;
 

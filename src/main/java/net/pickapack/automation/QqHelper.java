@@ -69,7 +69,7 @@ public class QqHelper {
         for(String message : messages) {
             System.out.println(message);
 
-            Login("2437106554", "1026@ustc");
+            Login("111111", "######"); //TODO: supply password here
             sendMessage("1041301030", message);
             logout();
         }

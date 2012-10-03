@@ -325,7 +325,7 @@ public class JkForumNoJSCrawler extends NoJSCrawler {
             }
         });
 
-        crawler.run(url, "itecgo", "bywwnss");
+        crawler.run(url, "###", "###");//TODO: supply password here
 //        crawler.downloadMediaFiles(FileUtils.getUserDirectory() +  "/Desktop/", new URL("http://lumfile.com/kw6pubwjipim/2510.part1.rar.html"));
 //        crawler.downloadMediaFiles(FileUtils.getUserDirectory() +  "/Desktop/", new URL("http://www.filereactor.com/x95kztrx3e7v/5217a.rar.html"));
         crawler.close();

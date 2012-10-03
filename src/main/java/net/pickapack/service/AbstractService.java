@@ -281,7 +281,7 @@ public class AbstractService implements Service {
     @SuppressWarnings("unchecked")
     protected <ModelElementT extends ModelElement> Dao<ModelElementT, Long> createDao(Class<ModelElementT> clz) {
         try {
-            return DaoManager.createDao(this.connectionSource, clz);
+            return (Dao<ModelElementT, Long>) DaoManager.createDao(this.connectionSource, clz);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

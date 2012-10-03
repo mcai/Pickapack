@@ -22,9 +22,9 @@ public class EmailInterceptionServiceImpl extends AbstractService implements Ema
     public EmailInterceptionServiceImpl() {
         super(ServiceManager.getDatabaseUrl(), Arrays.<Class<? extends ModelElement>>asList(EmailInterceptionTask.class, ReceivedEmailEvent.class, SentEmailEvent.class));
 
-        this.emailInterceptionTasks = createDao(EmailInterceptionTask.class);
-        this.receivedEmailEvents = createDao(ReceivedEmailEvent.class);
-        this.sentEmailEvents = createDao(SentEmailEvent.class);
+        this.emailInterceptionTasks = (Dao<EmailInterceptionTask, Long>) createDao(EmailInterceptionTask.class);
+        this.receivedEmailEvents = (Dao<ReceivedEmailEvent, Long>) createDao(ReceivedEmailEvent.class);
+        this.sentEmailEvents = (Dao<SentEmailEvent, Long>) createDao(SentEmailEvent.class);
     }
 
     @Override

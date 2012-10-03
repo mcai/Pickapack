@@ -20,11 +20,11 @@ public class ForumSpriteServiceImpl extends AbstractService implements ForumSpri
     public ForumSpriteServiceImpl(){
         super(ServiceManager.DATABASE_URL, Arrays.<Class<? extends ModelElement>>asList(ForumUser.class, Forum.class, ForumThread.class, ForumThreadMessage.class, ForumUserPermission.class));
 
-        this.forumUsers = (Dao<ForumUser, Long>) createDao(ForumUser.class);
-        this.forums = (Dao<Forum, Long>) createDao(Forum.class);
-        this.forumThreads = (Dao<ForumThread, Long>) createDao(ForumThread.class);
-        this.forumThreadMessages = (Dao<ForumThreadMessage, Long>) createDao(ForumThreadMessage.class);
-        this.forumUserPermissions = (Dao<ForumUserPermission, Long>) createDao(ForumUserPermission.class);
+        this.forumUsers = createDao(ForumUser.class);
+        this.forums = createDao(Forum.class);
+        this.forumThreads = createDao(ForumThread.class);
+        this.forumThreadMessages = createDao(ForumThreadMessage.class);
+        this.forumUserPermissions = createDao(ForumUserPermission.class);
     }
 
     @Override

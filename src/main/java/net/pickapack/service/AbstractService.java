@@ -278,7 +278,8 @@ public class AbstractService implements Service {
         this.blockingEventDispatcher.dispatch(new BeforeItemsRemovedEvent(clz, idAndOldParentIds));
     }
 
-    protected <ModelElementT extends ModelElement, D extends Dao<ModelElementT, Long>> D createDao(Class<ModelElementT> clz) {
+    @SuppressWarnings("unchecked")
+    protected <ModelElementT extends ModelElement> Dao<ModelElementT, Long> createDao(Class<ModelElementT> clz) {
         try {
             return DaoManager.createDao(this.connectionSource, clz);
         } catch (SQLException e) {

@@ -5,15 +5,14 @@ import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.html.DomAttr;
 import com.gargoylesoftware.htmlunit.html.DomText;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import de.l3s.boilerpipe.BoilerpipeProcessingException;
-import de.l3s.boilerpipe.extractors.ArticleExtractor;
 import net.pickapack.dateTime.DateHelper;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+//import de.l3s.boilerpipe.BoilerpipeProcessingException;
+//import de.l3s.boilerpipe.extractors.ArticleExtractor;
 
 public abstract class ACMTechNewsCrawler extends WebCrawler {
     private boolean latestOnly;
@@ -71,18 +70,19 @@ public abstract class ACMTechNewsCrawler extends WebCrawler {
 
                             String fullText = "";
 
-                            try {
-                                HtmlPage pageFullText = this.getWebClient().getPage(fullTextUrl);
-                                fullText = ArticleExtractor.INSTANCE.getText(pageFullText.asXml());
-                                System.out.printf("[%s]   body: %s%n", DateHelper.toString(new Date()), fullText);
-                                this.visitPage(page, pageFullText, null);
-                            } catch (BoilerpipeProcessingException e) {
-                                recordException(e);
-                            } catch (MalformedURLException e) {
-                                recordException(e);
-                            } catch (IOException e) {
-                                recordException(e);
-                            }
+                            //TODO: commented for the moment
+//                            try {
+//                                HtmlPage pageFullText = this.getWebClient().getPage(fullTextUrl);
+//                                fullText = ArticleExtractor.INSTANCE.getText(pageFullText.asXml());
+//                                System.out.printf("[%s]   body: %s%n", DateHelper.toString(new Date()), fullText);
+//                                this.visitPage(page, pageFullText, null);
+//                            } catch (BoilerpipeProcessingException e) {
+//                                recordException(e);
+//                            } catch (MalformedURLException e) {
+//                                recordException(e);
+//                            } catch (IOException e) {
+//                                recordException(e);
+//                            }
                             this.onNewsItemFound(fullTextUrl, title, summary, author, fullText);
                         }
                     }

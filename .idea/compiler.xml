@@ -25,6 +25,9 @@
         <module name="pickapack" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="pickapack" target="1.6" />
+    </bytecodeTargetLevel>
   </component>
 </project>
 

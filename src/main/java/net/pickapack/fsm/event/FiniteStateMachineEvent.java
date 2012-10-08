@@ -20,5 +20,9 @@ package net.pickapack.fsm.event;
 
 import net.pickapack.event.BlockingEvent;
 
+/**
+ *
+ * @author Min Cai
+ */
 public abstract class FiniteStateMachineEvent implements BlockingEvent {
 }

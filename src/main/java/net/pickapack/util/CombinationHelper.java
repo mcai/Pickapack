@@ -5,6 +5,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ * @param <T>
+ */
 public class CombinationHelper<T> {
     private class Pair {
         private int currentValue = 1;
@@ -20,6 +25,10 @@ public class CombinationHelper<T> {
     private List<Pair> currentCombination = new LinkedList<Pair>();
     private boolean hasMoreCombinations = true;
 
+    /**
+     *
+     * @param uncombinedList
+     */
     public CombinationHelper(List<List<T>> uncombinedList) {
         this.uncombinedList = uncombinedList;
         for (List<T> currentSubList : this.uncombinedList) {
@@ -57,6 +66,12 @@ public class CombinationHelper<T> {
         return result;
     }
 
+    /**
+     *
+     * @param <T>
+     * @param lists
+     * @return
+     */
     public static <T> List<List<T>> getCombinations(List<List<T>> lists) {
         List<List<T>> combinations = new ArrayList<List<T>>();
 

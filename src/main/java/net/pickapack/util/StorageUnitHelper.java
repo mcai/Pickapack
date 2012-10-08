@@ -2,7 +2,16 @@ package net.pickapack.util;
 
 import org.apache.commons.io.FileUtils;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class StorageUnitHelper {
+    /**
+     *
+     * @param displaySize
+     * @return
+     */
     public static long displaySizeToByteCount(String displaySize) {
         String[] parts = displaySize.split(" ");
         if (parts.length == 2) {

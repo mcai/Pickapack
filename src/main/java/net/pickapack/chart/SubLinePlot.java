@@ -21,19 +21,35 @@ package net.pickapack.chart;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class SubLinePlot {
     private String titleY;
     private List<SubLinePlotLine> lines;
 
+    /**
+     *
+     * @param titleY
+     */
     public SubLinePlot(String titleY) {
         this.titleY = titleY;
         this.lines = new ArrayList<SubLinePlotLine>();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTitleY() {
         return titleY;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<SubLinePlotLine> getLines() {
         return lines;
     }

@@ -8,6 +8,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class HotmailHelper {
     private static final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
     private static final String POP3_HOST = "pop3.live.com";
@@ -30,6 +34,13 @@ public class HotmailHelper {
         return Session.getInstance(pop3Props, null);
     }
 
+    /**
+     *
+     * @param email
+     * @param emailPassword
+     * @return
+     * @throws MessagingException
+     */
     public static Store connect(String email, String emailPassword) throws MessagingException {
         Session session = getSession();
 
@@ -39,6 +50,14 @@ public class HotmailHelper {
         return store;
     }
 
+    /**
+     *
+     * @param from
+     * @param to
+     * @param subject
+     * @param body
+     * @throws MessagingException
+     */
     public static void sendEmail(String from, String to, String subject, String body) throws MessagingException {
         Session session = getSession();
         Message message = new MimeMessage(session);
@@ -57,6 +76,11 @@ public class HotmailHelper {
         smtpTransport.sendMessage(message, message.getAllRecipients());
     }
     
+    /**
+     *
+     * @param args
+     * @throws MessagingException
+     */
     public static void main(String[] args) throws MessagingException {
         sendEmail("afrhaqmz676@hotmail.com", "min.cai.china@gmail.com", "Hello", "World");
     }

@@ -20,15 +20,28 @@ package net.pickapack.im.channel;
 
 import net.pickapack.im.sink.MessageSink;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class BasicMessageChannel extends AbstractMessageChannel {
     private boolean open;
     private String userId;
 
+    /**
+     *
+     * @param userId
+     * @param sink
+     * @param checkReceivedMessagePeriod
+     */
     public BasicMessageChannel(String userId, MessageSink sink, long checkReceivedMessagePeriod) {
         super(sink, checkReceivedMessagePeriod);
         this.userId = userId;
     }
 
+    /**
+     *
+     */
     @Override
     public void open() {
         super.open();
@@ -45,6 +58,11 @@ public class BasicMessageChannel extends AbstractMessageChannel {
         threadReceive.start();
     }
 
+    /**
+     *
+     * @param to
+     * @param obj
+     */
     @Override
     public void send(String to, Object obj) {
         if (this.open) {
@@ -64,15 +82,26 @@ public class BasicMessageChannel extends AbstractMessageChannel {
         }
     }
 
+    /**
+     *
+     */
     @Override
     public void close() {
         super.close();
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isOpen() {
         return open;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getUserId() {
         return userId;
     }

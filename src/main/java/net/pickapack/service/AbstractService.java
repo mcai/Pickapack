@@ -18,10 +18,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class AbstractService implements Service {
     private JdbcPooledConnectionSource connectionSource;
     private BlockingEventDispatcher<ServiceEvent> blockingEventDispatcher;
 
+    /**
+     *
+     * @param databaseUrl
+     * @param dataClasses
+     */
     public AbstractService(String databaseUrl, List<Class<? extends ModelElement>> dataClasses) {
         try {
             this.connectionSource = new JdbcPooledConnectionSource(databaseUrl);
@@ -38,6 +47,9 @@ public class AbstractService implements Service {
         this.blockingEventDispatcher = new BlockingEventDispatcher<ServiceEvent>();
     }
 
+    /**
+     *
+     */
     public void stop() {
         try {
             this.connectionSource.close();
@@ -46,6 +58,12 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @return
+     */
     public <TItem extends ModelElement> List<TItem> getAllItems(Dao<TItem, Long> dao) {
         try {
             return dao.queryForAll();
@@ -54,6 +72,14 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param first
+     * @param count
+     * @return
+     */
     public <TItem extends ModelElement> List<TItem> getAllItems(Dao<TItem, Long> dao, long first, long count) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().offset(first).limit(count).prepare();
@@ -63,6 +89,12 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @return
+     */
     public <TItem extends ModelElement> long getNumAllItems(Dao<TItem, Long> dao) {
         try {
             return dao.countOf();
@@ -71,6 +103,14 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param <TItemDirectory>
+     * @param dao
+     * @param parent
+     * @return
+     */
     public <TItem extends ModelElement, TItemDirectory extends ModelElement> List<TItem> getItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().where().eq("parentId", parent.getId()).prepare();
@@ -80,6 +120,16 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param <TItemDirectory>
+     * @param dao
+     * @param parent
+     * @param first
+     * @param count
+     * @return
+     */
     public <TItem extends ModelElement, TItemDirectory extends ModelElement> List<TItem> getItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent, long first, long count) {
         try {
             QueryBuilder<TItem, Long> queryBuilder = dao.queryBuilder();
@@ -92,6 +142,14 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param <TItemDirectory>
+     * @param dao
+     * @param parent
+     * @return
+     */
     public <TItem extends ModelElement, TItemDirectory extends ModelElement> long getNumItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().where().eq("parentId", parent.getId()).prepare();
@@ -101,6 +159,13 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param id
+     * @return
+     */
     public <TItem extends ModelElement> TItem getItemById(Dao<TItem, Long> dao, long id) {
         try {
             return dao.queryForId(id);
@@ -109,6 +174,13 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param title
+     * @return
+     */
     public <TItem extends ModelElement> TItem getFirstItemByTitle(Dao<TItem, Long> dao, String title) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().where().eq("title", title).prepare();
@@ -118,6 +190,14 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param <TItemDirectory>
+     * @param dao
+     * @param parent
+     * @return
+     */
     public <TItem extends ModelElement, TItemDirectory extends ModelElement> TItem getFirstItemByParent(Dao<TItem, Long> dao, TItemDirectory parent) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().where().eq("parentId", parent.getId()).and().prepare();
@@ -127,6 +207,13 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param title
+     * @return
+     */
     public <TItem extends ModelElement> TItem getLatestItemByTitle(Dao<TItem, Long> dao, String title) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().orderBy("createTime", false).where().eq("title", title).prepare();
@@ -136,6 +223,13 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param title
+     * @return
+     */
     public <TItem extends ModelElement> List<TItem> getItemsByTitle(Dao<TItem, Long> dao, String title) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().where().eq("title", title).prepare();
@@ -145,6 +239,15 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param title
+     * @param first
+     * @param count
+     * @return
+     */
     public <TItem extends ModelElement> List<TItem> getItemsByTitle(Dao<TItem, Long> dao, String title, long first, long count) {
         try {
             QueryBuilder<TItem,Long> queryBuilder = dao.queryBuilder();
@@ -156,6 +259,13 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param title
+     * @return
+     */
     public <TItem extends ModelElement> long getNumItemsByTitle(Dao<TItem, Long> dao, String title) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().where().eq("title", title).prepare();
@@ -165,6 +275,12 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @return
+     */
     public <TItem extends ModelElement> TItem getFirstItem(Dao<TItem, Long> dao) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().prepare();
@@ -174,6 +290,14 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param clz
+     * @param item
+     * @return
+     */
     public <TItem extends ModelElement> long addItem(Dao<TItem, Long> dao, Class<TItem> clz, TItem item) {
         List<TItem> items = new ArrayList<TItem>();
         items.add(item);
@@ -181,6 +305,13 @@ public class AbstractService implements Service {
         return item.getId();
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param clz
+     * @param items
+     */
     public <TItem extends ModelElement> void addItems(Dao<TItem, Long> dao, Class<TItem> clz, List<TItem> items) {
         try {
             List<Long> ids = new ArrayList<Long>();
@@ -196,12 +327,26 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param clz
+     * @param id
+     */
     public <TItem extends ModelElement> void removeItemById(Dao<TItem, Long> dao, Class<TItem> clz, long id) {
         List<Long> ids = new ArrayList<Long>();
         ids.add(id);
         removeItemsByIds(dao, clz, ids);
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param clz
+     * @param items
+     */
     public <TItem extends ModelElement> void removeItems(Dao<TItem, Long> dao, Class<TItem> clz, List<TItem> items) {
         List<Long> ids = new ArrayList<Long>();
         for (TItem item : items) {
@@ -210,6 +355,13 @@ public class AbstractService implements Service {
         removeItemsByIds(dao, clz, ids);
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param clz
+     * @param ids
+     */
     public <TItem extends ModelElement> void removeItemsByIds(Dao<TItem, Long> dao, Class<TItem> clz, List<Long> ids) {
         try {
             List<Pair<Long, Long>> idAndOldParentIds = new ArrayList<Pair<Long, Long>>();
@@ -228,6 +380,12 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param clz
+     */
     public <TItem extends ModelElement> void clearItems(Dao<TItem, Long> dao, Class<TItem> clz) {
         try {
             List<Pair<Long, Long>> idAndOldParentIds = new ArrayList<Pair<Long, Long>>();
@@ -244,12 +402,26 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param clz
+     * @param item
+     */
     public <TItem extends ModelElement> void updateItem(Dao<TItem, Long> dao, Class<TItem> clz, TItem item) {
         List<TItem> items = new ArrayList<TItem>();
         items.add(item);
         updateItems(dao, clz, items);
     }
 
+    /**
+     *
+     * @param <TItem>
+     * @param dao
+     * @param clz
+     * @param items
+     */
     public <TItem extends ModelElement> void updateItems(Dao<TItem, Long> dao, Class<TItem> clz, List<TItem> items) {
         try {
             List<Pair<Long, Long>> idAndOldParentIds = new ArrayList<Pair<Long, Long>>();
@@ -278,6 +450,13 @@ public class AbstractService implements Service {
         this.blockingEventDispatcher.dispatch(new BeforeItemsRemovedEvent(clz, idAndOldParentIds));
     }
 
+    /**
+     *
+     * @param <ModelElementT>
+     * @param <D>
+     * @param clz
+     * @return
+     */
     protected <ModelElementT extends ModelElement, D extends Dao<ModelElementT, Long>> D createDao(Class<ModelElementT> clz) {
         try {
             return DaoManager.createDao(this.connectionSource, clz);
@@ -286,10 +465,18 @@ public class AbstractService implements Service {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     protected JdbcPooledConnectionSource getConnectionSource() {
         return connectionSource;
     }
 
+    /**
+     *
+     * @return
+     */
     public BlockingEventDispatcher<ServiceEvent> getBlockingEventDispatcher() {
         return blockingEventDispatcher;
     }

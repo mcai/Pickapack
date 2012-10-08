@@ -21,19 +21,35 @@ package net.pickapack.im.sink;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class CloudUser {
     private String id;
     private List<InstantMessage> instantMessages;
 
+    /**
+     *
+     * @param id
+     */
     public CloudUser(String id) {
         this.id = id;
         this.instantMessages = new ArrayList<InstantMessage>();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<InstantMessage> getInstantMessages() {
         return instantMessages;
     }

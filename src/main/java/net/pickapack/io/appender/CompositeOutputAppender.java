@@ -18,19 +18,37 @@
  ******************************************************************************/
 package net.pickapack.io.appender;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class CompositeOutputAppender implements OutputAppender {
     private OutputAppender[] appenders;
 
+    /**
+     *
+     * @param appenders
+     */
     public CompositeOutputAppender(OutputAppender... appenders) {
         this.appenders = appenders;
     }
 
+    /**
+     *
+     * @param currentCycle
+     * @param text
+     */
     public void appendStdOutLine(long currentCycle, String text) {
         for (OutputAppender appender : this.appenders) {
             appender.appendStdOutLine(currentCycle, text);
         }
     }
 
+    /**
+     *
+     * @param currentCycle
+     * @param text
+     */
     public void appendStdErrLine(long currentCycle, String text) {
         for (OutputAppender appender : this.appenders) {
             appender.appendStdErrLine(currentCycle, text);

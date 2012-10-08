@@ -25,17 +25,33 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ * @param <SampleT>
+ */
 public class FrequencyCalculator<SampleT extends Comparable<SampleT>> {
     private List<SampleT> samples;
 
+    /**
+     *
+     */
     public FrequencyCalculator() {
         this.samples = new ArrayList<SampleT>();
     }
 
+    /**
+     *
+     * @param sample
+     */
     public void addSample(SampleT sample) {
         this.samples.add(sample);
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Triple<SampleT, Integer, Float>> getFrequencies() {
         List<Triple<SampleT, Integer, Float>> frequencies = new ArrayList<Triple<SampleT, Integer, Float>>();
 

@@ -20,6 +20,16 @@ package net.pickapack.action;
 
 import java.io.Serializable;
 
+/**
+ *
+ * @author Min Cai
+ * @param <TResult>
+ */
 public interface FunctionX<TResult> extends Serializable {
+    /**
+     *
+     * @param params
+     * @return
+     */
     TResult apply(Object... params);
 }

@@ -20,7 +20,19 @@ package net.pickapack.tree;
 
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ */
 public interface Node {
+    /**
+     *
+     * @return
+     */
     Object getValue();
+    /**
+     *
+     * @return
+     */
     List<? extends Node> getChildren();
 }

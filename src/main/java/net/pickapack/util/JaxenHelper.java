@@ -11,7 +11,18 @@ import java.util.Map;
 
 import static ch.lambdaj.Lambda.convert;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class JaxenHelper {
+    /**
+     *
+     * @param <T>
+     * @param obj
+     * @param expr
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public static <T> List<T> selectNodes(Object obj, String expr) {
         try {
@@ -27,6 +38,13 @@ public class JaxenHelper {
         }
     }
 
+    /**
+     *
+     * @param <T>
+     * @param obj
+     * @param expr
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public static <T> T selectSingleNode(Object obj, String expr) {
         try {
@@ -37,6 +55,12 @@ public class JaxenHelper {
         }
     }
 
+    /**
+     *
+     * @param stats
+     * @param obj
+     * @param expr
+     */
     public static void dumpValueFromXPath(Map<String, String> stats, Object obj, String expr) {
         Object resultObj = selectSingleNode(obj, expr);
         if (resultObj != null) {
@@ -54,6 +78,12 @@ public class JaxenHelper {
         }
     }
 
+    /**
+     *
+     * @param stats
+     * @param obj
+     * @param expr
+     */
     public static void dumpValuesFromXPath(Map<String, String> stats, Object obj, String expr) {
         List<Object> result = selectNodes(obj, expr);
         if (result != null) {

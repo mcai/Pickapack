@@ -17,7 +17,17 @@ import org.apache.http.params.BasicHttpParams;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class HttpHelper {
+    /**
+     *
+     * @param bytes
+     * @param bytesRead
+     * @return
+     */
     public static HttpRequest createRequest(final byte[] bytes, final int bytesRead) {
         try {
             SessionInputBuffer inputBuffer = new AbstractSessionInputBuffer() {
@@ -45,6 +55,12 @@ public class HttpHelper {
         }
     }
 
+    /**
+     *
+     * @param bytes
+     * @param bytesRead
+     * @return
+     */
     public static HttpResponse createResponse(final byte[] bytes, final int bytesRead) {
         try {
             SessionInputBuffer inputBuffer = new AbstractSessionInputBuffer() {

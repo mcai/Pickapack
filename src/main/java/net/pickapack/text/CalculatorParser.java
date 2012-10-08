@@ -8,8 +8,16 @@ import org.parboiled.parserunners.ReportingParseRunner;
 import org.parboiled.support.ParseTreeUtils;
 import org.parboiled.support.ParsingResult;
 
+/**
+ *
+ * @author Min Cai
+ */
 @BuildParseTree
 public class CalculatorParser extends BaseParser<Object> {
+    /**
+     *
+     * @return
+     */
     public Rule Expression() {
         return Sequence(
                 Term(),
@@ -17,6 +25,10 @@ public class CalculatorParser extends BaseParser<Object> {
         );
     }
 
+    /**
+     *
+     * @return
+     */
     public Rule Term() {
         return Sequence(
                 Factor(),
@@ -24,6 +36,10 @@ public class CalculatorParser extends BaseParser<Object> {
         );
     }
 
+    /**
+     *
+     * @return
+     */
     public Rule Factor() {
         return FirstOf(
                 Number(),
@@ -31,10 +47,18 @@ public class CalculatorParser extends BaseParser<Object> {
         );
     }
 
+    /**
+     *
+     * @return
+     */
     public Rule Number() {
         return OneOrMore(CharRange('0', '9'));
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         String input = "1+2";
         CalculatorParser parser = Parboiled.createParser(CalculatorParser.class);

@@ -18,15 +18,43 @@
  ******************************************************************************/
 package net.pickapack;
 
+/**
+ *
+ * @author Min Cai
+ */
 public enum StorageUnit {
+    /**
+     *
+     */
     BYTE("B", 1L),
+    /**
+     *
+     */
     KILOBYTE("KB", 1L << 10),
+    /**
+     *
+     */
     MEGABYTE("MB", 1L << 20),
+    /**
+     *
+     */
     GIGABYTE("GB", 1L << 30),
+    /**
+     *
+     */
     TERABYTE("TB", 1L << 40),
+    /**
+     *
+     */
     PETABYTE("PB", 1L << 50),
+    /**
+     *
+     */
     EXABYTE("EB", 1L << 60);
 
+    /**
+     *
+     */
     public static final StorageUnit BASE = BYTE;
 
     private final String symbol;
@@ -37,6 +65,11 @@ public enum StorageUnit {
         this.divider = divider;
     }
 
+    /**
+     *
+     * @param number
+     * @return
+     */
     public static StorageUnit of(final long number) {
         final long n = number > 0 ? -number : number;
         if (n > -(1L << 10)) {
@@ -56,10 +89,20 @@ public enum StorageUnit {
         }
     }
 
+    /**
+     *
+     * @param number
+     * @return
+     */
     public String format(long number) {
         return nf.format((double) number / divider) + " " + symbol;
     }
 
+    /**
+     *
+     * @param number
+     * @return
+     */
     public static String toString(long number) {
         return of(number).format(number);
     }

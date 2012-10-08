@@ -18,14 +18,37 @@
  ******************************************************************************/
 package net.pickapack.im.channel;
 
+/**
+ *
+ * @author Min Cai
+ */
 public interface MessageChannel {
+    /**
+     *
+     */
     void open();
 
+    /**
+     *
+     * @param to
+     * @param obj
+     */
     void send(String to, Object obj);
 
+    /**
+     *
+     */
     void close();
 
+    /**
+     *
+     * @param listener
+     */
     void addMessagingListener(MessagingListener listener);
 
+    /**
+     *
+     * @param listener
+     */
     void removeMessagingListener(MessagingListener listener);
 }

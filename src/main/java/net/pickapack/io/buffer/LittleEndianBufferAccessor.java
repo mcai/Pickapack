@@ -20,7 +20,18 @@ package net.pickapack.io.buffer;
 
 import java.io.IOException;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class LittleEndianBufferAccessor extends BufferAccessor {
+    /**
+     *
+     * @param buffer
+     * @param position
+     * @return
+     * @throws IOException
+     */
     public long getU4(Buffer buffer, long position) throws IOException {
         byte[] buf = new byte[4];
         buffer.read(position, buf, 4);
@@ -34,6 +45,13 @@ public class LittleEndianBufferAccessor extends BufferAccessor {
                 0x00000000ffffffffL);
     }
 
+    /**
+     *
+     * @param buffer
+     * @param position
+     * @return
+     * @throws IOException
+     */
     public int getU2(Buffer buffer, long position) throws IOException {
         byte[] buf = new byte[2];
         buffer.read(position, buf, 2);

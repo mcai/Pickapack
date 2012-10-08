@@ -18,6 +18,10 @@
  ******************************************************************************/
 package net.pickapack.math;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class SaturatingCounter {
     private int minValue;
     private int threshold;
@@ -25,6 +29,13 @@ public class SaturatingCounter {
     private int value;
     private int initialValue;
 
+    /**
+     *
+     * @param minValue
+     * @param threshold
+     * @param maxValue
+     * @param initialValue
+     */
     public SaturatingCounter(int minValue, int threshold, int maxValue, int initialValue) {
         this.minValue = minValue;
         this.threshold = threshold;
@@ -33,10 +44,17 @@ public class SaturatingCounter {
         this.initialValue = initialValue;
     }
 
+    /**
+     *
+     */
     public void reset() {
         this.value = this.initialValue;
     }
 
+    /**
+     *
+     * @param direction
+     */
     public void update(boolean direction) {
         if (direction) {
             this.inc();
@@ -57,26 +75,50 @@ public class SaturatingCounter {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isTaken() {
         return this.getValue() >= this.threshold;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getMinValue() {
         return minValue;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getThreshold() {
         return threshold;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getMaxValue() {
         return maxValue;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getInitialValue() {
         return initialValue;
     }

@@ -18,27 +18,54 @@
  ******************************************************************************/
 package net.pickapack;
 
+/**
+ *
+ * @author Min Cai
+ * @param <K>
+ * @param <T>
+ */
 public class Pair<K, T> {
     private K first;
     private T second;
 
+    /**
+     *
+     * @param first
+     * @param second
+     */
     public Pair(K first, T second) {
         this.first = first;
         this.second = second;
     }
 
+    /**
+     *
+     * @return
+     */
     public K getFirst() {
         return first;
     }
 
+    /**
+     *
+     * @return
+     */
     public T getSecond() {
         return second;
     }
 
+    /**
+     *
+     * @param first
+     */
     public void setFirst(K first) {
         this.first = first;
     }
 
+    /**
+     *
+     * @param second
+     */
     public void setSecond(T second) {
         this.second = second;
     }

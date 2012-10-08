@@ -24,16 +24,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class CycleAccurateEventQueue {
     private long currentCycle;
     private PriorityBlockingQueue<CycleAccurateEvent> events;
     private List<Action> perCycleEvents;
 
+    /**
+     *
+     */
     public CycleAccurateEventQueue() {
         this.events = new PriorityBlockingQueue<CycleAccurateEvent>();
         this.perCycleEvents = new ArrayList<Action>();
     }
 
+    /**
+     *
+     */
     public void advanceOneCycle() {
         while (!this.events.isEmpty()) {
             CycleAccurateEvent event = this.events.peek();
@@ -53,6 +63,13 @@ public class CycleAccurateEventQueue {
         this.currentCycle++;
     }
 
+    /**
+     *
+     * @param sender
+     * @param action
+     * @param delay
+     * @return
+     */
     public CycleAccurateEventQueue schedule(Object sender, Action action, int delay) {
         this.schedule(new CycleAccurateEvent(this, sender, action, this.currentCycle + delay));
         return this;
@@ -63,6 +80,9 @@ public class CycleAccurateEventQueue {
         this.events.add(event);
     }
 
+    /**
+     *
+     */
     public void resetCurrentCycle() {
         for (CycleAccurateEvent event : this.events) {
             event.setWhen(event.getWhen() - this.currentCycle);
@@ -71,10 +91,18 @@ public class CycleAccurateEventQueue {
         this.currentCycle = 0;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getCurrentCycle() {
         return this.currentCycle;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<Action> getPerCycleEvents() {
         return perCycleEvents;
     }
@@ -84,5 +112,8 @@ public class CycleAccurateEventQueue {
         return String.format("CycleAccurateEventQueue{currentCycle=%d, events=%s}", currentCycle, events);
     }
 
+    /**
+     *
+     */
     public long currentId = 0;
 }

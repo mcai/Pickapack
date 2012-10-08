@@ -38,12 +38,25 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class LinePlotFrame extends ApplicationFrame {
+    /**
+     *
+     */
     public int numSubPlots;
     private List<TimeSeriesCollection> dataSets;
     private List<Map<SubLinePlotLine, Function<Double>>> dataSinks;
     private LinePlot linePlot;
 
+    /**
+     *
+     * @param linePlot
+     * @param width
+     * @param height
+     */
     public LinePlotFrame(LinePlot linePlot, int width, int height) {
         super(linePlot.getTitle());
         this.linePlot = linePlot;

@@ -21,13 +21,24 @@ package net.pickapack.io.file;
 import java.io.*;
 import java.util.Iterator;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class IterableBigTextFile implements Iterable<String> {
     private BufferedReader reader;
 
+    /**
+     *
+     * @param reader
+     */
     public IterableBigTextFile(Reader reader) {
         this.reader = new BufferedReader(reader);
     }
 
+    /**
+     *
+     */
     public void close() {
         try {
             reader.close();

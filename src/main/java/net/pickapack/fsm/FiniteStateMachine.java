@@ -20,8 +20,25 @@ package net.pickapack.fsm;
 
 import net.pickapack.Params;
 
+/**
+ *
+ * @author Min Cai
+ * @param <StateT>
+ * @param <ConditionT>
+ */
 public interface FiniteStateMachine<StateT, ConditionT> {
+    /**
+     *
+     * @return
+     */
     StateT getState();
 
+    /**
+     *
+     * @param sender
+     * @param condition
+     * @param params
+     * @param state
+     */
     void setState(Object sender, ConditionT condition, Params params, StateT state);
 }

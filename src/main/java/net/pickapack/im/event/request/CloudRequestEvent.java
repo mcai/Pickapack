@@ -20,5 +20,9 @@ package net.pickapack.im.event.request;
 
 import net.pickapack.im.event.CloudEvent;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class CloudRequestEvent extends CloudEvent {
 }

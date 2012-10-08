@@ -18,27 +18,54 @@
  ******************************************************************************/
 package net.pickapack.math;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class Quantizer {
     private int maxValue;
     private int quantum;
 
+    /**
+     *
+     * @param maxValue
+     * @param quantum
+     */
     public Quantizer(int maxValue, int quantum) {
         this.maxValue = maxValue;
         this.quantum = quantum;
     }
 
+    /**
+     *
+     * @param rawValue
+     * @return
+     */
     public int quantize(int rawValue) {
         return Math.min(rawValue / this.quantum, this.maxValue);
     }
 
+    /**
+     *
+     * @param value
+     * @return
+     */
     public int unQuantize(int value) {
         return value * this.quantum;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getMaxValue() {
         return maxValue;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getQuantum() {
         return quantum;
     }

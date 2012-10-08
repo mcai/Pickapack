@@ -31,7 +31,19 @@ import org.jfree.ui.ApplicationFrame;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ *
+ * @author Min Cai
+ * @param <ItemT>
+ */
 public class BarPlotFrame<ItemT> extends ApplicationFrame {
+    /**
+     *
+     * @param barPlot
+     * @param domainAxisLabel
+     * @param width
+     * @param height
+     */
     public BarPlotFrame(BarPlot<ItemT> barPlot, String domainAxisLabel, int width, int height) {
         super(barPlot.getTitle());
 

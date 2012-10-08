@@ -18,7 +18,16 @@
  ******************************************************************************/
 package net.pickapack;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class IntegerIntegerPair extends Pair<Integer, Integer> implements Comparable<IntegerIntegerPair> {
+    /**
+     *
+     * @param first
+     * @param second
+     */
     public IntegerIntegerPair(Integer first, Integer second) {
         super(first, second);
     }

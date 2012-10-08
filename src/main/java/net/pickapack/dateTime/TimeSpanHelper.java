@@ -18,11 +18,20 @@
  ******************************************************************************/
 package net.pickapack.dateTime;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class TimeSpanHelper {
     private static String zeroNumber(long in) {
         return (in < 10 ? "0" : "") + in;
     }
 
+    /**
+     *
+     * @param timespanInMilliseconds
+     * @return
+     */
     public static String toString(long timespanInMilliseconds) {
         long days = 0;
         long hours = 0;

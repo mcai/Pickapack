@@ -18,20 +18,40 @@
  ******************************************************************************/
 package net.pickapack;
 
+/**
+ *
+ * @author Min Cai
+ * @param <T>
+ */
 public class Reference<T> {
     private T value;
 
+    /**
+     *
+     */
     public Reference() {
     }
 
+    /**
+     *
+     * @param value
+     */
     public Reference(T value) {
         this.value = value;
     }
 
+    /**
+     *
+     * @return
+     */
     public T get() {
         return value;
     }
 
+    /**
+     *
+     * @param value
+     */
     public void set(T value) {
         this.value = value;
     }

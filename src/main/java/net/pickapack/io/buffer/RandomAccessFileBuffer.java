@@ -21,25 +21,51 @@ package net.pickapack.io.buffer;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class RandomAccessFileBuffer implements Buffer {
     private RandomAccessFile file;
 
+    /**
+     *
+     * @param file
+     */
     public RandomAccessFileBuffer(RandomAccessFile file) {
         this.file = file;
     }
 
+    /**
+     *
+     * @param position
+     * @param buf
+     * @param len
+     * @throws IOException
+     */
     public void read(long position, byte[] buf, int len)
             throws IOException {
         file.seek(position);
         file.read(buf, 0, len);
     }
 
+    /**
+     *
+     * @param position
+     * @param buf
+     * @param len
+     * @throws IOException
+     */
     public void write(long position, byte[] buf, int len)
             throws IOException {
         file.seek(position);
         file.read(buf, 0, len);
     }
 
+    /**
+     *
+     * @return
+     */
     public RandomAccessFile getFile() {
         return file;
     }

@@ -19,13 +19,29 @@ import java.io.IOException;
 import java.lang.Object;import java.lang.RuntimeException;import java.lang.String;import java.lang.SuppressWarnings;import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class XPathHelper {
     private static XPath xpath = XPathFactory.newInstance().newXPath();
 
+    /**
+     *
+     * @param obj
+     * @param xpathExpression
+     * @return
+     */
     public static Node getFirstByXPath(Object obj, String xpathExpression) {
         return evaluate(obj, xpathExpression, XPathConstants.NODE);
     }
 
+    /**
+     *
+     * @param obj
+     * @param xpathExpression
+     * @return
+     */
     public static List<Node> getByXPath(Object obj, String xpathExpression) {
         NodeList list1 = evaluate(obj, xpathExpression, XPathConstants.NODESET);
 
@@ -46,14 +62,39 @@ public class XPathHelper {
         }
     }
 
+    /**
+     *
+     * @param text
+     * @return
+     * @throws IOException
+     * @throws TransformerException
+     * @throws XPathExpressionException
+     */
     public static Document parse(String text) throws IOException, TransformerException, XPathExpressionException {
         return parse(text.getBytes("UTF-8"));
     }
 
+    /**
+     *
+     * @param data
+     * @return
+     * @throws IOException
+     * @throws TransformerException
+     * @throws XPathExpressionException
+     */
     public static Document parse(byte[] data) throws IOException, TransformerException, XPathExpressionException {
         return parse(data, HtmlCleaner.DEFAULT_CHARSET);
     }
 
+    /**
+     *
+     * @param data
+     * @param charset
+     * @return
+     * @throws IOException
+     * @throws TransformerException
+     * @throws XPathExpressionException
+     */
     public static Document parse(byte[] data, String charset) throws IOException, TransformerException, XPathExpressionException {
         HtmlCleaner cleaner = new HtmlCleaner();
         TagNode rootNode = cleaner.clean(new ByteArrayInputStream(data), charset);

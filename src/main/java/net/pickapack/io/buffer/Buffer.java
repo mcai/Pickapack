@@ -20,8 +20,26 @@ package net.pickapack.io.buffer;
 
 import java.io.IOException;
 
+/**
+ *
+ * @author Min Cai
+ */
 public interface Buffer {
+    /**
+     *
+     * @param position
+     * @param buf
+     * @param len
+     * @throws IOException
+     */
     public void read(long position, byte[] buf, int len) throws IOException;
 
+    /**
+     *
+     * @param position
+     * @param buf
+     * @param len
+     * @throws IOException
+     */
     public void write(long position, byte[] buf, int len) throws IOException;
 }

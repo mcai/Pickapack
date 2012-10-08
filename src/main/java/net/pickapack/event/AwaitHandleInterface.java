@@ -8,5 +8,8 @@ package net.pickapack.event;
  * To change this template use File | Settings | File Templates.
  */
 public interface AwaitHandleInterface {
+    /**
+     *
+     */
     void complete();
 }

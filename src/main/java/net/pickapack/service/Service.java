@@ -5,8 +5,19 @@ import net.pickapack.event.BlockingEventDispatcher;
 
 import java.io.Serializable;
 
+/**
+ *
+ * @author Min Cai
+ */
 public interface Service extends Serializable {
+    /**
+     *
+     */
     void stop();
+    /**
+     *
+     * @return
+     */
     BlockingEventDispatcher<ServiceEvent> getBlockingEventDispatcher();
 }
 

@@ -20,25 +20,48 @@ package net.pickapack.chart;
 
 import net.pickapack.action.Function1;
 
+/**
+ *
+ * @author Min Cai
+ * @param <ItemT>
+ */
 public class SubBarPlot<ItemT> {
     private String title;
     private Function1<ItemT, Double> getValueCallback;
     private Function1<ItemT, String> getTitleCallback;
 
+    /**
+     *
+     * @param title
+     * @param getValueCallback
+     * @param getTitleCallback
+     */
     public SubBarPlot(String title, Function1<ItemT, Double> getValueCallback, Function1<ItemT, String> getTitleCallback) {
         this.title = title;
         this.getValueCallback = getValueCallback;
         this.getTitleCallback = getTitleCallback;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     *
+     * @return
+     */
     public Function1<ItemT, Double> getGetValueCallback() {
         return getValueCallback;
     }
 
+    /**
+     *
+     * @return
+     */
     public Function1<ItemT, String> getGetTitleCallback() {
         return getTitleCallback;
     }

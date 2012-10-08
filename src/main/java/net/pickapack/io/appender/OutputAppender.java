@@ -20,8 +20,22 @@ package net.pickapack.io.appender;
 
 import java.io.Serializable;
 
+/**
+ *
+ * @author Min Cai
+ */
 public interface OutputAppender extends Serializable {
+    /**
+     *
+     * @param currentCycle
+     * @param text
+     */
     void appendStdOutLine(long currentCycle, String text);
 
+    /**
+     *
+     * @param currentCycle
+     * @param text
+     */
     void appendStdErrLine(long currentCycle, String text);
 }

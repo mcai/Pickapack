@@ -23,6 +23,11 @@ import net.pickapack.action.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ * @param <ItemT>
+ */
 public class BarPlot<ItemT> {
     private String title;
     private String titleY;
@@ -31,6 +36,13 @@ public class BarPlot<ItemT> {
     private List<ItemT> items;
     private List<SubBarPlot<ItemT>> subBarPlots;
 
+    /**
+     *
+     * @param title
+     * @param titleY
+     * @param pred
+     * @param items
+     */
     public BarPlot(String title, String titleY, Predicate<ItemT> pred, List<ItemT> items) {
         this.title = title;
         this.titleY = titleY;
@@ -39,30 +51,58 @@ public class BarPlot<ItemT> {
         this.subBarPlots = new ArrayList<SubBarPlot<ItemT>>();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTitleY() {
         return titleY;
     }
 
+    /**
+     *
+     * @param stacked
+     */
     public void setStacked(boolean stacked) {
         this.stacked = stacked;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isStacked() {
         return stacked;
     }
 
+    /**
+     *
+     * @return
+     */
     public Predicate<ItemT> getPred() {
         return pred;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<ItemT> getItems() {
         return items;
     }
 
+    /**
+     *
+     * @return
+     */
     public List<SubBarPlot<ItemT>> getSubBarPlots() {
         return subBarPlots;
     }

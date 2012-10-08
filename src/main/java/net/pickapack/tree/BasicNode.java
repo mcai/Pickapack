@@ -21,25 +21,45 @@ package net.pickapack.tree;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class BasicNode implements Node {
     private Object value;
     private List<Node> children;
 
+    /**
+     *
+     * @param value
+     */
     public BasicNode(Object value) {
         this.value = value;
         this.children = new ArrayList<Node>();
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Object getValue() {
         return value;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public List<Node> getChildren() {
         return children;
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         BasicNode node0 = new BasicNode(0);
         BasicNode node1 = new BasicNode(1);

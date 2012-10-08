@@ -20,10 +20,24 @@ package net.pickapack.net.proxy;
 
 import java.util.Properties;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class ProxyHelper {
+    /**
+     *
+     */
     public static final String PROXY_IP = "localhost";
+    /**
+     *
+     */
     public static final int PROXY_PORT = 8888;
 
+    /**
+     *
+     * @param useLocalProxy
+     */
     public static void setupProxy(boolean useLocalProxy) {
         if (useLocalProxy) {
             Properties props = System.getProperties();

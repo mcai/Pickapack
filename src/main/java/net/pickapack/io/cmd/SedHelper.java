@@ -20,11 +20,30 @@ package net.pickapack.io.cmd;
 
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class SedHelper {
+    /**
+     *
+     * @param inputFileName
+     * @param outputFileName
+     * @param oldStuff
+     * @param newStuff
+     * @return
+     */
     public static List<String> sed(String inputFileName, String outputFileName, String oldStuff, String newStuff) {
         return CommandLineHelper.invokeShellCommandAndGetResult("sed -e 's/" + oldStuff + "/" + newStuff + "/g' " + inputFileName + " > " + outputFileName);
     }
 
+    /**
+     *
+     * @param fileName
+     * @param oldStuff
+     * @param newStuff
+     * @return
+     */
     public static List<String> sedInPlace(String fileName, String oldStuff, String newStuff) {
         return CommandLineHelper.invokeShellCommandAndGetResult("sed -i -e 's/^" + oldStuff + ".*/" + newStuff + "/g' " + fileName);
     }

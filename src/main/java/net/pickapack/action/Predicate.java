@@ -20,6 +20,16 @@ package net.pickapack.action;
 
 import java.io.Serializable;
 
+/**
+ *
+ * @author Min Cai
+ * @param <T>
+ */
 public interface Predicate<T> extends Serializable {
+    /**
+     *
+     * @param param
+     * @return
+     */
     boolean apply(T param);
 }

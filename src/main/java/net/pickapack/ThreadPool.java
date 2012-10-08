@@ -23,15 +23,26 @@ import net.pickapack.io.cmd.CommandLineHelper;
 import java.util.LinkedList;
 import java.util.Random;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class ThreadPool {
     private BlockingQueue queue = new BlockingQueue();
     private boolean closed = true;
     private int poolSize;
 
+    /**
+     *
+     * @param poolSize
+     */
     public ThreadPool(int poolSize) {
         this.poolSize = poolSize;
     }
 
+    /**
+     *
+     */
     public synchronized void open() {
         if (!closed) {
             throw new IllegalStateException("Pool already started.");
@@ -42,6 +53,10 @@ public class ThreadPool {
         }
     }
 
+    /**
+     *
+     * @param job
+     */
     public synchronized void execute(Runnable job) {
         if (closed) {
             throw new PoolClosedException();
@@ -65,11 +80,18 @@ public class ThreadPool {
         }
     }
 
+    /**
+     *
+     */
     public void close() {
         closed = true;
         queue.close();
     }
 
+    /**
+     *
+     * @return
+     */
     public int getPoolSize() {
         return poolSize;
     }
@@ -121,12 +143,19 @@ public class ThreadPool {
         }
     }
 
+    /**
+     *
+     */
     public class ClosedException extends RuntimeException {
         ClosedException() {
             super("Queue closed.");
         }
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         System.out.println("Total memory: " + CommandLineHelper.invokeShellCommandAndGetResult("cat /proc/meminfo | grep MemTotal").get(0).split("\\s+")[1] + "KB");
         System.out.println("Free memory: " + CommandLineHelper.invokeShellCommandAndGetResult("cat /proc/meminfo | grep MemFree").get(0).split("\\s+")[1] + "KB");

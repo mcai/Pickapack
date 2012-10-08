@@ -18,6 +18,15 @@
  ******************************************************************************/
 package net.pickapack.im.channel;
 
+/**
+ *
+ * @author Min Cai
+ */
 public interface MessagingListener {
+    /**
+     *
+     * @param from
+     * @param obj
+     */
     void messageReceived(String from, Object obj);
 }

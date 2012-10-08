@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class IndentedPrintWriter extends PrintWriter {
     private static char[] ls = System.getProperty("line.separator").toCharArray();
     private int truncatedNL;

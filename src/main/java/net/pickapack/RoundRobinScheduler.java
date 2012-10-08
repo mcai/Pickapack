@@ -24,6 +24,11 @@ import net.pickapack.action.Predicate;
 import java.util.BitSet;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ * @param <ResourceT>
+ */
 public class RoundRobinScheduler<ResourceT> {
     private final List<ResourceT> resources;
     private final Predicate<ResourceT> pred;
@@ -34,6 +39,13 @@ public class RoundRobinScheduler<ResourceT> {
 
     private BitSet stalled;
 
+    /**
+     *
+     * @param resources
+     * @param pred
+     * @param consumeAction
+     * @param quant
+     */
     public RoundRobinScheduler(List<ResourceT> resources, Predicate<ResourceT> pred, Function1<ResourceT, Boolean> consumeAction, int quant) {
         this.resources = resources;
         this.pred = pred;
@@ -45,6 +57,9 @@ public class RoundRobinScheduler<ResourceT> {
         this.stalled = new BitSet(this.resources.size());
     }
 
+    /**
+     *
+     */
     public void consumeNext() {
         this.resourceId = consumeNext(this.resourceId);
     }

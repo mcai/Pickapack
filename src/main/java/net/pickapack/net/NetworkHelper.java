@@ -23,9 +23,22 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class NetworkHelper {
+    /**
+     *
+     */
     public static final int DEFAULT_TIMEOUT = 400;
 
+    /**
+     *
+     * @param host
+     * @param timeout
+     * @return
+     */
     public static boolean isHostReachable(String host, int timeout) {
         try {
             return InetAddress.getByName(host).isReachable(timeout);
@@ -34,10 +47,22 @@ public class NetworkHelper {
         }
     }
 
+    /**
+     *
+     * @param host
+     * @return
+     */
     public static boolean isHostReachable(String host) {
         return isHostReachable(host, DEFAULT_TIMEOUT);
     }
 
+    /**
+     *
+     * @param host
+     * @param port
+     * @param timeout
+     * @return
+     */
     public static boolean isPortReachable(String host, int port, int timeout) {
         try {
             Socket socket = new Socket();
@@ -49,6 +74,12 @@ public class NetworkHelper {
         }
     }
 
+    /**
+     *
+     * @param host
+     * @param port
+     * @return
+     */
     public static boolean isPortReachable(String host, int port) {
         return isPortReachable(host, port, DEFAULT_TIMEOUT);
     }

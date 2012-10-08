@@ -18,7 +18,15 @@
  ******************************************************************************/
 package net.pickapack.tree;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class NodeHelper {
+    /**
+     *
+     * @param node
+     */
     public static void print(Node node) {
         print(node, "", true);
     }

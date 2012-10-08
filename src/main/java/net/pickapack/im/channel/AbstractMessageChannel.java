@@ -27,11 +27,26 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ */
 public abstract class AbstractMessageChannel implements MessageChannel {
+    /**
+     *
+     */
     protected MessageSink sink;
+    /**
+     *
+     */
     protected long checkReceivedMessagePeriod;
     private final List<MessagingListener> listeners;
 
+    /**
+     *
+     * @param sink
+     * @param checkReceivedMessagePeriod
+     */
     public AbstractMessageChannel(MessageSink sink, long checkReceivedMessagePeriod) {
         this.checkReceivedMessagePeriod = checkReceivedMessagePeriod;
         this.sink = sink;
@@ -39,6 +54,10 @@ public abstract class AbstractMessageChannel implements MessageChannel {
         this.listeners = new ArrayList<MessagingListener>();
     }
 
+    /**
+     *
+     * @param listener
+     */
     @Override
     public void addMessagingListener(MessagingListener listener) {
         synchronized (this.listeners) {
@@ -46,6 +65,10 @@ public abstract class AbstractMessageChannel implements MessageChannel {
         }
     }
 
+    /**
+     *
+     * @param listener
+     */
     @Override
     public void removeMessagingListener(MessagingListener listener) {
         synchronized (this.listeners) {
@@ -53,14 +76,28 @@ public abstract class AbstractMessageChannel implements MessageChannel {
         }
     }
 
+    /**
+     *
+     * @param fromUserId
+     * @param toUserId
+     * @param obj
+     */
     protected void sendObj(String fromUserId, String toUserId, Object obj) {
         this.sink.send(fromUserId, toUserId, JsonSerializationHelper.serialize(new JsonSerializationHelper.ObjectWrapper(obj.getClass().getName(), obj)));
     }
 
+    /**
+     *
+     * @param message
+     */
     public void send(Object message) {
         this.send(MessageSink.USER_ID_SERVER, message);
     }
 
+    /**
+     *
+     * @param instantMessage
+     */
     protected void fireMessageReceived(InstantMessage instantMessage) {
         JsonSerializationHelper.ObjectWrapper objectWrapper = JsonSerializationHelper.deserialize(JsonSerializationHelper.ObjectWrapper.class, instantMessage.getBody());
 
@@ -69,6 +106,11 @@ public abstract class AbstractMessageChannel implements MessageChannel {
         }
     }
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     protected boolean receiveOne(String userId) {
         String str;
         if ((str = this.sink.receive(userId)) != null) {
@@ -81,14 +123,24 @@ public abstract class AbstractMessageChannel implements MessageChannel {
         return false;
     }
 
+    /**
+     *
+     * @param userId
+     */
     protected void receiveBatch(String userId) {
         for (; receiveOne(userId); ) ;
     }
 
+    /**
+     *
+     */
     @Override
     public void open() {
     }
 
+    /**
+     *
+     */
     @Override
     public void close() {
         this.listeners.clear();

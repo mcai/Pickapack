@@ -20,5 +20,9 @@ package net.pickapack.event;
 
 import java.io.Serializable;
 
+/**
+ *
+ * @author Min Cai
+ */
 public interface BlockingEvent extends Serializable {
 }

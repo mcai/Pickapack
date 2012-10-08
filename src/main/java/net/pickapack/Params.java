@@ -21,13 +21,25 @@ package net.pickapack;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class Params {
     private Map<Object, Object> properties;
 
+    /**
+     *
+     */
     public Params() {
         this.properties = new HashMap<Object, Object>();
     }
 
+    /**
+     *
+     * @param key
+     * @param value
+     */
     public void put(Object key, Object value) {
         if(key == null || value == null) {
             throw new IllegalArgumentException();
@@ -36,6 +48,14 @@ public class Params {
         this.properties.put(key, value);
     }
 
+    /**
+     *
+     * @param <T>
+     * @param clz
+     * @param key
+     * @param defaultValue
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public <T> T get(Class<T> clz, Object key, T defaultValue) {
         if(clz == null || key == null) {
@@ -45,14 +65,29 @@ public class Params {
         return this.properties.containsKey (key) ? (T) this.properties.get(key) : defaultValue;
     }
 
+    /**
+     *
+     * @param <T>
+     * @param clz
+     * @param key
+     * @return
+     */
     public <T> T get(Class<T> clz, Object key) {
         return this.get(clz, key, null);
     }
 
+    /**
+     *
+     * @return
+     */
     public int size() {
         return this.properties.size();
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isEmpty() {
         return this.properties.isEmpty();
     }

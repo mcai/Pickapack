@@ -20,5 +20,9 @@ package net.pickapack.im.event;
 
 import net.pickapack.event.BlockingEvent;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class CloudEvent implements BlockingEvent {
 }

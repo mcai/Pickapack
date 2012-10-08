@@ -27,12 +27,23 @@ import net.pickapack.fsm.event.FiniteStateMachineEvent;
 
 import java.util.Map;
 
+/**
+ *
+ * @author Min Cai
+ * @param <StateT>
+ * @param <ConditionT>
+ */
 public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implements FiniteStateMachine<StateT,ConditionT> {
     private String name;
     private StateT state;
 
     private BlockingEventDispatcher<FiniteStateMachineEvent> eventDispatcher;
 
+    /**
+     *
+     * @param name
+     * @param state
+     */
     public BasicFiniteStateMachine(String name, StateT state) {
         this.name = name;
         this.state = state;
@@ -40,18 +51,38 @@ public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implemen
         this.eventDispatcher = new BlockingEventDispatcher<FiniteStateMachineEvent>();
     }
 
+    /**
+     *
+     * @param <EventT>
+     * @param eventClass
+     * @param listener
+     */
     public <EventT extends FiniteStateMachineEvent> void addListener(Class<EventT> eventClass, Action1<EventT> listener) {
         this.eventDispatcher.addListener(eventClass, listener);
     }
 
+    /**
+     *
+     * @param <EventT>
+     * @param eventClass
+     * @param listener
+     */
     public <EventT extends FiniteStateMachineEvent> void removeListener(Class<EventT> eventClass, Action1<EventT> listener) {
         this.eventDispatcher.removeListener(eventClass, listener);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public StateT getState() {
         return state;
@@ -59,6 +90,13 @@ public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implemen
 
     private boolean settingStates = false;
 
+    /**
+     *
+     * @param sender
+     * @param condition
+     * @param params
+     * @param state
+     */
     @Override
     public void setState(Object sender, ConditionT condition, Params params, StateT state) {
         if(this.settingStates) {
@@ -74,6 +112,10 @@ public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implemen
         this.settingStates = false;
     }
 
+    /**
+     *
+     * @param fsmFactory
+     */
     public void dump(FiniteStateMachineFactory<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>> fsmFactory) {
         for(StateT state : fsmFactory.transitions.keySet()) {
             System.out.println(state);

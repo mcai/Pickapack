@@ -22,7 +22,16 @@ import java.io.*;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class MapHelper {
+    /**
+     *
+     * @param map
+     * @param fileName
+     */
     public static void load(Map<String, String> map, String fileName) {
         if (new File(fileName).exists()) {
             try {
@@ -33,6 +42,11 @@ public class MapHelper {
         }
     }
 
+    /**
+     *
+     * @param map
+     * @param in
+     */
     public static void load(Map<String, String> map, InputStream in) {
         try {
             Properties prop = new Properties();
@@ -49,6 +63,11 @@ public class MapHelper {
         }
     }
 
+    /**
+     *
+     * @param map
+     * @param fileName
+     */
     public static void save(Map<String, String> map, String fileName) {
         try {
             save(map, new FileOutputStream(fileName));
@@ -57,6 +76,11 @@ public class MapHelper {
         }
     }
 
+    /**
+     *
+     * @param map
+     * @param out
+     */
     public static void save(Map<String, String> map, OutputStream out) {
         if (map.size() > 0) {
             PrintWriter pw = new PrintWriter(out);

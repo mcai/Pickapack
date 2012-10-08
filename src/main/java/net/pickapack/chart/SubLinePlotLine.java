@@ -20,19 +20,36 @@ package net.pickapack.chart;
 
 import net.pickapack.action.Function;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class SubLinePlotLine {
     private String title;
     private Function<Double> getValueCallback;
 
+    /**
+     *
+     * @param title
+     * @param getValueCallback
+     */
     public SubLinePlotLine(String title, Function<Double> getValueCallback) {
         this.title = title;
         this.getValueCallback = getValueCallback;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     *
+     * @return
+     */
     public Function<Double> getGetValueCallback() {
         return getValueCallback;
     }

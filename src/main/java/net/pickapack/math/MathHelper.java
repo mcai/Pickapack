@@ -18,11 +18,27 @@
  ******************************************************************************/
 package net.pickapack.math;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class MathHelper {
+    /**
+     *
+     * @param buffer
+     * @return
+     */
     public static String dumpBytes(byte[] buffer) {
         return dumpBytes(buffer, 0, buffer.length);
     }
 
+    /**
+     *
+     * @param buffer
+     * @param offset
+     * @param size
+     * @return
+     */
     public static String dumpBytes(byte[] buffer, int offset, int size) {
         if (buffer == null) {
             return "";
@@ -40,34 +56,81 @@ public class MathHelper {
         return sb.toString();
     }
 
+    /**
+     *
+     * @param value
+     * @param i
+     * @return
+     */
     public static boolean containsBit(int value, int i) {
         return (value & (1 << i)) != 0;
     }
 
+    /**
+     *
+     * @param value
+     * @param i
+     * @return
+     */
     public static int setBit(int value, int i) {
         return value | (1 << i);
     }
 
+    /**
+     *
+     * @param value
+     * @param i
+     * @return
+     */
     public static int clearBit(int value, int i) {
         return value & ~(1 << i);
     }
 
+    /**
+     *
+     * @param nbits
+     * @return
+     */
     public static int mask(int nbits) {
         return (1 << nbits) - 1;
     }
 
+    /**
+     *
+     * @param val
+     * @param first
+     * @param last
+     * @return
+     */
     public static int bits(int val, int first, int last) {
         return (val >> last) & mask(first - last + 1);
     }
 
+    /**
+     *
+     * @param val
+     * @param first
+     * @param last
+     * @return
+     */
     public static int mbits(int val, int first, int last) {
         return val & (mask(first + 1) & ~mask(last));
     }
 
+    /**
+     *
+     * @param value
+     * @return
+     */
     public static int signExtend(int value) {
         return (value << 16) >> 16;
     }
 
+    /**
+     *
+     * @param value
+     * @return
+     */
     public static int zeroExtend(int value) {
         return (value & 0xffff);
     }

@@ -18,30 +18,54 @@
  ******************************************************************************/
 package net.pickapack.math;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class Counter {
     private long initialValue;
     private long value;
 
+    /**
+     *
+     * @param initialValue
+     */
     public Counter(long initialValue) {
         this.initialValue = initialValue;
         this.value = initialValue;
     }
 
+    /**
+     *
+     * @return
+     */
     public Counter inc() {
         this.value++;
         return this;
     }
 
+    /**
+     *
+     * @return
+     */
     public Counter dec() {
         this.value--;
         return this;
     }
 
+    /**
+     *
+     * @return
+     */
     public Counter reset() {
         this.value = this.initialValue;
         return this;
     }
 
+    /**
+     *
+     * @return
+     */
     public long getValue() {
         return value;
     }

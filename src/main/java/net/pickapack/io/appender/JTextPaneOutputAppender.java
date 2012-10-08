@@ -25,12 +25,20 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class JTextPaneOutputAppender implements OutputAppender {
     private StyledDocument doc;
     private Style styleCurrentCycle;
     private Style styleStdOut;
     private Style styleStdErr;
 
+    /**
+     *
+     * @param textPane
+     */
     public JTextPaneOutputAppender(JTextPane textPane) {
         this.doc = (StyledDocument) textPane.getDocument();
 
@@ -45,6 +53,11 @@ public class JTextPaneOutputAppender implements OutputAppender {
         StyleConstants.setForeground(this.styleStdErr, Color.RED);
     }
 
+    /**
+     *
+     * @param currentCycle
+     * @param text
+     */
     public void appendStdOutLine(final long currentCycle, final String text) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -59,6 +72,11 @@ public class JTextPaneOutputAppender implements OutputAppender {
 
     }
 
+    /**
+     *
+     * @param currentCycle
+     * @param text
+     */
     public void appendStdErrLine(final long currentCycle, final String text) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

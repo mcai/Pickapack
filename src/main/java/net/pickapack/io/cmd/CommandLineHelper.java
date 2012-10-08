@@ -23,7 +23,17 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class CommandLineHelper {
+    /**
+     *
+     * @param cmd
+     * @param waitFor
+     * @return
+     */
     public static int invokeNativeCommand(String[] cmd, boolean waitFor) {
         try {
             Runtime r = Runtime.getRuntime();
@@ -49,22 +59,49 @@ public class CommandLineHelper {
         }
     }
 
+    /**
+     *
+     * @param args
+     * @return
+     */
     public static int invokeNativeCommand(String args) {
         return invokeNativeCommand(args, true);
     }
 
+    /**
+     *
+     * @param args
+     * @return
+     */
     public static int invokeShellCommand(String args) {
         return invokeShellCommand(args, true);
     }
 
+    /**
+     *
+     * @param args
+     * @param waitFor
+     * @return
+     */
     public static int invokeNativeCommand(String args, boolean waitFor) {
         return invokeNativeCommand(args.split(" "), waitFor);
     }
 
+    /**
+     *
+     * @param args
+     * @param waitFor
+     * @return
+     */
     public static int invokeShellCommand(String args, boolean waitFor) {
         return invokeNativeCommand(new String[]{"sh", "-c", args}, waitFor);
     }
 
+    /**
+     *
+     * @param cmd
+     * @return
+     */
     public static List<String> invokeNativeCommandAndGetResult(String[] cmd) {
         List<String> outputList = new ArrayList<String>();
 
@@ -95,10 +132,20 @@ public class CommandLineHelper {
         return outputList;
     }
 
+    /**
+     *
+     * @param args
+     * @return
+     */
     public static List<String> invokeNativeCommandAndGetResult(String args) {
         return invokeNativeCommandAndGetResult(args.split(" "));
     }
 
+    /**
+     *
+     * @param args
+     * @return
+     */
     public static List<String> invokeShellCommandAndGetResult(String args) {
         return invokeNativeCommandAndGetResult(new String[]{"sh", "-c", args});
     }

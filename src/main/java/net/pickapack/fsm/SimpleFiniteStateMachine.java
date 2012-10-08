@@ -20,20 +20,41 @@ package net.pickapack.fsm;
 
 import net.pickapack.Params;
 
+/**
+ *
+ * @author Min Cai
+ * @param <StateT>
+ * @param <ConditionT>
+ */
 public class SimpleFiniteStateMachine<StateT, ConditionT> implements FiniteStateMachine<StateT,ConditionT> {
     private StateT state;
 
     private boolean settingStates = false;
 
+    /**
+     *
+     * @param state
+     */
     public SimpleFiniteStateMachine(StateT state) {
         this.state = state;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public StateT getState() {
         return state;
     }
 
+    /**
+     *
+     * @param sender
+     * @param condition
+     * @param params
+     * @param state
+     */
     @Override
     public void setState(Object sender, ConditionT condition, Params params, StateT state) {
         if(this.settingStates) {

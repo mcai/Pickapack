@@ -12,8 +12,16 @@ import java.util.Scanner;
 
 import static org.parboiled.support.ParseTreeUtils.printNodeTree;
 
+/**
+ *
+ * @author Min Cai
+ */
 @BuildParseTree
 public class TimeParser extends BaseParser<Object> {
+    /**
+     *
+     * @return
+     */
     public Rule Time() {
         return FirstOf(Time_HH_MM_SS(), Time_HHMMSS(), Time_HMM());
     }
@@ -68,14 +76,31 @@ public class TimeParser extends BaseParser<Object> {
         return CharRange('0', '9');
     }
 
+    /**
+     *
+     * @return
+     */
     protected Integer popAsInt() {
         return (Integer) pop();
     }
 
+    /**
+     *
+     * @param hours
+     * @param minutes
+     * @return
+     */
     protected String convertToTime(Integer hours, Integer minutes) {
         return convertToTime(hours, minutes, 0);
     }
 
+    /**
+     *
+     * @param hours
+     * @param minutes
+     * @param seconds
+     * @return
+     */
     protected String convertToTime(Integer hours, Integer minutes, Integer seconds) {
         return String.format("%s h, %s min, %s s",
                 hours != null ? hours : 0,
@@ -83,6 +108,10 @@ public class TimeParser extends BaseParser<Object> {
                 seconds != null ? seconds : 0);
     }
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         TimeParser parser = Parboiled.createParser(TimeParser.class);
 

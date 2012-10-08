@@ -23,14 +23,30 @@ import net.pickapack.action.Action1;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+/**
+ *
+ * @author Min Cai
+ * @param <TraceRecordT>
+ */
 public abstract class TraceTester<TraceRecordT> {
     private String fileName;
+    /**
+     *
+     */
     protected RandomAccessFile buffer;
 
+    /**
+     *
+     * @param fileName
+     */
     public TraceTester(String fileName) {
         this.fileName = fileName;
     }
 
+    /**
+     *
+     * @param action
+     */
     public void run(Action1<TraceRecordT> action) {
         try {
             this.buffer = new RandomAccessFile(fileName, "r");
@@ -51,8 +67,16 @@ public abstract class TraceTester<TraceRecordT> {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     protected abstract TraceRecordT readNext();
 
+    /**
+     *
+     * @return
+     */
     public String getFileName() {
         return fileName;
     }

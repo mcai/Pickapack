@@ -23,9 +23,18 @@ import net.pickapack.event.BlockingEventDispatcher;
 import net.pickapack.im.event.CloudEvent;
 import net.pickapack.im.sink.MessageSink;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class CloudMessageChannel extends BasicMessageChannel {
     private BlockingEventDispatcher<CloudEvent> cloudEventDispatcher;
 
+    /**
+     *
+     * @param userId
+     * @param sink
+     */
     public CloudMessageChannel(String userId, MessageSink sink) {
         super(userId, sink, 5000);
 
@@ -41,10 +50,22 @@ public class CloudMessageChannel extends BasicMessageChannel {
         });
     }
 
+    /**
+     *
+     * @param <CloudEventT>
+     * @param eventClass
+     * @param listener
+     */
     public <CloudEventT extends CloudEvent> void addCloudEventListener(Class<CloudEventT> eventClass, Action1<CloudEventT> listener) {
         this.cloudEventDispatcher.addListener(eventClass, listener);
     }
 
+    /**
+     *
+     * @param <CloudEventT>
+     * @param eventClass
+     * @param listener
+     */
     public <CloudEventT extends CloudEvent> void removeCloudEventListener(Class<CloudEventT> eventClass, Action1<CloudEventT> listener) {
         this.cloudEventDispatcher.removeListener(eventClass, listener);
     }

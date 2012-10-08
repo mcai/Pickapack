@@ -30,10 +30,17 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class TelnetServer implements OutputAppender {
     private ServerSocket serverSocket;
     private List<SocketThread> socketThreads;
 
+    /**
+     *
+     */
     public TelnetServer() {
         this.socketThreads = new ArrayList<SocketThread>();
         this.start();
@@ -79,6 +86,9 @@ public class TelnetServer implements OutputAppender {
         appendStdOutLine(socketThread, "Copyright (c) 2010-2012 by Min Cai (min.cai.china@gmail.com).\n");
     }
 
+    /**
+     *
+     */
     public void stop() {
         try {
             this.serverSocket.close();
@@ -87,12 +97,22 @@ public class TelnetServer implements OutputAppender {
         }
     }
 
+    /**
+     *
+     * @param currentCycle
+     * @param text
+     */
     public void appendStdOutLine(long currentCycle, String text) {
         for (SocketThread socketThread : this.socketThreads) {
             appendStdOutLine(socketThread, "[" + currentCycle + "] " + text);
         }
     }
 
+    /**
+     *
+     * @param currentCycle
+     * @param text
+     */
     public void appendStdErrLine(long currentCycle, String text) {
         for (SocketThread socketThread : this.socketThreads) {
             appendStdErrLine(socketThread, "[" + currentCycle + "] " + text);
@@ -149,5 +169,8 @@ public class TelnetServer implements OutputAppender {
         }
     }
 
+    /**
+     *
+     */
     public static final int SERVER_PORT = 3900;
 }

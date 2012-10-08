@@ -24,7 +24,18 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class ExitStateEvent extends FiniteStateMachineStateChangedEvent {
+    /**
+     *
+     * @param fsm
+     * @param sender
+     * @param condition
+     * @param params
+     */
     public ExitStateEvent(FiniteStateMachine<?, ?> fsm, Object sender, Object condition, Params params) {
         super(fsm, sender, condition, params);
     }

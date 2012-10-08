@@ -4,7 +4,17 @@ import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ *
+ * @author Min Cai
+ * @param <T>
+ */
 public class GZIPObjectSerializer<T> {
+    /**
+     *
+     * @param obj
+     * @param fileName
+     */
     public void serialize(T obj, String fileName) {
         try {
             FileOutputStream fos = new FileOutputStream(fileName);
@@ -19,6 +29,11 @@ public class GZIPObjectSerializer<T> {
         }
     }
 
+    /**
+     *
+     * @param fileName
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public T deserialize(String fileName) {
         try {

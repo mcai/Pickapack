@@ -18,25 +18,50 @@
  ******************************************************************************/
 package net.pickapack;
 
+/**
+ *
+ * @author Min Cai
+ * @param <K>
+ * @param <T>
+ * @param <P>
+ */
 public class Triple<K, T, P> {
     private K first;
     private T second;
     private P third;
 
+    /**
+     *
+     * @param first
+     * @param second
+     * @param third
+     */
     public Triple(K first, T second, P third) {
         this.first = first;
         this.second = second;
         this.third = third;
     }
 
+    /**
+     *
+     * @return
+     */
     public K getFirst() {
         return first;
     }
 
+    /**
+     *
+     * @return
+     */
     public T getSecond() {
         return second;
     }
 
+    /**
+     *
+     * @return
+     */
     public P getThird() {
         return third;
     }

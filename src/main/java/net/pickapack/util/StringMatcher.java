@@ -1,6 +1,17 @@
 package net.pickapack.util;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class StringMatcher {
+    /**
+     *
+     * @param text
+     * @param pattern
+     * @param matchType
+     * @return
+     */
     public static boolean matches(String text, String pattern, StringMatchType matchType) {
         if (text == null || pattern == null) {
             return false;

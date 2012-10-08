@@ -10,12 +10,22 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class TableHelper {
     private static final Font boldFont = new Font(Font.FontFamily.HELVETICA, Font.DEFAULTSIZE, Font.BOLD);
     private static final Font normalFont = new Font(Font.FontFamily.HELVETICA, Font.DEFAULTSIZE, Font.NORMAL);
     private static final Rectangle A3_LANDSCAPE = new RectangleReadOnly(842,1191, 90);
     private static final Rectangle A3_EXTRA_LANDSCAPE = new RectangleReadOnly(842,1391, 90);
 
+    /**
+     *
+     * @param fileName
+     * @param columns
+     * @param rows
+     */
     public static void generateTable(String fileName, List<String> columns, List<List<String>> rows) {
         Document document = new Document(A3_EXTRA_LANDSCAPE);
 

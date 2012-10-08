@@ -18,11 +18,25 @@
  ******************************************************************************/
 package net.pickapack.io.appender;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class ConsoleOutputAppender implements OutputAppender {
+    /**
+     *
+     * @param currentCycle
+     * @param text
+     */
     public void appendStdOutLine(long currentCycle, String text) {
         System.out.println("[" + currentCycle + "] " + text);
     }
 
+    /**
+     *
+     * @param currentCycle
+     * @param text
+     */
     public void appendStdErrLine(long currentCycle, String text) {
         System.err.println("[" + currentCycle + "] " + text);
     }

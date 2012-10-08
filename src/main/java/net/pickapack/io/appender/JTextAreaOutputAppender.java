@@ -20,13 +20,26 @@ package net.pickapack.io.appender;
 
 import javax.swing.*;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class JTextAreaOutputAppender implements OutputAppender {
     private JTextArea textArea;
 
+    /**
+     *
+     * @param textArea
+     */
     public JTextAreaOutputAppender(JTextArea textArea) {
         this.textArea = textArea;
     }
 
+    /**
+     *
+     * @param currentCycle
+     * @param text
+     */
     public void appendStdOutLine(final long currentCycle, final String text) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -36,6 +49,11 @@ public class JTextAreaOutputAppender implements OutputAppender {
 
     }
 
+    /**
+     *
+     * @param currentCycle
+     * @param text
+     */
     public void appendStdErrLine(final long currentCycle, final String text) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

@@ -18,25 +18,46 @@
  ******************************************************************************/
 package net.pickapack.im.sink;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class InstantMessage {
     private Long id;
     private String fromUserId;
     private String body;
 
+    /**
+     *
+     * @param fromUserId
+     * @param body
+     */
     public InstantMessage(String fromUserId, String body) {
         this.id = currentId++;
         this.fromUserId = fromUserId;
         this.body = body;
     }
 
+    /**
+     *
+     * @return
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getFromUserId() {
         return fromUserId;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getBody() {
         return body;
     }

@@ -6,6 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Arrays;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class StringParser {
     /**
      * specifier length modifiers
@@ -672,6 +676,7 @@ public class StringParser {
      * parse string
      *
      * @param string    string to parse
+     * @param index 
      * @param format    format string (like printf)
      * @param arguments parsed values
      * @return index of first not parsed character
@@ -686,6 +691,7 @@ public class StringParser {
      * @param string    string to parse
      * @param format    format string (like printf)
      * @param arguments parsed values
+     * @param stringQuotes 
      * @return true iff string parse, false otherwise
      */
     public static boolean parse(String string, String format, Object arguments[], String stringQuotes) {
@@ -704,6 +710,11 @@ public class StringParser {
         return parse(string, format, arguments, null);
     }
 
+    /**
+     *
+     * @param args
+     * @throws FileNotFoundException
+     */
     public static void main(String[] args) throws FileNotFoundException {
         IterableBigTextFile file = new IterableBigTextFile(new FileReader("/home/itecgo/Desktop/stats.txt"));
         for(String line : file) {

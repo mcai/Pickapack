@@ -20,8 +20,26 @@ package net.pickapack.io.buffer;
 
 import java.io.IOException;
 
+/**
+ *
+ * @author Min Cai
+ */
 public abstract class BufferAccessor {
+    /**
+     *
+     * @param buffer
+     * @param position
+     * @return
+     * @throws IOException
+     */
     public abstract int getU2(Buffer buffer, long position) throws IOException;
 
+    /**
+     *
+     * @param buffer
+     * @param position
+     * @return
+     * @throws IOException
+     */
     public abstract long getU4(Buffer buffer, long position) throws IOException;
 }

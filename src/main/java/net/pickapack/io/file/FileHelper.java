@@ -20,7 +20,16 @@ package net.pickapack.io.file;
 
 import java.io.*;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class FileHelper {
+    /**
+     *
+     * @param dir
+     * @return
+     */
     public static boolean deleteDir(File dir) {
         if (dir.isDirectory()) {
             for (String child : dir.list()) {
@@ -33,6 +42,12 @@ public class FileHelper {
         return dir.delete();
     }
 
+    /**
+     *
+     * @param file
+     * @return
+     * @throws IOException
+     */
     public static byte[] load(File file) throws IOException {
         InputStream in = new FileInputStream(file);
         byte[] content = load(in, (int) file.length());
@@ -40,6 +55,13 @@ public class FileHelper {
         return content;
     }
 
+    /**
+     *
+     * @param in
+     * @param length
+     * @return
+     * @throws IOException
+     */
     public static byte[] load(InputStream in, int length) throws IOException {
         byte[] buffer = new byte[length];
         int offset = 0;
@@ -57,12 +79,24 @@ public class FileHelper {
         return buffer;
     }
 
+    /**
+     *
+     * @param file
+     * @param content
+     * @throws IOException
+     */
     public static void save(File file, byte[] content) throws IOException {
         FileOutputStream out = new FileOutputStream(file);
         save(out, content);
         out.close();
     }
 
+    /**
+     *
+     * @param out
+     * @param content
+     * @throws IOException
+     */
     public static void save(OutputStream out, byte[] content) throws IOException {
         out.write(content);
     }

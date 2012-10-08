@@ -32,7 +32,18 @@ import java.awt.geom.Rectangle2D;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+/**
+ *
+ * @author Min Cai
+ */
 public class ChartPdfExporter {
+    /**
+     *
+     * @param chart
+     * @param width
+     * @param height
+     * @param fileName
+     */
     public static void exportPdf(JFreeChart chart, int width, int height, String fileName) {
         try {
             Document document = new Document(new Rectangle(width, height));

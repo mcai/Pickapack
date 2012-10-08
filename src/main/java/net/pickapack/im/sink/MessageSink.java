@@ -21,12 +21,34 @@ package net.pickapack.im.sink;
 import java.io.Serializable;
 import java.util.Set;
 
+/**
+ *
+ * @author Min Cai
+ */
 public interface MessageSink extends Serializable {
+    /**
+     *
+     * @return
+     */
     Set<String> getUserIds();
 
+    /**
+     *
+     * @param fromUserId
+     * @param toUserId
+     * @param message
+     */
     void send(String fromUserId, String toUserId, String message);
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     String receive(String userId);
 
+    /**
+     *
+     */
     public static String USER_ID_SERVER = "#server";
 }

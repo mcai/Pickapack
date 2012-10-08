@@ -11,16 +11,34 @@ import org.parboiled.support.ParsingResult;
 
 import static org.parboiled.errors.ErrorUtils.printParseErrors;
 
+/**
+ *
+ * @author Min Cai
+ */
 @BuildParseTree
 public class BlogTest extends BaseParser<Object> {
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         parse("Person($expand=location($current))");
     }
 
     private static BlogTest parser = Parboiled.createParser(BlogTest.class);
+    /**
+     *
+     */
     public static boolean RESULT_TREE_ON = true;
+    /**
+     *
+     */
     public static boolean STDOUT = true;
 
+    /**
+     *
+     * @param str
+     */
     public static void parse(String str) {
         ParseRunner runner = new TracingParseRunner(parser.Query());
         ParsingResult<?> result = runner.run(str);
@@ -56,6 +74,10 @@ public class BlogTest extends BaseParser<Object> {
         );
     }
 
+    /**
+     *
+     * @return
+     */
     protected boolean matchedQueryName() {
         QueryAst query = new QueryAst();
         query.name = match();
@@ -89,12 +111,20 @@ public class BlogTest extends BaseParser<Object> {
         );
     }
 
+    /**
+     *
+     * @return
+     */
     protected boolean matchedExpand() {
         ExpandAst expand = new ExpandAst();
         expand.name = match();
         return push(expand);
     }
 
+    /**
+     *
+     * @return
+     */
     protected boolean popExpandAst() {
         ExpandAst expand = (ExpandAst) pop();
         QueryAst query = (QueryAst) peek();
@@ -110,6 +140,10 @@ public class BlogTest extends BaseParser<Object> {
         );
     }
 
+    /**
+     *
+     * @return
+     */
     protected boolean currentSucceeded() {
         ExpandAst prop = (ExpandAst) peek();
         prop.current = true;

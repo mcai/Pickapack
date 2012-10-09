@@ -1,15 +1,10 @@
 package net.pickapack.util;
 
-import ch.lambdaj.function.convert.Converter;
-import org.jaxen.JaxenException;
-import org.jaxen.javabean.Element;
-import org.jaxen.javabean.JavaBeanXPath;
+import org.apache.commons.jxpath.JXPathContext;
 
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
-
-import static ch.lambdaj.Lambda.convert;
 
 /**
  *
@@ -23,19 +18,21 @@ public class JaxenHelper {
      * @param expr
      * @return
      */
-    @SuppressWarnings("unchecked")
+    @Deprecated
     public static <T> List<T> selectNodes(Object obj, String expr) {
-        try {
-            List<Element> result = new JavaBeanXPath(expr).selectNodes(obj);
-            return result != null ? convert(result, new Converter<Element, T>() {
-                @Override
-                public T convert(Element from) {
-                    return (T) from.getObject();
-                }
-            }) : null;
-        } catch (JaxenException e) {
-            throw new RuntimeException(e);
-        }
+        return evaluate(obj, expr);
+    }
+
+    /**
+     *
+     * @param <T>
+     * @param obj
+     * @param expr
+     * @return
+     */
+    @Deprecated
+    public static <T> T selectSingleNode(Object obj, String expr) {
+        return evaluate(obj, expr);
     }
 
     /**
@@ -46,13 +43,8 @@ public class JaxenHelper {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T> T selectSingleNode(Object obj, String expr) {
-        try {
-            Element result = (Element) new JavaBeanXPath(expr).selectSingleNode(obj);
-            return (T) (result != null ? result.getObject() : null);
-        } catch (JaxenException e) {
-            throw new RuntimeException(e);
-        }
+    public static <T> T evaluate(Object obj, String expr) {
+        return (T) JXPathContext.newContext(obj).getValue(expr);
     }
 
     /**
@@ -68,7 +60,7 @@ public class JaxenHelper {
                 Map resultMap = (Map) resultObj;
 
                 for (Object key : resultMap.keySet()) {
-                    stats.put(escape(expr) + "[" + key + "]", toString(resultMap.get(key)));
+                    stats.put(escape(expr) + "/" + key, toString(resultMap.get(key)));
                 }
             } else {
                 stats.put(escape(expr), toString(resultObj));
@@ -89,18 +81,18 @@ public class JaxenHelper {
         if (result != null) {
             for (int i = 0; i < result.size(); i++) {
                 Object resultObj = result.get(i);
-                stats.put(escape(expr) + "[" + i + "]", toString(resultObj));
+                stats.put(escape(expr) + "/" + i, toString(resultObj));
             }
         } else {
             throw new IllegalArgumentException();
         }
     }
 
-    private static String escape(String str) {
+    public static String escape(String str) {
         return str.replaceAll("'", "").replaceAll("\\[", "\\[").replaceAll("\\]", "\\]");
     }
 
-    private static String toString(Object resultObj) {
+    public static String toString(Object resultObj) {
         if (resultObj instanceof Integer || resultObj instanceof Long || resultObj instanceof Float || resultObj instanceof Double) {
             return MessageFormat.format("{0}", resultObj);
         }

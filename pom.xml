@@ -124,18 +124,6 @@
             <artifactId>xom</artifactId>
             <version>1.2.5</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.gravity</groupId>-->
-            <!--<artifactId>goose</artifactId>-->
-            <!--<version>2.1.17</version>-->
-            <!--<optional>true</optional>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>de.l3s.boilerpipe</groupId>-->
-            <!--<artifactId>boilerpipe</artifactId>-->
-            <!--<version>1.2.0</version>-->
-            <!--<optional>true</optional>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>net.sourceforge.htmlcleaner</groupId>
             <artifactId>htmlcleaner</artifactId>
@@ -193,12 +181,6 @@
             <artifactId>xalan</artifactId>
             <version>2.7.1</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.owasp</groupId>-->
-            <!--<artifactId>proxy</artifactId>-->
-            <!--<version>1.1-20120719_0005</version>-->
-            <!--<optional>true</optional>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>com.googlecode.lambdaj</groupId>
             <artifactId>lambdaj</artifactId>

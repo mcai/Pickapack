@@ -265,10 +265,6 @@
         <finalName>pickapack</finalName>
         <resources>
             <resource>
-                <filtering>false</filtering>
-                <directory>src/main/mitm</directory>
-            </resource>
-            <resource>
                 <filtering>true</filtering>
                 <directory>src/main/resources</directory>
             </resource>

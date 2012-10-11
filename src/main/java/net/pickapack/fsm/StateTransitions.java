@@ -112,7 +112,7 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
             }
         });
 
-        this.perStateTransitions.put(condition, new StateTransition(newState, actions, onCompletedCallback));
+        this.perStateTransitions.put(condition, new StateTransition(state, condition, newState, actions, onCompletedCallback));
 
         return this;
     }
@@ -130,7 +130,7 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
             throw new IllegalArgumentException("Transition of condition " + condition + " in state " + this.state + " has already been registered");
         }
 
-        this.perStateTransitions.put(condition, new StateTransition(newState, actions, onCompletedCallback));
+        this.perStateTransitions.put(condition, new StateTransition(state, condition, newState, actions, onCompletedCallback));
 
         return this;
     }
@@ -179,17 +179,23 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
      *
      */
     public class StateTransition implements Function4<FiniteStateMachineT, Object, ConditionT, Params, StateT> {
+        private StateT state;
+        private ConditionT condition;
         private StateT newState;
         private List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> actions;
         private Action1<FiniteStateMachineT> onCompletedCallback;
 
         /**
          *
+         * @param state
+         * @param condition
          * @param newState
          * @param actions
          * @param onCompletedCallback
          */
-        public StateTransition(StateT newState, List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> actions, Action1<FiniteStateMachineT> onCompletedCallback) {
+        public StateTransition(StateT state, ConditionT condition, StateT newState, List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> actions, Action1<FiniteStateMachineT> onCompletedCallback) {
+            this.state = state;
+            this.condition = condition;
             this.newState = newState;
             this.actions = actions;
             this.onCompletedCallback = onCompletedCallback;
@@ -242,6 +248,22 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
          */
         public List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> getActions() {
             return actions;
+        }
+
+        /**
+         *
+         * @return
+         */
+        public StateT getState() {
+            return state;
+        }
+
+        /**
+         *
+         * @return
+         */
+        public ConditionT getCondition() {
+            return condition;
         }
 
         /**

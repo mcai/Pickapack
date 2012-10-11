@@ -116,7 +116,7 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
                     numExecutions += fsm.getNumExecutionsByTransition(state, condition);
                 }
 
-                stats.put(String.format("%s.%s:%s->%s/%s", name, state, condition, stateTransition.getActions(), stateTransition.getNewState()), "" + numExecutions);
+                stats.put(String.format("%s.%s.%s", name, state, condition), "" + numExecutions);
             }
         }
     }

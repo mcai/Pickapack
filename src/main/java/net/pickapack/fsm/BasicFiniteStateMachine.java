@@ -25,6 +25,7 @@ import net.pickapack.fsm.event.EnterStateEvent;
 import net.pickapack.fsm.event.ExitStateEvent;
 import net.pickapack.fsm.event.FiniteStateMachineEvent;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -39,6 +40,8 @@ public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implemen
 
     private BlockingEventDispatcher<FiniteStateMachineEvent> eventDispatcher;
 
+    private Map<StateT, Map<ConditionT, Long>> numExecutions;
+
     /**
      *
      * @param name
@@ -49,6 +52,8 @@ public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implemen
         this.state = state;
 
         this.eventDispatcher = new BlockingEventDispatcher<FiniteStateMachineEvent>();
+
+        this.numExecutions = new LinkedHashMap<StateT, Map<ConditionT, Long>>();
     }
 
     /**
@@ -124,10 +129,20 @@ public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implemen
             Map<ConditionT, StateTransitions<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>>.StateTransition> perStateTransitions = stateTransitions.getPerStateTransitions();
             for(ConditionT condition : perStateTransitions.keySet()) {
                 StateTransitions<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>>.StateTransition stateTransition = perStateTransitions.get(condition);
-                System.out.printf("  -> %s:  %s/%s [%d] %n", condition, stateTransition.getActions(), stateTransition.getNewState(), stateTransition.getNumExecutionsPerFsm(this));
+                System.out.printf("  -> %s:  %s/%s [%d] %n", condition, stateTransition.getActions(), stateTransition.getNewState(), getNumExecutionsByTransition(state, condition));
             }
 
             System.out.println();
         }
+    }
+
+    @Override
+    public Map<StateT, Map<ConditionT, Long>> getNumExecutions() {
+        return numExecutions;
+    }
+
+    @Override
+    public long getNumExecutionsByTransition(StateT state, ConditionT condition) {
+        return this.numExecutions.containsKey(state) && this.numExecutions.get(state).containsKey(condition) ? this.numExecutions.get(state).get(condition) : 0L;
     }
 }

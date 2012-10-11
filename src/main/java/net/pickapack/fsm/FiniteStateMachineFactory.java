@@ -21,6 +21,7 @@ package net.pickapack.fsm;
 import net.pickapack.Params;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -83,14 +84,14 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
      *
      */
     public void dump() {
-        for(StateT state : this.transitions.keySet()) {
+        for(StateT state : this.getTransitions().keySet()) {
             System.out.println(state);
 
-            StateTransitions<StateT, ConditionT, FiniteStateMachineT> stateTransitions = this.transitions.get(state);
+            StateTransitions<StateT, ConditionT, FiniteStateMachineT> stateTransitions = this.getTransitions().get(state);
             Map<ConditionT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>.StateTransition> perStateTransitions = stateTransitions.getPerStateTransitions();
             for(ConditionT condition : perStateTransitions.keySet()) {
                 StateTransitions<StateT, ConditionT, FiniteStateMachineT>.StateTransition stateTransition = perStateTransitions.get(condition);
-                System.out.printf(" :%s ->%s/%s [%d] %n", condition, stateTransition.getActions(), stateTransition.getNewState(), stateTransition.getNumExecutions());
+                System.out.printf(" :%s ->%s/%s %n", condition, stateTransition.getActions(), stateTransition.getNewState());
             }
 
             System.out.println();
@@ -100,16 +101,27 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
     /**
      *
      * @param name
+     * @param fsms
      * @param stats
      */
-    public void dump(String name, Map<String, String> stats) {
+    public void dump(String name, List<? extends FiniteStateMachine<StateT, ConditionT>> fsms, Map<String, String> stats) {
         for(StateT state : this.transitions.keySet()) {
             StateTransitions<StateT, ConditionT, FiniteStateMachineT> stateTransitions = this.transitions.get(state);
             Map<ConditionT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>.StateTransition> perStateTransitions = stateTransitions.getPerStateTransitions();
             for(ConditionT condition : perStateTransitions.keySet()) {
                 StateTransitions<StateT, ConditionT, FiniteStateMachineT>.StateTransition stateTransition = perStateTransitions.get(condition);
-                stats.put(String.format("%s.%s:%s->%s/%s", name, state, condition, stateTransition.getActions(), stateTransition.getNewState()), "" + stateTransition.getNumExecutions());
+
+                long numExecutions = 0;
+                for(FiniteStateMachine<StateT, ConditionT> fsm : fsms) {
+                    numExecutions += fsm.getNumExecutionsByTransition(state, condition);
+                }
+
+                stats.put(String.format("%s.%s:%s->%s/%s", name, state, condition, stateTransition.getActions(), stateTransition.getNewState()), "" + numExecutions);
             }
         }
+    }
+
+    public Map<StateT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>> getTransitions() {
+        return transitions;
     }
 }

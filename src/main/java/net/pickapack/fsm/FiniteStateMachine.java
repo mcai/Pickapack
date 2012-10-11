@@ -20,6 +20,8 @@ package net.pickapack.fsm;
 
 import net.pickapack.Params;
 
+import java.util.Map;
+
 /**
  *
  * @author Min Cai
@@ -41,4 +43,18 @@ public interface FiniteStateMachine<StateT, ConditionT> {
      * @param state
      */
     void setState(Object sender, ConditionT condition, Params params, StateT state);
+
+    /**
+     *
+     * @return
+     */
+    Map<StateT, Map<ConditionT, Long>> getNumExecutions();
+
+    /**
+     *
+     *
+     * @param state
+     * @return
+     */
+    long getNumExecutionsByTransition(StateT state, ConditionT condition);
 }

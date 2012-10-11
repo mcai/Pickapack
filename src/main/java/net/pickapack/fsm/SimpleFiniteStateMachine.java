@@ -20,6 +20,9 @@ package net.pickapack.fsm;
 
 import net.pickapack.Params;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  *
  * @author Min Cai
@@ -31,12 +34,16 @@ public class SimpleFiniteStateMachine<StateT, ConditionT> implements FiniteState
 
     private boolean settingStates = false;
 
+    private Map<StateT, Map<ConditionT, Long>> numExecutions;
+
     /**
      *
      * @param state
      */
     public SimpleFiniteStateMachine(StateT state) {
         this.state = state;
+
+        this.numExecutions = new LinkedHashMap<StateT, Map<ConditionT, Long>>();
     }
 
     /**
@@ -66,5 +73,15 @@ public class SimpleFiniteStateMachine<StateT, ConditionT> implements FiniteState
         this.state = state;
 
         this.settingStates = false;
+    }
+
+    @Override
+    public Map<StateT, Map<ConditionT, Long>> getNumExecutions() {
+        return numExecutions;
+    }
+
+    @Override
+    public long getNumExecutionsByTransition(StateT state, ConditionT condition) {
+        return this.numExecutions.containsKey(state) && this.numExecutions.get(state).containsKey(condition) ? this.numExecutions.get(state).get(condition) : 0L;
     }
 }

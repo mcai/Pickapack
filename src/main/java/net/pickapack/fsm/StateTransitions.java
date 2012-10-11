@@ -155,7 +155,7 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
         this.perStateTransitions.clear();
     }
 
-    Map<ConditionT, StateTransition> getPerStateTransitions() {
+    public Map<ConditionT, StateTransition> getPerStateTransitions() {
         return perStateTransitions;
     }
 
@@ -180,8 +180,6 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
      */
     public class StateTransition implements Function4<FiniteStateMachineT, Object, ConditionT, Params, StateT> {
         private StateT newState;
-        private Map<FiniteStateMachineT, Integer> numExecutionsPerFsm;
-        private long numExecutions;
         private List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> actions;
         private Action1<FiniteStateMachineT> onCompletedCallback;
 
@@ -193,7 +191,6 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
          */
         public StateTransition(StateT newState, List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> actions, Action1<FiniteStateMachineT> onCompletedCallback) {
             this.newState = newState;
-            this.numExecutionsPerFsm = new HashMap<FiniteStateMachineT, Integer>();
             this.actions = actions;
             this.onCompletedCallback = onCompletedCallback;
         }
@@ -212,12 +209,15 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
                 ((FiniteStateMachineAction<FiniteStateMachineT, ConditionT, Params>) action).apply(fsm, sender, condition, params);
             }
 
-            if(!this.numExecutionsPerFsm.containsKey(fsm)) {
-                 this.numExecutionsPerFsm.put(fsm, 0);
+            if(!fsm.getNumExecutions().containsKey(state)) {
+                fsm.getNumExecutions().put(state, new LinkedHashMap<ConditionT, Long>());
             }
-            this.numExecutionsPerFsm.put(fsm, this.numExecutionsPerFsm.get(fsm) + 1);
 
-            this.numExecutions++;
+            if(!fsm.getNumExecutions().get(state).containsKey(condition)) {
+                fsm.getNumExecutions().get(state).put(condition, 0L);
+            }
+
+            fsm.getNumExecutions().get(state).put(condition, fsm.getNumExecutions().get(state).get(condition) + 1);
 
             if(this.newState == null) {
                 return fsm.getState();
@@ -238,15 +238,6 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
 
         /**
          *
-         * @param fsm
-         * @return
-         */
-        public int getNumExecutionsPerFsm(FiniteStateMachineT fsm) {
-            return this.numExecutionsPerFsm.containsKey(fsm) ? this.numExecutionsPerFsm.get(fsm) : 0;
-        }
-
-        /**
-         *
          * @return
          */
         public List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> getActions() {
@@ -259,14 +250,6 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
          */
         public StateT getNewState() {
             return newState;
-        }
-
-        /**
-         *
-         * @return
-         */
-        public long getNumExecutions() {
-            return numExecutions;
         }
     }
 }

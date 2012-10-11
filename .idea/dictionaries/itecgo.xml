@@ -2,6 +2,7 @@
   <dictionary name="itecgo">
     <words>
       <w>deserialize</w>
+      <w>fsms</w>
       <w>gson</w>
       <w>itecgo</w>
     </words>

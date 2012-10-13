@@ -3,31 +3,25 @@ package net.pickapack.service;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
+import com.j256.ormlite.misc.TransactionManager;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.TableUtils;
-import net.pickapack.Pair;
-import net.pickapack.event.BlockingEventDispatcher;
 import net.pickapack.model.ModelElement;
-import net.pickapack.service.event.AfterItemsAddedEvent;
-import net.pickapack.service.event.AfterItemsUpdatedEvent;
-import net.pickapack.service.event.BeforeItemsRemovedEvent;
-import net.pickapack.service.event.ServiceEvent;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
- *
  * @author Min Cai
  */
 public class AbstractService implements Service {
     private JdbcPooledConnectionSource connectionSource;
-    private BlockingEventDispatcher<ServiceEvent> blockingEventDispatcher;
 
     /**
-     *
      * @param databaseUrl
      * @param dataClasses
      */
@@ -43,8 +37,6 @@ public class AbstractService implements Service {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-        this.blockingEventDispatcher = new BlockingEventDispatcher<ServiceEvent>();
     }
 
     /**
@@ -59,7 +51,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param dao
      * @return
@@ -73,7 +64,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param dao
      * @param first
@@ -90,7 +80,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param dao
      * @return
@@ -104,7 +93,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param <TItemDirectory>
      * @param dao
@@ -121,7 +109,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param <TItemDirectory>
      * @param dao
@@ -143,7 +130,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param <TItemDirectory>
      * @param dao
@@ -160,7 +146,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param dao
      * @param id
@@ -175,7 +160,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param dao
      * @param title
@@ -191,7 +175,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param <TItemDirectory>
      * @param dao
@@ -208,7 +191,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param dao
      * @param title
@@ -224,7 +206,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param dao
      * @param title
@@ -240,7 +221,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param dao
      * @param title
@@ -250,7 +230,7 @@ public class AbstractService implements Service {
      */
     public <TItem extends ModelElement> List<TItem> getItemsByTitle(Dao<TItem, Long> dao, String title, long first, long count) {
         try {
-            QueryBuilder<TItem,Long> queryBuilder = dao.queryBuilder();
+            QueryBuilder<TItem, Long> queryBuilder = dao.queryBuilder();
             queryBuilder.where().eq("title", title);
             queryBuilder.offset(first).limit(count);
             return dao.query(queryBuilder.prepare());
@@ -260,7 +240,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param dao
      * @param title
@@ -276,7 +255,6 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @param <TItem>
      * @param dao
      * @return
@@ -292,110 +270,80 @@ public class AbstractService implements Service {
 
     /**
      *
-     * @param <TItem>
      * @param dao
-     * @param clz
      * @param item
      * @return
      */
-    public <TItem extends ModelElement> long addItem(Dao<TItem, Long> dao, Class<TItem> clz, TItem item) {
-        List<TItem> items = new ArrayList<TItem>();
-        items.add(item);
-        addItems(dao, clz, items);
+    public <TItem extends ModelElement> long addItem(final Dao<TItem, Long> dao, final TItem item) {
+        addItems(dao, new ArrayList<TItem>() {{
+            add(item);
+        }});
         return item.getId();
     }
 
     /**
-     *
-     * @param <TItem>
      * @param dao
-     * @param clz
      * @param items
      */
-    public <TItem extends ModelElement> void addItems(Dao<TItem, Long> dao, Class<TItem> clz, List<TItem> items) {
+    public <TItem extends ModelElement> void addItems(final Dao<TItem, Long> dao, final List<TItem> items) {
         try {
-            List<Long> ids = new ArrayList<Long>();
+            TransactionManager.callInTransaction(getConnectionSource(),
+                    new Callable<Void>() {
+                        public Void call() throws Exception {
+                            for (TItem item : items) {
+                                dao.create(item);
+                            }
+                            return null;
+                        }
+                    });
 
-            for (TItem item : items) {
-                dao.create(item);
-                ids.add(item.getId());
-            }
-
-            fireAfterItemsAdded(clz, ids);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     /**
-     *
-     * @param <TItem>
      * @param dao
-     * @param clz
      * @param id
      */
-    public <TItem extends ModelElement> void removeItemById(Dao<TItem, Long> dao, Class<TItem> clz, long id) {
-        List<Long> ids = new ArrayList<Long>();
-        ids.add(id);
-        removeItemsByIds(dao, clz, ids);
+    public <TItem extends ModelElement> void removeItemById(Dao<TItem, Long> dao, final long id) {
+        removeItemsByIds(dao, new ArrayList<Long>(){{
+            add(id);
+        }});
     }
 
     /**
-     *
-     * @param <TItem>
      * @param dao
-     * @param clz
      * @param items
      */
-    public <TItem extends ModelElement> void removeItems(Dao<TItem, Long> dao, Class<TItem> clz, List<TItem> items) {
-        List<Long> ids = new ArrayList<Long>();
-        for (TItem item : items) {
-            ids.add(item.getId());
-        }
-        removeItemsByIds(dao, clz, ids);
+    public <TItem extends ModelElement> void removeItems(Dao<TItem, Long> dao, final List<TItem> items) {
+        removeItemsByIds(dao, new ArrayList<Long>(){{
+            for (TItem item : items) {
+                add(item.getId());
+            }
+        }});
     }
 
     /**
-     *
-     * @param <TItem>
      * @param dao
-     * @param clz
      * @param ids
      */
-    public <TItem extends ModelElement> void removeItemsByIds(Dao<TItem, Long> dao, Class<TItem> clz, List<Long> ids) {
+    public <TItem extends ModelElement> void removeItemsByIds(final Dao<TItem, Long> dao, final List<Long> ids) {
         try {
-            List<Pair<Long, Long>> idAndOldParentIds = new ArrayList<Pair<Long, Long>>();
-
-            for (long id : ids) {
-                idAndOldParentIds.add(new Pair<Long, Long>(id, getItemById(dao, id).getParentId()));
-            }
-
-            fireBeforeItemsRemoved(clz, idAndOldParentIds);
-
-            for (long id : ids) {
-                dao.deleteById(id);
-            }
+            DeleteBuilder<TItem,Long> deleteBuilder = dao.deleteBuilder();
+            deleteBuilder.where().in("id", ids);
+            dao.delete(deleteBuilder.prepare());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     /**
-     *
-     * @param <TItem>
      * @param dao
-     * @param clz
+     *
      */
-    public <TItem extends ModelElement> void clearItems(Dao<TItem, Long> dao, Class<TItem> clz) {
+    public <TItem extends ModelElement> void clearItems(Dao<TItem, Long> dao) {
         try {
-            List<Pair<Long, Long>> idAndOldParentIds = new ArrayList<Pair<Long, Long>>();
-
-            for (TItem item : getAllItems(dao)) {
-                idAndOldParentIds.add(new Pair<Long, Long>(item.getId(), item.getParentId()));
-            }
-
-            fireBeforeItemsRemoved(clz, idAndOldParentIds);
-
             dao.delete(dao.deleteBuilder().prepare());
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -403,55 +351,39 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
-     * @param <TItem>
      * @param dao
-     * @param clz
      * @param item
      */
-    public <TItem extends ModelElement> void updateItem(Dao<TItem, Long> dao, Class<TItem> clz, TItem item) {
-        List<TItem> items = new ArrayList<TItem>();
-        items.add(item);
-        updateItems(dao, clz, items);
+    public <TItem extends ModelElement> void updateItem(Dao<TItem, Long> dao, final TItem item) {
+        updateItems(dao, new ArrayList<TItem>(){{
+            add(item);
+        }});
     }
 
     /**
-     *
-     * @param <TItem>
      * @param dao
-     * @param clz
      * @param items
      */
-    public <TItem extends ModelElement> void updateItems(Dao<TItem, Long> dao, Class<TItem> clz, List<TItem> items) {
+    public <TItem extends ModelElement> void updateItems(final Dao<TItem, Long> dao, final List<TItem> items) {
         try {
-            List<Pair<Long, Long>> idAndOldParentIds = new ArrayList<Pair<Long, Long>>();
+            TransactionManager.callInTransaction(getConnectionSource(),
+                    new Callable<Void>() {
+                        public Void call() throws Exception {
+                            for (TItem item : items) {
+                                dao.update(item);
+                            }
 
-            for (TItem item : items) {
-                long oldParentId = getItemById(dao, item.getId()).getParentId();
-                dao.update(item);
-                idAndOldParentIds.add(new Pair<Long, Long>(item.getId(), oldParentId));
-            }
+                            return null;
+                        }
+                    });
 
-            fireAfterItemsUpdated(clz, idAndOldParentIds);
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void fireAfterItemsAdded(Class<?> clz, List<Long> itemIds) {
-        this.blockingEventDispatcher.dispatch(new AfterItemsAddedEvent(clz, itemIds));
-    }
-
-    private void fireAfterItemsUpdated(Class<?> clz, List<Pair<Long, Long>> idAndOldParentIds) {
-        this.blockingEventDispatcher.dispatch(new AfterItemsUpdatedEvent(clz, idAndOldParentIds));
-    }
-
-    private void fireBeforeItemsRemoved(Class<?> clz, List<Pair<Long, Long>> idAndOldParentIds) {
-        this.blockingEventDispatcher.dispatch(new BeforeItemsRemovedEvent(clz, idAndOldParentIds));
-    }
-
     /**
-     *
      * @param <ModelElementT>
      * @param <D>
      * @param clz
@@ -466,18 +398,9 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
      * @return
      */
     protected JdbcPooledConnectionSource getConnectionSource() {
         return connectionSource;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public BlockingEventDispatcher<ServiceEvent> getBlockingEventDispatcher() {
-        return blockingEventDispatcher;
     }
 }

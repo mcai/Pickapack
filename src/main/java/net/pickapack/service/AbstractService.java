@@ -138,7 +138,7 @@ public class AbstractService implements Service {
      */
     public <TItem extends ModelElement, TItemDirectory extends ModelElement> long getNumItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent) {
         try {
-            PreparedQuery<TItem> query = dao.queryBuilder().where().eq("parentId", parent.getId()).prepare();
+            PreparedQuery<TItem> query = dao.queryBuilder().setCountOf(true).where().eq("parentId", parent.getId()).prepare();
             return dao.countOf(query);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -247,7 +247,7 @@ public class AbstractService implements Service {
      */
     public <TItem extends ModelElement> long getNumItemsByTitle(Dao<TItem, Long> dao, String title) {
         try {
-            PreparedQuery<TItem> query = dao.queryBuilder().where().eq("title", title).prepare();
+            PreparedQuery<TItem> query = dao.queryBuilder().setCountOf(true).where().eq("title", title).prepare();
             return dao.countOf(query);
         } catch (SQLException e) {
             throw new RuntimeException(e);

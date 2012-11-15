@@ -95,7 +95,11 @@ public enum StorageUnit {
      * @return
      */
     public String format(long number) {
-        return nf.format((double) number / divider) + " " + symbol;
+        return getValue(number) + " " + symbol;
+    }
+
+    public String getValue(double number) {
+        return nf.format(number / divider);
     }
 
     /**

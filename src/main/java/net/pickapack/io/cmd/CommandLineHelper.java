@@ -18,7 +18,10 @@
  ******************************************************************************/
 package net.pickapack.io.cmd;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +40,35 @@ public class CommandLineHelper {
     public static int invokeNativeCommand(String[] cmd, boolean waitFor) {
         try {
             Runtime r = Runtime.getRuntime();
-            Process ps = r.exec(cmd);
+            final Process ps = r.exec(cmd);
 //            ProcessBuilder pb = new ProcessBuilder(cmd);
 //            Process ps = pb.start();
+
+            new Thread(){{
+                setDaemon(true);
+            }
+                @Override
+                public void run() {
+                    try {
+                        IOUtils.copy(ps.getInputStream(), System.out);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+
+            new Thread(){{
+                setDaemon(true);
+            }
+                @Override
+                public void run() {
+                    try {
+                        IOUtils.copy(ps.getErrorStream(), System.out);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
 
             if(waitFor) {
                 int exitValue = ps.waitFor();

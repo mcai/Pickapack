@@ -18,13 +18,15 @@
  ******************************************************************************/
 package net.pickapack;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Min Cai
  * @param <K>
  * @param <T>
  */
-public class Pair<K, T> {
+public class Pair<K, T> implements Serializable {
     private K first;
     private T second;
 

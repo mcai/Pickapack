@@ -16,45 +16,34 @@
  * You should have received a copy of the GNU General Public License
  * along with PickaPack. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package net.pickapack;
+package net.pickapack.model;
 
 import java.io.Serializable;
 
 /**
  *
  * @author Min Cai
- * @param <T>
  */
-public class Reference<T> implements Serializable {
-    private T value;
-
-    /**
-     *
-     */
-    public Reference() {
-    }
-
-    /**
-     *
-     * @param value
-     */
-    public Reference(T value) {
-        this.value = value;
-    }
-
+public interface ModelElement extends Serializable {
     /**
      *
      * @return
      */
-    public T get() {
-        return value;
-    }
-
+    long getId();
     /**
      *
-     * @param value
+     * @return
      */
-    public void set(T value) {
-        this.value = value;
-    }
+    long getParentId();
+    /**
+     *
+     * @return
+     */
+    String getTitle();
+    /**
+     *
+     * @return
+     */
+    long getCreateTime();
 }
+

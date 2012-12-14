@@ -20,12 +20,14 @@ package net.pickapack.chart;
 
 import net.pickapack.action.Function1;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Min Cai
  * @param <ItemT>
  */
-public class SubBarPlot<ItemT> {
+public class SubBarPlot<ItemT> implements Serializable {
     private String title;
     private Function1<ItemT, Double> getValueCallback;
     private Function1<ItemT, String> getTitleCallback;

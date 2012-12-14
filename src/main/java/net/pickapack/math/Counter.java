@@ -18,11 +18,13 @@
  ******************************************************************************/
 package net.pickapack.math;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Min Cai
  */
-public class Counter {
+public class Counter implements Serializable {
     private long initialValue;
     private long value;
 

@@ -18,6 +18,7 @@
  ******************************************************************************/
 package net.pickapack.chart;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import java.util.List;
  *
  * @author Min Cai
  */
-public class LinePlot {
+public class LinePlot implements Serializable {
     private String title;
     private List<SubLinePlot> subLinePlots;
 

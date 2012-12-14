@@ -18,11 +18,13 @@
  ******************************************************************************/
 package net.pickapack.math;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Min Cai
  */
-public class SaturatingCounter {
+public class SaturatingCounter implements Serializable {
     private int minValue;
     private int threshold;
     private int maxValue;

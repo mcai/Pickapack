@@ -18,6 +18,8 @@
  ******************************************************************************/
 package net.pickapack;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Min Cai
@@ -25,7 +27,7 @@ package net.pickapack;
  * @param <T>
  * @param <P>
  */
-public class Triple<K, T, P> {
+public class Triple<K, T, P> implements Serializable {
     private K first;
     private T second;
     private P third;

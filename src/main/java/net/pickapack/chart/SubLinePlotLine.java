@@ -20,11 +20,13 @@ package net.pickapack.chart;
 
 import net.pickapack.action.Function;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Min Cai
  */
-public class SubLinePlotLine {
+public class SubLinePlotLine implements Serializable {
     private String title;
     private Function<Double> getValueCallback;
 

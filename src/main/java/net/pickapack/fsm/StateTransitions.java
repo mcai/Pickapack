@@ -21,6 +21,7 @@ package net.pickapack.fsm;
 import net.pickapack.Params;
 import net.pickapack.action.*;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -30,7 +31,7 @@ import java.util.*;
  * @param <ConditionT>
  * @param <FiniteStateMachineT>
  */
-public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends FiniteStateMachine<StateT, ConditionT>> {
+public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends FiniteStateMachine<StateT, ConditionT>> implements Serializable {
     private Map<ConditionT, StateTransition> perStateTransitions;
     private FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT> fsmFactory;
     private StateT state;

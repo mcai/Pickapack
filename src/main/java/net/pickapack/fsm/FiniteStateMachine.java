@@ -20,6 +20,7 @@ package net.pickapack.fsm;
 
 import net.pickapack.Params;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
@@ -28,7 +29,7 @@ import java.util.Map;
  * @param <StateT>
  * @param <ConditionT>
  */
-public interface FiniteStateMachine<StateT, ConditionT> {
+public interface FiniteStateMachine<StateT, ConditionT> extends Serializable {
     /**
      *
      * @return

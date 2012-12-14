@@ -18,6 +18,7 @@
  ******************************************************************************/
 package net.pickapack;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ import java.util.Map;
  *
  * @author Min Cai
  */
-public class Params {
+public class Params implements Serializable {
     private Map<Object, Object> properties;
 
     /**

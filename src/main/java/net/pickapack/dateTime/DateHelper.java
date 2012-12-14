@@ -16,45 +16,66 @@
  * You should have received a copy of the GNU General Public License
  * along with PickaPack. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package net.pickapack;
+package net.pickapack.dateTime;
 
-import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *
  * @author Min Cai
- * @param <T>
  */
-public class Reference<T> implements Serializable {
-    private T value;
-
-    /**
-     *
-     */
-    public Reference() {
-    }
-
-    /**
-     *
-     * @param value
-     */
-    public Reference(T value) {
-        this.value = value;
-    }
-
+public class DateHelper {
     /**
      *
      * @return
      */
-    public T get() {
-        return value;
+    public static long toTick() {
+        return toTick(new Date());
+    }
+
+    /**
+     *                           model
+     * @param time
+     * @return
+     */
+    public static long toTick(Date time) {
+        return time.getTime();
     }
 
     /**
      *
-     * @param value
+     * @param tick
+     * @return
      */
-    public void set(T value) {
-        this.value = value;
+    public static Date fromTick(long tick) {
+        return new Date(tick);
+    }
+
+    /**
+     *
+     * @param tick
+     * @return
+     */
+    public static String toString(long tick) {
+        return toString(fromTick(tick));
+    }
+
+    /**
+     *
+     * @param date
+     * @return
+     */
+    public static String toString(Date date) {
+        return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(date);
+    }
+
+    /**
+     *
+     * @param date
+     * @return
+     */
+    public static String toFileNameString(Date date) {
+        return new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss").format(date);
     }
 }

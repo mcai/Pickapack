@@ -18,13 +18,14 @@
  ******************************************************************************/
 package net.pickapack.tree;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author Min Cai
  */
-public interface Node {
+public interface Node extends Serializable {
     /**
      *
      * @return

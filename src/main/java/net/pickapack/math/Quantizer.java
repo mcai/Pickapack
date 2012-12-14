@@ -18,11 +18,13 @@
  ******************************************************************************/
 package net.pickapack.math;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Min Cai
  */
-public class Quantizer {
+public class Quantizer implements Serializable {
     private int maxValue;
     private int quantum;
 

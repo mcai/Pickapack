@@ -20,6 +20,7 @@ package net.pickapack.chart;
 
 import net.pickapack.action.Predicate;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import java.util.List;
  * @author Min Cai
  * @param <ItemT>
  */
-public class BarPlot<ItemT> {
+public class BarPlot<ItemT> implements Serializable {
     private String title;
     private String titleY;
     private boolean stacked;

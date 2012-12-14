@@ -26,7 +26,7 @@
         <dependency>
             <groupId>net.sourceforge.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
-            <version>2.10</version>
+            <version>2.11</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
-            <version>3.1</version>
+            <version>3.2</version>
         </dependency>
         <dependency>
             <groupId>commons-math</groupId>
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.21</version>
+            <version>5.1.22</version>
         </dependency>
         <dependency>
             <groupId>org.subethamail</groupId>
@@ -127,17 +127,17 @@
         <dependency>
             <groupId>com.jcraft</groupId>
             <artifactId>jsch</artifactId>
-            <version>0.1.48</version>
+            <version>0.1.49</version>
         </dependency>
         <dependency>
             <groupId>org.parboiled</groupId>
             <artifactId>parboiled-core</artifactId>
-            <version>1.1.1</version>
+            <version>1.1.4</version>
         </dependency>
         <dependency>
             <groupId>org.parboiled</groupId>
             <artifactId>parboiled-java</artifactId>
-            <version>1.1.1</version>
+            <version>1.1.4</version>
         </dependency>
         <dependency>
             <groupId>org.jfree</groupId>
@@ -147,13 +147,13 @@
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
-            <version>5.3.2</version>
+            <version>5.3.4</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>com.itextpdf.tool</groupId>
             <artifactId>xmlworker</artifactId>
-            <version>1.1.6</version>
+            <version>1.2.1</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -199,12 +199,12 @@
         <dependency>
             <groupId>org.simpleframework</groupId>
             <artifactId>simple-xml</artifactId>
-            <version>2.6.6</version>
+            <version>2.6.9</version>
         </dependency>
         <dependency>
             <groupId>org.simpleframework</groupId>
             <artifactId>simple</artifactId>
-            <version>4.1.21</version>
+            <version>5.0.3</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty.aggregate</groupId>
@@ -214,22 +214,22 @@
         <dependency>
             <groupId>de.agilecoders.wicket</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>0.6.2</version>
+            <version>0.7.5</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.0.6</version>
+            <version>2.1.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.0.6</version>
+            <version>2.1.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.0.6</version>
+            <version>2.1.2</version>
         </dependency>
         <dependency>
             <groupId>commons-jxpath</groupId>

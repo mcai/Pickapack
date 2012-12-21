@@ -5,6 +5,7 @@
       <w>fsms</w>
       <w>gson</w>
       <w>itecgo</w>
+      <w>jdbc</w>
     </words>
   </dictionary>
 </component>

@@ -8,7 +8,10 @@ import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.table.TableUtils;
-import net.pickapack.model.ModelElement;
+import net.pickapack.model.WithCreateTime;
+import net.pickapack.model.WithId;
+import net.pickapack.model.WithParentId;
+import net.pickapack.model.WithTitle;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,16 +19,20 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
+ * Abstract service.
+ *
  * @author Min Cai
  */
 public class AbstractService implements Service {
     private JdbcPooledConnectionSource connectionSource;
 
     /**
-     * @param databaseUrl
-     * @param dataClasses
+     * Create an abstract service.
+     *
+     * @param databaseUrl database URL
+     * @param dataClasses a list of data classes
      */
-    public AbstractService(String databaseUrl, List<Class<? extends ModelElement>> dataClasses) {
+    public AbstractService(String databaseUrl, List<Class<? extends WithId>> dataClasses) {
         try {
             this.connectionSource = new JdbcPooledConnectionSource(databaseUrl);
             this.connectionSource.setCheckConnectionsEveryMillis(0);
@@ -40,7 +47,7 @@ public class AbstractService implements Service {
     }
 
     /**
-     *
+     * Stop the service.
      */
     public void stop() {
         try {
@@ -51,11 +58,13 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param dao
-     * @return
+     * Get the items.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @return the items
      */
-    public <TItem extends ModelElement> List<TItem> getAllItems(Dao<TItem, Long> dao) {
+    public <TItem extends WithId> List<TItem> getItems(Dao<TItem, Long> dao) {
         try {
             return dao.queryForAll();
         } catch (SQLException e) {
@@ -64,15 +73,17 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param dao
-     * @param first
-     * @param count
-     * @return
+     * Get the items with paging.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @param offset the offset
+     * @param limit the maximum number of items to be fetched
+     * @return the items with the specified offset and limit
      */
-    public <TItem extends ModelElement> List<TItem> getAllItems(Dao<TItem, Long> dao, long first, long count) {
+    public <TItem extends WithId> List<TItem> getItems(Dao<TItem, Long> dao, long offset, long limit) {
         try {
-            PreparedQuery<TItem> query = dao.queryBuilder().offset(first).limit(count).prepare();
+            PreparedQuery<TItem> query = dao.queryBuilder().offset(offset).limit(limit).prepare();
             return dao.query(query);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -80,11 +91,13 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param dao
-     * @return
+     * Get the number of items.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @return the number of items
      */
-    public <TItem extends ModelElement> long getNumAllItems(Dao<TItem, Long> dao) {
+    public <TItem extends WithId> long getNumItems(Dao<TItem, Long> dao) {
         try {
             return dao.countOf();
         } catch (SQLException e) {
@@ -93,13 +106,15 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param <TItemDirectory>
-     * @param dao
-     * @param parent
-     * @return
+     * Get the items under the specified parent.
+     *
+     * @param <TItem> the item type
+     * @param <TItemDirectory> the item directory type
+     * @param dao the data access object
+     * @param parent the parent
+     * @return the items under the specified parent
      */
-    public <TItem extends ModelElement, TItemDirectory extends ModelElement> List<TItem> getItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent) {
+    public <TItem extends WithParentId, TItemDirectory extends WithId> List<TItem> getItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().where().eq("parentId", parent.getId()).prepare();
             return dao.query(query);
@@ -109,18 +124,20 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param <TItemDirectory>
-     * @param dao
-     * @param parent
-     * @param first
-     * @param count
-     * @return
+     * Get the items under the specified parent with paging.
+     *
+     * @param <TItem> the item type
+     * @param <TItemDirectory> the item directory type
+     * @param dao the data access object
+     * @param parent the parent
+     * @param offset the offset
+     * @param limit the limit
+     * @return the items under the specified parent with the specified offset and limit
      */
-    public <TItem extends ModelElement, TItemDirectory extends ModelElement> List<TItem> getItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent, long first, long count) {
+    public <TItem extends WithParentId, TItemDirectory extends WithId> List<TItem> getItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent, long offset, long limit) {
         try {
             QueryBuilder<TItem, Long> queryBuilder = dao.queryBuilder();
-            queryBuilder.offset(first).limit(count);
+            queryBuilder.offset(offset).limit(limit);
             queryBuilder.where().eq("parentId", parent.getId());
             PreparedQuery<TItem> query = queryBuilder.prepare();
             return dao.query(query);
@@ -130,13 +147,15 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param <TItemDirectory>
-     * @param dao
-     * @param parent
-     * @return
+     * Get the number of items under the specified parent.
+     *
+     * @param <TItem> the item type
+     * @param <TItemDirectory> the item directory type
+     * @param dao the data access object
+     * @param parent the parent
+     * @return the number of items under the specified parent
      */
-    public <TItem extends ModelElement, TItemDirectory extends ModelElement> long getNumItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent) {
+    public <TItem extends WithParentId, TItemDirectory extends WithId> long getNumItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().setCountOf(true).where().eq("parentId", parent.getId()).prepare();
             return dao.countOf(query);
@@ -146,12 +165,14 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param dao
-     * @param id
-     * @return
+     * Get the item matching the specified ID.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @param id the ID
+     * @return the item matching the specified ID
      */
-    public <TItem extends ModelElement> TItem getItemById(Dao<TItem, Long> dao, long id) {
+    public <TItem extends WithId> TItem getItemById(Dao<TItem, Long> dao, long id) {
         try {
             return dao.queryForId(id);
         } catch (SQLException e) {
@@ -160,12 +181,14 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param dao
-     * @param title
-     * @return
+     * Get the first item matching the specified title.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @param title the title
+     * @return the first item matching the specified title
      */
-    public <TItem extends ModelElement> TItem getFirstItemByTitle(Dao<TItem, Long> dao, String title) {
+    public <TItem extends WithTitle> TItem getFirstItemByTitle(Dao<TItem, Long> dao, String title) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().where().eq("title", title).prepare();
             return dao.queryForFirst(query);
@@ -175,13 +198,15 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param <TItemDirectory>
-     * @param dao
-     * @param parent
-     * @return
+     * Get the first item under the specified parent.
+     *
+     * @param <TItem> the item type
+     * @param <TItemDirectory> the item directory type
+     * @param dao the data access object
+     * @param parent the parent
+     * @return the first item under the specified parent
      */
-    public <TItem extends ModelElement, TItemDirectory extends ModelElement> TItem getFirstItemByParent(Dao<TItem, Long> dao, TItemDirectory parent) {
+    public <TItem extends WithParentId, TItemDirectory extends WithId> TItem getFirstItemByParent(Dao<TItem, Long> dao, TItemDirectory parent) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().where().eq("parentId", parent.getId()).and().prepare();
             return dao.queryForFirst(query);
@@ -191,12 +216,14 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param dao
-     * @param title
-     * @return
+     * Get the latest item matching the specified title.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @param title the  title
+     * @return the latest item matching the specified title
      */
-    public <TItem extends ModelElement> TItem getLatestItemByTitle(Dao<TItem, Long> dao, String title) {
+    public <TItem extends WithTitle & WithCreateTime> TItem getLatestItemByTitle(Dao<TItem, Long> dao, String title) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().orderBy("createTime", false).where().eq("title", title).prepare();
             return dao.queryForFirst(query);
@@ -206,12 +233,14 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param dao
-     * @param title
-     * @return
+     * Get the list of items matching the specified title.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @param title the title
+     * @return the list of items matching the specified title
      */
-    public <TItem extends ModelElement> List<TItem> getItemsByTitle(Dao<TItem, Long> dao, String title) {
+    public <TItem extends WithTitle> List<TItem> getItemsByTitle(Dao<TItem, Long> dao, String title) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().where().eq("title", title).prepare();
             return dao.query(query);
@@ -221,18 +250,20 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param dao
-     * @param title
-     * @param first
-     * @param count
-     * @return
+     * Get the list of items matching the specified title and with paging.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @param title the title
+     * @param offset the offset
+     * @param limit the limit
+     * @return the list of items matching the specified title and with the specified offset and limit
      */
-    public <TItem extends ModelElement> List<TItem> getItemsByTitle(Dao<TItem, Long> dao, String title, long first, long count) {
+    public <TItem extends WithTitle> List<TItem> getItemsByTitle(Dao<TItem, Long> dao, String title, long offset, long limit) {
         try {
             QueryBuilder<TItem, Long> queryBuilder = dao.queryBuilder();
             queryBuilder.where().eq("title", title);
-            queryBuilder.offset(first).limit(count);
+            queryBuilder.offset(offset).limit(limit);
             return dao.query(queryBuilder.prepare());
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -240,12 +271,14 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param dao
-     * @param title
-     * @return
+     * Get the number of items matching the specified title.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @param title the title
+     * @return the number of items matching the specified title
      */
-    public <TItem extends ModelElement> long getNumItemsByTitle(Dao<TItem, Long> dao, String title) {
+    public <TItem extends WithTitle> long getNumItemsByTitle(Dao<TItem, Long> dao, String title) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().setCountOf(true).where().eq("title", title).prepare();
             return dao.countOf(query);
@@ -255,11 +288,13 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <TItem>
-     * @param dao
-     * @return
+     * Get the first item.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @return the first item if any exists; otherwise null
      */
-    public <TItem extends ModelElement> TItem getFirstItem(Dao<TItem, Long> dao) {
+    public <TItem extends WithId> TItem getFirstItem(Dao<TItem, Long> dao) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().prepare();
             return dao.queryForFirst(query);
@@ -269,12 +304,13 @@ public class AbstractService implements Service {
     }
 
     /**
+     * Add an item.
      *
-     * @param dao
-     * @param item
-     * @return
+     * @param dao the data access object
+     * @param item the item that is to be added
+     * @return the ID of the newly added item
      */
-    public <TItem extends ModelElement> long addItem(final Dao<TItem, Long> dao, final TItem item) {
+    public <TItem extends WithId> long addItem(final Dao<TItem, Long> dao, final TItem item) {
         addItems(dao, new ArrayList<TItem>() {{
             add(item);
         }});
@@ -282,10 +318,12 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param dao
-     * @param items
+     * Add a list of items.
+     *
+     * @param dao the data access object
+     * @param items the list of items that is to be added
      */
-    public <TItem extends ModelElement> void addItems(final Dao<TItem, Long> dao, final List<TItem> items) {
+    public <TItem extends WithId> void addItems(final Dao<TItem, Long> dao, final List<TItem> items) {
         try {
             TransactionManager.callInTransaction(getConnectionSource(),
                     new Callable<Void>() {
@@ -303,20 +341,24 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param dao
-     * @param id
+     * Remove the item matching the specified ID.
+     *
+     * @param dao the data access object
+     * @param id the ID of the item that is to be removed
      */
-    public <TItem extends ModelElement> void removeItemById(Dao<TItem, Long> dao, final long id) {
+    public <TItem extends WithId> void removeItemById(Dao<TItem, Long> dao, final long id) {
         removeItemsByIds(dao, new ArrayList<Long>(){{
             add(id);
         }});
     }
 
     /**
-     * @param dao
-     * @param items
+     * Remove the specified items.
+     *
+     * @param dao the data access object
+     * @param items the items that is to be removed
      */
-    public <TItem extends ModelElement> void removeItems(Dao<TItem, Long> dao, final List<TItem> items) {
+    public <TItem extends WithId> void removeItems(Dao<TItem, Long> dao, final List<TItem> items) {
         removeItemsByIds(dao, new ArrayList<Long>(){{
             for (TItem item : items) {
                 add(item.getId());
@@ -325,10 +367,12 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param dao
-     * @param ids
+     * Remove the items matching the specified list of IDs.
+     *
+     * @param dao the data access object
+     * @param ids the list of IDs
      */
-    public <TItem extends ModelElement> void removeItemsByIds(final Dao<TItem, Long> dao, final List<Long> ids) {
+    public <TItem extends WithId> void removeItemsByIds(final Dao<TItem, Long> dao, final List<Long> ids) {
         try {
             DeleteBuilder<TItem,Long> deleteBuilder = dao.deleteBuilder();
             deleteBuilder.where().in("id", ids);
@@ -339,10 +383,11 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param dao
+     * Clear the items.
      *
+     * @param dao the data access object
      */
-    public <TItem extends ModelElement> void clearItems(Dao<TItem, Long> dao) {
+    public <TItem extends WithId> void clearItems(Dao<TItem, Long> dao) {
         try {
             dao.delete(dao.deleteBuilder().prepare());
         } catch (SQLException e) {
@@ -351,20 +396,24 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param dao
-     * @param item
+     * Update the specified item.
+     *
+     * @param dao the data access object
+     * @param item the item that is to be updated
      */
-    public <TItem extends ModelElement> void updateItem(Dao<TItem, Long> dao, final TItem item) {
+    public <TItem extends WithId> void updateItem(Dao<TItem, Long> dao, final TItem item) {
         updateItems(dao, new ArrayList<TItem>(){{
             add(item);
         }});
     }
 
     /**
-     * @param dao
-     * @param items
+     * Update the specified list of items.
+     *
+     * @param dao the data access object
+     * @param items the items that is to be updated
      */
-    public <TItem extends ModelElement> void updateItems(final Dao<TItem, Long> dao, final List<TItem> items) {
+    public <TItem extends WithId> void updateItems(final Dao<TItem, Long> dao, final List<TItem> items) {
         try {
             TransactionManager.callInTransaction(getConnectionSource(),
                     new Callable<Void>() {
@@ -384,12 +433,14 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @param <ModelElementT>
-     * @param <D>
-     * @param clz
-     * @return
+     * Create a data access object for the specified class.
+     *
+     * @param <TItem> the item type
+     * @param <D> the dao type
+     * @param clz the class
+     * @return the newly created data access object for the specified class
      */
-    protected <ModelElementT extends ModelElement, D extends Dao<ModelElementT, Long>> D createDao(Class<ModelElementT> clz) {
+    protected <TItem extends WithId, D extends Dao<TItem, Long>> D createDao(Class<TItem> clz) {
         try {
             return DaoManager.createDao(this.connectionSource, clz);
         } catch (SQLException e) {
@@ -398,7 +449,9 @@ public class AbstractService implements Service {
     }
 
     /**
-     * @return
+     * Get the JDBC connection source.
+     *
+     * @return the JDBC connection source
      */
     protected JdbcPooledConnectionSource getConnectionSource() {
         return connectionSource;

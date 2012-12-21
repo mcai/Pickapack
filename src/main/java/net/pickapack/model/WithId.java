@@ -21,29 +21,16 @@ package net.pickapack.model;
 import java.io.Serializable;
 
 /**
+ * With ID.
  *
  * @author Min Cai
  */
-public interface ModelElement extends Serializable {
+public interface WithId extends Serializable {
     /**
+     * Get the ID.
      *
-     * @return
+     * @return the ID
      */
     long getId();
-    /**
-     *
-     * @return
-     */
-    long getParentId();
-    /**
-     *
-     * @return
-     */
-    String getTitle();
-    /**
-     *
-     * @return
-     */
-    long getCreateTime();
 }
 

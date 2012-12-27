@@ -21,6 +21,7 @@ package net.pickapack.math;
 import java.io.Serializable;
 
 /**
+ * Counter.
  *
  * @author Min Cai
  */
@@ -29,8 +30,9 @@ public class Counter implements Serializable {
     private long value;
 
     /**
+     * Create a counter using the specified initial value.
      *
-     * @param initialValue
+     * @param initialValue the initial value
      */
     public Counter(long initialValue) {
         this.initialValue = initialValue;
@@ -38,8 +40,9 @@ public class Counter implements Serializable {
     }
 
     /**
+     * Increment the value of the counter.
      *
-     * @return
+     * @return the counter itself
      */
     public Counter inc() {
         this.value++;
@@ -47,8 +50,9 @@ public class Counter implements Serializable {
     }
 
     /**
+     * Decrement the value of the counter.
      *
-     * @return
+     * @return the counter itself
      */
     public Counter dec() {
         this.value--;
@@ -56,8 +60,9 @@ public class Counter implements Serializable {
     }
 
     /**
+     * Reset the value of the counter.
      *
-     * @return
+     * @return the counter itself
      */
     public Counter reset() {
         this.value = this.initialValue;
@@ -65,10 +70,16 @@ public class Counter implements Serializable {
     }
 
     /**
+     * Get the value.
      *
-     * @return
+     * @return the value
      */
     public long getValue() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Counter{initialValue=%d, value=%d}", initialValue, value);
     }
 }

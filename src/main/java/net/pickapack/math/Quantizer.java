@@ -21,6 +21,7 @@ package net.pickapack.math;
 import java.io.Serializable;
 
 /**
+ * Quantizer.
  *
  * @author Min Cai
  */
@@ -29,9 +30,10 @@ public class Quantizer implements Serializable {
     private int quantum;
 
     /**
+     * Create a quantizer.
      *
-     * @param maxValue
-     * @param quantum
+     * @param maxValue the max value
+     * @param quantum the quantum
      */
     public Quantizer(int maxValue, int quantum) {
         this.maxValue = maxValue;
@@ -39,36 +41,45 @@ public class Quantizer implements Serializable {
     }
 
     /**
+     * Quantize the specified raw value.
      *
-     * @param rawValue
-     * @return
+     * @param rawValue the raw value
+     * @return the quantized value
      */
     public int quantize(int rawValue) {
         return Math.min(rawValue / this.quantum, this.maxValue);
     }
 
     /**
+     * Un-quantize the specified value.
      *
-     * @param value
-     * @return
+     * @param value the value
+     * @return the un-quantized raw value
      */
     public int unQuantize(int value) {
         return value * this.quantum;
     }
 
     /**
+     * Get the maximum value.
      *
-     * @return
+     * @return the maximum value
      */
     public int getMaxValue() {
         return maxValue;
     }
 
     /**
+     * Get the quantum.
      *
-     * @return
+     * @return the quantum
      */
     public int getQuantum() {
         return quantum;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Quantizer{maxValue=%d, quantum=%d}", maxValue, quantum);
     }
 }

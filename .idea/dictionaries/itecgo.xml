@@ -2,10 +2,12 @@
   <dictionary name="itecgo">
     <words>
       <w>deserialize</w>
+      <w>exabyte</w>
       <w>fsms</w>
       <w>gson</w>
       <w>itecgo</w>
       <w>jdbc</w>
+      <w>petabyte</w>
     </words>
   </dictionary>
 </component>

@@ -18,59 +18,70 @@
  ******************************************************************************/
 package net.pickapack;
 
+import java.text.NumberFormat;
+
 /**
+ * Storage unit.
  *
  * @author Min Cai
  */
 public enum StorageUnit {
     /**
-     *
+     * Byte.
      */
     BYTE("B", 1L),
+
     /**
-     *
+     * Kilobyte.
      */
     KILOBYTE("KB", 1L << 10),
+
     /**
-     *
+     * Megabyte.
      */
     MEGABYTE("MB", 1L << 20),
+
     /**
-     *
+     * Gigabyte.
      */
     GIGABYTE("GB", 1L << 30),
+
     /**
-     *
+     * Terabyte.
      */
     TERABYTE("TB", 1L << 40),
+
     /**
-     *
+     * Petabyte.
      */
     PETABYTE("PB", 1L << 50),
+
     /**
-     *
+     * Exabyte.
      */
     EXABYTE("EB", 1L << 60);
 
+    private String symbol;
+    private long divider;
+
     /**
+     * Create a storage unit.
      *
+     * @param symbol the symbol
+     * @param divider the divider
      */
-    public static final StorageUnit BASE = BYTE;
-
-    private final String symbol;
-    private final long divider;  // divider of BASE unit
-
-    StorageUnit(String name, long divider) {
-        this.symbol = name;
+    StorageUnit(String symbol, long divider) {
+        this.symbol = symbol;
         this.divider = divider;
     }
 
     /**
+     * Get the storage unit for the specified number.
      *
-     * @param number
-     * @return
+     * @param number the number
+     * @return the storage unit for the specified number
      */
-    public static StorageUnit of(final long number) {
+    public static StorageUnit of(long number) {
         final long n = number > 0 ? -number : number;
         if (n > -(1L << 10)) {
             return BYTE;
@@ -84,38 +95,67 @@ public enum StorageUnit {
             return TERABYTE;
         } else if (n > -(1L << 60)) {
             return PETABYTE;
-        } else {  // n >= Long.MIN_VALUE
+        } else {
             return EXABYTE;
         }
     }
 
     /**
+     * Get the formatted string representation for the specified number.
      *
-     * @param number
-     * @return
+     * @param number the number
+     * @return the formatted string representation for the specified number
      */
     public String format(long number) {
         return getValue(number) + " " + symbol;
     }
 
+    /**
+     * Get the value in the storage unit of the specified number
+     *
+     * @param number the number
+     * @return the value in the storage unit of the specified number
+     */
     public String getValue(double number) {
-        return nf.format(number / divider);
+        return NUMBER_FORMAT.format(number / divider);
     }
 
     /**
+     * Get the symbol.
      *
-     * @param number
-     * @return
+     * @return the symbol
+     */
+    public String getSymbol() {
+        return symbol;
+    }
+
+    /**
+     * Get the divider.
+     *
+     * @return the divider
+     */
+    public long getDivider() {
+        return divider;
+    }
+
+    /**
+     * Get the text representation in storage unit of the specified number.
+     *
+     * @param number the number
+     * @return the text representation in storage unit of the specified number
      */
     public static String toString(long number) {
         return of(number).format(number);
     }
 
-    private static final java.text.NumberFormat nf = java.text.NumberFormat.getInstance();
+    private static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance();
 
+    /**
+     * Static constructor.
+     */
     static {
-        nf.setGroupingUsed(false);
-        nf.setMinimumFractionDigits(0);
-        nf.setMaximumFractionDigits(1);
+        NUMBER_FORMAT.setGroupingUsed(false);
+        NUMBER_FORMAT.setMinimumFractionDigits(0);
+        NUMBER_FORMAT.setMaximumFractionDigits(1);
     }
 }

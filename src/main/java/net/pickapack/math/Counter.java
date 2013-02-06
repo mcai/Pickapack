@@ -44,7 +44,7 @@ public class Counter implements Serializable {
      *
      * @return the counter itself
      */
-    public Counter inc() {
+    public Counter increment() {
         this.value++;
         return this;
     }
@@ -54,7 +54,7 @@ public class Counter implements Serializable {
      *
      * @return the counter itself
      */
-    public Counter dec() {
+    public Counter decrement() {
         this.value--;
         return this;
     }

@@ -62,16 +62,16 @@ public class SaturatingCounter implements Serializable {
      */
     public void update(boolean direction) {
         if (direction) {
-            this.inc();
+            this.increment();
         } else {
-            this.dec();
+            this.decrement();
         }
     }
 
     /**
      * Increment the value of the saturating counter.
      */
-    private void inc() {
+    private void increment() {
         if (this.value < this.maxValue) {
             this.value++;
         }
@@ -80,7 +80,7 @@ public class SaturatingCounter implements Serializable {
     /**
      * Decrement the value of the saturating counter.
      */
-    private void dec() {
+    private void decrement() {
         if (this.value > this.minValue) {
             this.value--;
         }

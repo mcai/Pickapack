@@ -19,13 +19,15 @@
 package net.pickapack.action;
 
 /**
+ * Predicate.
  *
  * @author Min Cai
  */
 public interface UntypedPredicate {
     /**
+     * Apply.
      *
-     * @return
+     * @return the result
      */
     boolean apply();
 }

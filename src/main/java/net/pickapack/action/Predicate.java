@@ -21,15 +21,17 @@ package net.pickapack.action;
 import java.io.Serializable;
 
 /**
+ * Predicate.
  *
  * @author Min Cai
- * @param <T>
+ * @param <T> the type of the first parameter
  */
 public interface Predicate<T> extends Serializable {
     /**
+     * Apply.
      *
-     * @param param
-     * @return
+     * @param param the first parameter
+     * @return the result
      */
     boolean apply(T param);
 }

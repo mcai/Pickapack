@@ -21,14 +21,16 @@ package net.pickapack.action;
 import java.io.Serializable;
 
 /**
+ * Action.
  *
  * @author Min Cai
- * @param <T>
+ * @param <T> the type of the first parameter
  */
 public interface Action1<T> extends Serializable {
     /**
+     * Apply.
      *
-     * @param param
+     * @param param the first parameter
      */
     void apply(T param);
 }

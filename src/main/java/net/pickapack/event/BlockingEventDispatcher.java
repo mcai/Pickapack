@@ -27,37 +27,40 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Blocking event dispatcher.
  *
+ * @param <BlockingEventT> the type of the event
  * @author Min Cai
- * @param <BlockingEventT>
  */
 public class BlockingEventDispatcher<BlockingEventT extends BlockingEvent> {
     /**
-     *
+     * Map of event listeners.
      */
     protected final Map<Class<? extends BlockingEventT>, List<Action2<?, ? extends BlockingEventT>>> listeners;
 
     /**
-     *
+     * Create a blocking event dispatcher.
      */
     public BlockingEventDispatcher() {
         this.listeners = new LinkedHashMap<Class<? extends BlockingEventT>, List<Action2<?, ? extends BlockingEventT>>>();
     }
 
     /**
+     * Dispatch the specified event.
      *
-     * @param <BlockingEventK>
-     * @param event
+     * @param <BlockingEventK> the type of the event
+     * @param event            the event
      */
     public synchronized <BlockingEventK extends BlockingEventT> void dispatch(BlockingEventK event) {
         this.dispatch(null, event);
     }
 
     /**
+     * Dispatch the specified event from the specified sender.
      *
-     * @param <BlockingEventK>
-     * @param sender
-     * @param event
+     * @param <BlockingEventK> the type of the event
+     * @param sender           the sender
+     * @param event            the event
      */
     @SuppressWarnings({"unchecked"})
     public synchronized <BlockingEventK extends BlockingEventT> void dispatch(Object sender, BlockingEventK event) {
@@ -71,20 +74,22 @@ public class BlockingEventDispatcher<BlockingEventT extends BlockingEvent> {
     }
 
     /**
+     * Add a listener for the specified event class.
      *
-     * @param <BlockingEventK>
-     * @param eventClass
-     * @param listener
+     * @param <BlockingEventK> the type of the event
+     * @param eventClass       the event class
+     * @param listener         the listener that is to be added
      */
     public synchronized <BlockingEventK extends BlockingEventT> void addListener(Class<BlockingEventK> eventClass, final Action1<BlockingEventK> listener) {
         this.addListener(eventClass, new ProxyAction2<BlockingEventK>(listener));
     }
 
     /**
+     * Add a listener for the specified event class.
      *
-     * @param <BlockingEventK>
-     * @param eventClass
-     * @param listener
+     * @param <BlockingEventK> the type of the event
+     * @param eventClass       the event class
+     * @param listener         the listener that is to be added
      */
     public synchronized <BlockingEventK extends BlockingEventT> void addListener(Class<BlockingEventK> eventClass, Action2<?, BlockingEventK> listener) {
         if (!this.listeners.containsKey(eventClass)) {
@@ -97,10 +102,11 @@ public class BlockingEventDispatcher<BlockingEventT extends BlockingEvent> {
     }
 
     /**
+     * Remove the specified listener for the specified event class.
      *
-     * @param <BlockingEventK>
-     * @param eventClass
-     * @param listener
+     * @param <BlockingEventK> the type of the event
+     * @param eventClass       the event class
+     * @param listener         the listener that is to be removed
      */
     public synchronized <BlockingEventK extends BlockingEventT> void removeListener(Class<BlockingEventK> eventClass, Action1<BlockingEventK> listener) {
         if (this.listeners.containsKey(eventClass)) {
@@ -118,10 +124,11 @@ public class BlockingEventDispatcher<BlockingEventT extends BlockingEvent> {
     }
 
     /**
+     * Remove the specified listener for the specified event class.
      *
-     * @param <BlockingEventK>
-     * @param eventClass
-     * @param listener
+     * @param <BlockingEventK> the type of the event
+     * @param eventClass       the event class
+     * @param listener         the listener that is to be removed
      */
     public synchronized <BlockingEventK extends BlockingEventT> void removeListener(Class<BlockingEventK> eventClass, Action2<?, BlockingEventK> listener) {
         if (this.listeners.containsKey(eventClass)) {
@@ -130,39 +137,43 @@ public class BlockingEventDispatcher<BlockingEventT extends BlockingEvent> {
     }
 
     /**
-     *
+     * Clear all the listeners.
      */
     public synchronized void clearListeners() {
         this.listeners.clear();
     }
 
     /**
+     * Get a value indicating whether the listeners is empty or not.
      *
-     * @return
+     * @return a value indicating whether the listeners is empty or not
      */
     public boolean isEmpty() {
         return this.listeners.isEmpty();
     }
 
     /**
+     * Proxy action.
      *
-     * @param <BlockingEventK>
+     * @param <BlockingEventK> the type of the event
      */
     protected static class ProxyAction2<BlockingEventK> implements Action2<Object, BlockingEventK> {
         private Action1<BlockingEventK> listener;
 
         /**
+         * Create a proxy action.
          *
-         * @param listener
+         * @param listener the listener
          */
         public ProxyAction2(Action1<BlockingEventK> listener) {
             this.listener = listener;
         }
 
         /**
+         * Apply.
          *
-         * @param param1
-         * @param param2
+         * @param param1 the first parameter
+         * @param param2 the second parameter
          */
         public void apply(Object param1, BlockingEventK param2) {
             this.listener.apply(param2);

@@ -21,6 +21,7 @@ package net.pickapack.event;
 import net.pickapack.action.Action;
 
 /**
+ * Cycle accurate event.
  *
  * @author Min Cai
  */
@@ -32,11 +33,12 @@ public class CycleAccurateEvent implements Comparable<CycleAccurateEvent> {
     private long id;
 
     /**
+     * Create a cycle accurate event.
      *
-     * @param parent
-     * @param sender
-     * @param action
-     * @param when
+     * @param parent the parent cycle accurate event queue
+     * @param sender the event sender
+     * @param action the action that is to be performed when the event takes place
+     * @param when   the cycle at which the event takes place
      */
     public CycleAccurateEvent(CycleAccurateEventQueue parent, Object sender, Action action, long when) {
         this.id = parent.currentId++;
@@ -45,23 +47,82 @@ public class CycleAccurateEvent implements Comparable<CycleAccurateEvent> {
         this.when = when;
     }
 
+    /**
+     * Get the ID of the event.
+     *
+     * @return the ID of the event
+     */
+    public long getId() {
+        return id;
+    }
+
+    /**
+     * Get the cycle at which the event is scheduled.
+     *
+     * @return the cycle at which the event is scheduled
+     */
+    public long getScheduledTime() {
+        return scheduledTime;
+    }
+
+    /**
+     * Set the cycle at which the event is scheduled.
+     *
+     * @param scheduledTime the cycle at which the event is scheduled
+     */
+    public void setScheduledTime(long scheduledTime) {
+        this.scheduledTime = scheduledTime;
+    }
+
+    /**
+     * Get the cycle at which the event takes place.
+     *
+     * @return the cycle at which the event takes place
+     */
+    public long getWhen() {
+        return when;
+    }
+
+    /**
+     * Set the cycle at which the event takes place.
+     *
+     * @param when the cycle at which the event takes place
+     */
+    public void setWhen(long when) {
+        this.when = when;
+    }
+
+    /**
+     * Get the action that is to be performed when the event takes place.
+     *
+     * @return the action that is to be performed when the event takes place
+     */
+    public Action getAction() {
+        return action;
+    }
+
+    /**
+     * Get the event sender.
+     *
+     * @return the event sender
+     */
+    public Object getSender() {
+        return sender;
+    }
+
     @Override
     public int compareTo(CycleAccurateEvent otherEvent) {
         if (this.when < otherEvent.when) {
             return -1;
-        }
-        else if (this.when == otherEvent.when) {
+        } else if (this.when == otherEvent.when) {
             if (this.id < otherEvent.id) {
                 return -1;
-            }
-            else if (this.id == otherEvent.id) {
+            } else if (this.id == otherEvent.id) {
                 return 0;
-            }
-            else {
+            } else {
                 return 1;
             }
-        }
-        else {
+        } else {
             return 1;
         }
     }
@@ -74,62 +135,6 @@ public class CycleAccurateEvent implements Comparable<CycleAccurateEvent> {
     @Override
     public int hashCode() {
         return (int) (id ^ (id >>> 32));
-    }
-
-    /**
-     *
-     * @return
-     */
-    public long getId() {
-        return id;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public long getScheduledTime() {
-        return scheduledTime;
-    }
-
-    /**
-     *
-     * @param scheduledTime
-     */
-    public void setScheduledTime(long scheduledTime) {
-        this.scheduledTime = scheduledTime;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public long getWhen() {
-        return when;
-    }
-
-    /**
-     *
-     * @param when
-     */
-    public void setWhen(long when) {
-        this.when = when;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Action getAction() {
-        return action;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Object getSender() {
-        return sender;
     }
 
     @Override

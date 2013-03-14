@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
+ * Cycle accurate event queue.
  *
  * @author Min Cai
  */
@@ -34,7 +35,7 @@ public class CycleAccurateEventQueue {
     private List<Action> perCycleEvents;
 
     /**
-     *
+     * Create a cycle accurate event queue.
      */
     public CycleAccurateEventQueue() {
         this.events = new PriorityBlockingQueue<CycleAccurateEvent>();
@@ -42,7 +43,7 @@ public class CycleAccurateEventQueue {
     }
 
     /**
-     *
+     * Advance for one cycle.
      */
     public void advanceOneCycle() {
         while (!this.events.isEmpty()) {
@@ -56,7 +57,7 @@ public class CycleAccurateEventQueue {
             this.events.remove(event);
         }
 
-        for(Action action : this.perCycleEvents) {
+        for (Action action : this.perCycleEvents) {
             action.apply();
         }
 
@@ -64,24 +65,30 @@ public class CycleAccurateEventQueue {
     }
 
     /**
+     * Schedule the specified action to be performed after the specified delay in cycles.
      *
-     * @param sender
-     * @param action
-     * @param delay
-     * @return
+     * @param sender the event sender
+     * @param action the action that is to be performed when the specified event takes place
+     * @param delay  the delay in cycles after which the the specified event takes place
+     * @return the newly created cycle accurate event
      */
     public CycleAccurateEventQueue schedule(Object sender, Action action, int delay) {
         this.schedule(new CycleAccurateEvent(this, sender, action, this.currentCycle + delay));
         return this;
     }
 
+    /**
+     * Schedule the specified cycle accurate event.
+     *
+     * @param event the cycle accurate event that is to be scheduled
+     */
     private void schedule(CycleAccurateEvent event) {
         event.setScheduledTime(this.getCurrentCycle());
         this.events.add(event);
     }
 
     /**
-     *
+     * Reset the current cycle to 0.
      */
     public void resetCurrentCycle() {
         for (CycleAccurateEvent event : this.events) {
@@ -92,16 +99,18 @@ public class CycleAccurateEventQueue {
     }
 
     /**
+     * Get the current cycle.
      *
-     * @return
+     * @return the current cycle
      */
     public long getCurrentCycle() {
         return this.currentCycle;
     }
 
     /**
+     * Get the list of actions that is to be performed at each cycle.
      *
-     * @return
+     * @return the list of actions that is to be performed at each cycle
      */
     public List<Action> getPerCycleEvents() {
         return perCycleEvents;
@@ -113,7 +122,7 @@ public class CycleAccurateEventQueue {
     }
 
     /**
-     *
+     * Current maximum ID of the cycle accurate event.
      */
     public long currentId = 0;
 }

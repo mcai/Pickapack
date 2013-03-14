@@ -21,6 +21,7 @@ package net.pickapack.event;
 import java.io.Serializable;
 
 /**
+ * Blocking event.
  *
  * @author Min Cai
  */

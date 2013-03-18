@@ -22,58 +22,65 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * Date helper.
  *
  * @author Min Cai
  */
 public class DateHelper {
     /**
+     * Get the ticks of the current time.
      *
-     * @return
+     * @return the ticks of the current time
      */
     public static long toTick() {
         return toTick(new Date());
     }
 
     /**
+     * Get the ticks of the specified time.
      *
-     * @param time
-     * @return
+     * @param time the time
+     * @return the ticks of the specified time
      */
     public static long toTick(Date time) {
         return time.getTime();
     }
 
     /**
+     * Get the date time object from the specified ticks.
      *
-     * @param tick
-     * @return
+     * @param tick the ticks
+     * @return the date time object converted from the specified ticks
      */
     public static Date fromTick(long tick) {
         return new Date(tick);
     }
 
     /**
+     * Get the string representation of the specified ticks.
      *
-     * @param tick
-     * @return
+     * @param tick the ticks
+     * @return the string representation of the specified ticks
      */
     public static String toString(long tick) {
         return toString(fromTick(tick));
     }
 
     /**
+     * Get the string representation of the specified date time object.
      *
-     * @param date
-     * @return
+     * @param date the date time object
+     * @return the string representation of the specified date time object
      */
     public static String toString(Date date) {
         return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(date);
     }
 
     /**
+     * Get the string representation of the specified date time object, which is suitable for use in file names.
      *
-     * @param date
-     * @return
+     * @param date the date time object
+     * @return the string representation of the specified date time object, which is suitable for use in file names
      */
     public static String toFileNameString(Date date) {
         return new SimpleDateFormat("yyyy_MM_dd-HH_mm_ss").format(date);

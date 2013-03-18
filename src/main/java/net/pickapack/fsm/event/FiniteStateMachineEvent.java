@@ -21,6 +21,7 @@ package net.pickapack.fsm.event;
 import net.pickapack.event.BlockingEvent;
 
 /**
+ * The finite state machine event.
  *
  * @author Min Cai
  */

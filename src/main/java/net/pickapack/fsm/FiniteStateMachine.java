@@ -24,38 +24,43 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
+ * Finite state machine.
  *
+ * @param <StateT>     the type of the states
+ * @param <ConditionT> the type of the conditions
  * @author Min Cai
- * @param <StateT>
- * @param <ConditionT>
  */
 public interface FiniteStateMachine<StateT, ConditionT> extends Serializable {
     /**
+     * Get the number of executions by the specified transition.
      *
-     * @return
+     * @param state     the state
+     * @param condition the condition
+     * @return the number of executions by the specified transition
      */
-    StateT getState();
+    long getNumExecutionsByTransition(StateT state, ConditionT condition);
 
     /**
+     * Get the map of the number of executions ordered by states and conditions.
      *
-     * @param sender
-     * @param condition
-     * @param params
-     * @param state
-     */
-    void setState(Object sender, ConditionT condition, Params params, StateT state);
-
-    /**
-     *
-     * @return
+     * @return the map of the number of executions ordered by states and conditions
      */
     Map<StateT, Map<ConditionT, Long>> getNumExecutions();
 
     /**
+     * Get the current state.
      *
-     *
-     * @param state
-     * @return
+     * @return the current state
      */
-    long getNumExecutionsByTransition(StateT state, ConditionT condition);
+    StateT getState();
+
+    /**
+     * Set the current state.
+     *
+     * @param sender the event sender
+     * @param condition the condition
+     * @param params the event parameters
+     * @param state the new state
+     */
+    void setState(Object sender, ConditionT condition, Params params, StateT state);
 }

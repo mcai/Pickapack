@@ -25,11 +25,12 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
+ * Finite state machine state transitions.
  *
  * @author Min Cai
- * @param <StateT>
- * @param <ConditionT>
- * @param <FiniteStateMachineT>
+ * @param <StateT> the type of the states
+ * @param <ConditionT> the type of the conditions
+ * @param <FiniteStateMachineT> the type of the finite state machines
  */
 public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends FiniteStateMachine<StateT, ConditionT>> implements Serializable {
     private Map<ConditionT, StateTransition> perStateTransitions;
@@ -37,6 +38,12 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
     private StateT state;
     private Action1<FiniteStateMachineT> onCompletedCallback;
 
+    /**
+     * Create a finite state machine state transitions object.
+     *
+     * @param fsmFactory the finite state machine factory
+     * @param state the state
+     */
     StateTransitions(FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT> fsmFactory, StateT state) {
         this.fsmFactory = fsmFactory;
         this.state = state;
@@ -44,9 +51,10 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
     }
 
     /**
+     * Set the callback action performed when a transition completes.
      *
-     * @param onCompletedCallback
-     * @return
+     * @param onCompletedCallback the callback action that is performed when a transition completes
+     * @return this
      */
     public StateTransitions<StateT, ConditionT, FiniteStateMachineT> setOnCompletedCallback(Action1<FiniteStateMachineT> onCompletedCallback) {
         this.onCompletedCallback = onCompletedCallback;
@@ -54,23 +62,25 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
     }
 
     /**
+     * Specifies transitions on a list of conditions.
      *
-     * @param conditions
-     * @param transition
-     * @param newState
-     * @return
+     * @param conditions the list of conditions
+     * @param transition the transition
+     * @param newState the new state
+     * @return this
      */
     public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onConditions(List<ConditionT> conditions, Action4<FiniteStateMachineT, Object, ConditionT, ? extends Params> transition, StateT newState) {
         return onConditions(conditions, transition, newState, null);
     }
 
     /**
+     * Specifies transitions on a list of conditions.
      *
-     * @param conditions
-     * @param transition
-     * @param newState
-     * @param onCompletedCallback
-     * @return
+     * @param conditions the list of conditions
+     * @param transition the transition
+     * @param newState the new state
+     * @param onCompletedCallback the callback action that is performed when the transition completes
+     * @return this
      */
     public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onConditions(List<ConditionT> conditions, Action4<FiniteStateMachineT, Object, ConditionT, ? extends Params> transition, StateT newState, Action1<FiniteStateMachineT> onCompletedCallback) {
         for (ConditionT condition : conditions) {
@@ -81,23 +91,25 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
     }
 
     /**
+     * Specifies the transition on the specified condition.
      *
-     * @param condition
-     * @param transition
-     * @param newState
-     * @return
+     * @param condition the condition
+     * @param transition the transition
+     * @param newState the new state
+     * @return this
      */
     public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, final Action4<FiniteStateMachineT, Object, ConditionT, ? extends Params> transition, final StateT newState) {
         return onCondition(condition, transition, newState, null);
     }
 
     /**
+     * Specifies the transition on the specified condition.
      *
-     * @param condition
-     * @param transition
-     * @param newState
-     * @param onCompletedCallback
-     * @return
+     * @param condition the condition
+     * @param transition the transition
+     * @param newState the new state
+     * @param onCompletedCallback the callback action that is performed when the transition completes
+     * @return this
      */
     public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, final Action4<FiniteStateMachineT, Object, ConditionT, ? extends Params> transition, final StateT newState, Action1<FiniteStateMachineT> onCompletedCallback) {
         if (this.perStateTransitions.containsKey(condition)) {
@@ -119,12 +131,13 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
     }
 
     /**
+     * Specifies the transition on the specified condition.
      *
-     * @param condition
-     * @param actions
-     * @param newState
-     * @param onCompletedCallback
-     * @return
+     * @param condition the condition
+     * @param actions the list of actions
+     * @param newState the new state
+     * @param onCompletedCallback the callback action that is performed when the transition completes
+     * @return this
      */
     public StateTransitions<StateT, ConditionT, FiniteStateMachineT> onCondition(ConditionT condition, final List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> actions, final StateT newState, Action1<FiniteStateMachineT> onCompletedCallback) {
         if (this.perStateTransitions.containsKey(condition)) {
@@ -150,16 +163,29 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
     }
 
     /**
-     *
+     * Clear the map of the per state transitions.
      */
     public void clear() {
         this.perStateTransitions.clear();
     }
 
+    /**
+     * Get the map of the per state transitions.
+     *
+     * @return the map of the per state transitions
+     */
     public Map<ConditionT, StateTransition> getPerStateTransitions() {
         return perStateTransitions;
     }
 
+    /**
+     * Fire the specified transition.
+     *
+     * @param fsm the finite state machine
+     * @param sender the event sender
+     * @param condition the condition
+     * @param params the event parameters
+     */
     void fireTransition(FiniteStateMachineT fsm, Object sender, ConditionT condition, Params params) {
         if (this.perStateTransitions.containsKey(condition)) {
             StateTransition stateTransition = this.perStateTransitions.get(condition);
@@ -177,7 +203,7 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
     }
 
     /**
-     *
+     * State transition.
      */
     public class StateTransition implements Function4<FiniteStateMachineT, Object, ConditionT, Params, StateT> {
         private StateT state;
@@ -187,12 +213,13 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
         private Action1<FiniteStateMachineT> onCompletedCallback;
 
         /**
+         * Create a state transition.
          *
-         * @param state
-         * @param condition
-         * @param newState
-         * @param actions
-         * @param onCompletedCallback
+         * @param state the state
+         * @param condition the condition
+         * @param newState the new state
+         * @param actions the list of actions
+         * @param onCompletedCallback the callback action that is performed when the transition completes
          */
         public StateTransition(StateT state, ConditionT condition, StateT newState, List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> actions, Action1<FiniteStateMachineT> onCompletedCallback) {
             this.state = state;
@@ -203,12 +230,13 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
         }
 
         /**
+         * Perform the transition.
          *
-         * @param fsm
-         * @param sender
-         * @param condition
-         * @param params
-         * @return
+         * @param fsm the finite state machine
+         * @param sender the event sender
+         * @param condition the condition
+         * @param params the event parameters
+         * @return the new state
          */
         @SuppressWarnings("unchecked")
         public StateT apply(FiniteStateMachineT fsm, Object sender, ConditionT condition, Params params) {
@@ -234,9 +262,10 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
         }
 
         /**
+         * Set the callback action that is performed when the transition completes.
          *
-         * @param onCompletedCallback
-         * @return
+         * @param onCompletedCallback the callback action that is performed when the transition completes
+         * @return this
          */
         public StateTransition setOnCompletedCallback(Action1<FiniteStateMachineT> onCompletedCallback) {
             this.onCompletedCallback = onCompletedCallback;
@@ -244,32 +273,36 @@ public class StateTransitions<StateT, ConditionT, FiniteStateMachineT extends Fi
         }
 
         /**
+         * Get the list of actions.
          *
-         * @return
+         * @return the list of actions
          */
         public List<FiniteStateMachineAction<FiniteStateMachineT, ConditionT, ? extends Params>> getActions() {
             return actions;
         }
 
         /**
+         * Get the state.
          *
-         * @return
+         * @return the state
          */
         public StateT getState() {
             return state;
         }
 
         /**
+         * Get the condition.
          *
-         * @return
+         * @return the condition
          */
         public ConditionT getCondition() {
             return condition;
         }
 
         /**
+         * Get the new state.
          *
-         * @return
+         * @return the new state
          */
         public StateT getNewState() {
             return newState;

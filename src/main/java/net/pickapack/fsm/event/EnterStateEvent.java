@@ -25,16 +25,18 @@ import org.apache.commons.lang.StringUtils;
 import java.util.Arrays;
 
 /**
+ * The event when a finite state machine enters a state.
  *
  * @author Min Cai
  */
 public class EnterStateEvent extends FiniteStateMachineStateChangedEvent {
     /**
+     * Create an event when a finite state machine enters a state.
      *
-     * @param fsm
-     * @param sender
-     * @param condition
-     * @param params
+     * @param fsm the finite state machine
+     * @param sender the event sender
+     * @param condition the condition
+     * @param params the event parameters
      */
     public EnterStateEvent(FiniteStateMachine<?, ?> fsm, Object sender, Object condition, Params params) {
         super(fsm, sender, condition, params);

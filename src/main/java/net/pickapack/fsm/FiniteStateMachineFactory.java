@@ -25,26 +25,28 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Finite state machine factory.
  *
  * @author Min Cai
- * @param <StateT>
- * @param <ConditionT>
- * @param <FiniteStateMachineT>
+ * @param <StateT> the type of the states
+ * @param <ConditionT> the type of the conditions
+ * @param <FiniteStateMachineT> the type of the finite state machines
  */
 public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT extends FiniteStateMachine<StateT, ConditionT>> {
     Map<StateT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>> transitions;
 
     /**
-     *
+     * Create a finite state machine factory.
      */
     public FiniteStateMachineFactory() {
         this.transitions = new LinkedHashMap<StateT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>>();
     }
 
     /**
+     * Get or create the state transitions object for the specified state.
      *
-     * @param state
-     * @return
+     * @param state the state
+     * @return the state transitions object for the specified state
      */
     public StateTransitions<StateT, ConditionT, FiniteStateMachineT> inState(StateT state) {
         if (!this.transitions.containsKey(state)) {
@@ -55,18 +57,19 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
     }
 
     /**
-     *
+     * Clear the transitions.
      */
     public void clear() {
         this.transitions.clear();
     }
 
     /**
+     * Fire the specified transition.
      *
-     * @param fsm
-     * @param sender
-     * @param condition
-     * @param params
+     * @param fsm the involved finite state machine
+     * @param sender the event sender
+     * @param condition the condition
+     * @param params the event parameters
      */
     public void fireTransition(FiniteStateMachineT fsm, Object sender, ConditionT condition, Params params) {
         if (this.transitions.containsKey(fsm.getState())) {
@@ -76,12 +79,21 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
         }
     }
 
+    /**
+     * Change the state of the specified finite state machine.
+     *
+     * @param fsm the finite state machine
+     * @param sender the event sender
+     * @param condition the condition
+     * @param params the event parameters
+     * @param newState the new state
+     */
     void changeState(FiniteStateMachineT fsm, Object sender, ConditionT condition, Params params, StateT newState) {
         fsm.setState(sender, condition, params, newState);
     }
 
     /**
-     *
+     * Dump.
      */
     public void dump() {
         for(StateT state : this.getTransitions().keySet()) {
@@ -99,10 +111,11 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
     }
 
     /**
+     * Dump.
      *
-     * @param name
-     * @param fsms
-     * @param stats
+     * @param name the name of the finite state machine factory.
+     * @param fsms the list of the finite state machines
+     * @param stats the map of statistics
      */
     public void dump(String name, List<? extends FiniteStateMachine<StateT, ConditionT>> fsms, Map<String, String> stats) {
         for(StateT state : this.transitions.keySet()) {
@@ -121,6 +134,11 @@ public class FiniteStateMachineFactory<StateT, ConditionT, FiniteStateMachineT e
         }
     }
 
+    /**
+     * Get the transitions specified in the finite state machine factory.
+     *
+     * @return the transitions specified in the finite state machine factory
+     */
     public Map<StateT, StateTransitions<StateT, ConditionT, FiniteStateMachineT>> getTransitions() {
         return transitions;
     }

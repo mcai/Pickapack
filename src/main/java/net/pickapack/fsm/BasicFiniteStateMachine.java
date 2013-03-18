@@ -29,12 +29,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * Basic finite state machine.
  *
+ * @param <StateT>     the type of the states
+ * @param <ConditionT> the type of the conditions
  * @author Min Cai
- * @param <StateT>
- * @param <ConditionT>
  */
-public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implements FiniteStateMachine<StateT,ConditionT> {
+public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implements FiniteStateMachine<StateT, ConditionT> {
     private String name;
     private StateT state;
 
@@ -42,10 +43,13 @@ public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implemen
 
     private Map<StateT, Map<ConditionT, Long>> numExecutions;
 
+    private boolean settingStates = false;
+
     /**
+     * Create a basic finite state machine.
      *
-     * @param name
-     * @param state
+     * @param name  the name
+     * @param state the initial state
      */
     public BasicFiniteStateMachine(String name, StateT state) {
         this.name = name;
@@ -57,54 +61,74 @@ public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implemen
     }
 
     /**
+     * Add a listener for the specified event class.
      *
-     * @param <EventT>
-     * @param eventClass
-     * @param listener
+     * @param <EventT>   the type of the event
+     * @param eventClass the event class
+     * @param listener   the listener that is to be added for the specified event class
      */
     public <EventT extends FiniteStateMachineEvent> void addListener(Class<EventT> eventClass, Action1<EventT> listener) {
         this.eventDispatcher.addListener(eventClass, listener);
     }
 
     /**
+     * Remove a listener for the specified event class.
      *
-     * @param <EventT>
-     * @param eventClass
-     * @param listener
+     * @param <EventT>   the type of the event
+     * @param eventClass the event class
+     * @param listener   the listener that is to removed for the specified event class
      */
     public <EventT extends FiniteStateMachineEvent> void removeListener(Class<EventT> eventClass, Action1<EventT> listener) {
         this.eventDispatcher.removeListener(eventClass, listener);
     }
 
     /**
+     * Dump.
      *
-     * @return
+     * @param fsmFactory the finite state machine factory
+     */
+    public void dump(FiniteStateMachineFactory<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>> fsmFactory) {
+        for (StateT state : fsmFactory.transitions.keySet()) {
+            System.out.println(state);
+
+            StateTransitions<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>> stateTransitions = fsmFactory.transitions.get(state);
+            Map<ConditionT, StateTransitions<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>>.StateTransition> perStateTransitions = stateTransitions.getPerStateTransitions();
+            for (ConditionT condition : perStateTransitions.keySet()) {
+                StateTransitions<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>>.StateTransition stateTransition = perStateTransitions.get(condition);
+                System.out.printf("  -> %s:  %s/%s [%d] %n", condition, stateTransition.getActions(), stateTransition.getNewState(), getNumExecutionsByTransition(state, condition));
+            }
+
+            System.out.println();
+        }
+    }
+
+    /**
+     * Get the name of the basic finite state machine.
+     *
+     * @return the name of the basic finite state machine
      */
     public String getName() {
         return name;
     }
 
-    /**
-     *
-     * @return
-     */
+    @Override
+    public long getNumExecutionsByTransition(StateT state, ConditionT condition) {
+        return this.numExecutions.containsKey(state) && this.numExecutions.get(state).containsKey(condition) ? this.numExecutions.get(state).get(condition) : 0L;
+    }
+
+    @Override
+    public Map<StateT, Map<ConditionT, Long>> getNumExecutions() {
+        return numExecutions;
+    }
+
     @Override
     public StateT getState() {
         return state;
     }
 
-    private boolean settingStates = false;
-
-    /**
-     *
-     * @param sender
-     * @param condition
-     * @param params
-     * @param state
-     */
     @Override
     public void setState(Object sender, ConditionT condition, Params params, StateT state) {
-        if(this.settingStates) {
+        if (this.settingStates) {
             throw new IllegalArgumentException();
         }
 
@@ -115,34 +139,5 @@ public class BasicFiniteStateMachine<StateT, ConditionT> extends Params implemen
         this.eventDispatcher.dispatch(new EnterStateEvent(this, sender, condition, params));
 
         this.settingStates = false;
-    }
-
-    /**
-     *
-     * @param fsmFactory
-     */
-    public void dump(FiniteStateMachineFactory<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>> fsmFactory) {
-        for(StateT state : fsmFactory.transitions.keySet()) {
-            System.out.println(state);
-
-            StateTransitions<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>> stateTransitions = fsmFactory.transitions.get(state);
-            Map<ConditionT, StateTransitions<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>>.StateTransition> perStateTransitions = stateTransitions.getPerStateTransitions();
-            for(ConditionT condition : perStateTransitions.keySet()) {
-                StateTransitions<StateT, ConditionT, BasicFiniteStateMachine<StateT, ConditionT>>.StateTransition stateTransition = perStateTransitions.get(condition);
-                System.out.printf("  -> %s:  %s/%s [%d] %n", condition, stateTransition.getActions(), stateTransition.getNewState(), getNumExecutionsByTransition(state, condition));
-            }
-
-            System.out.println();
-        }
-    }
-
-    @Override
-    public Map<StateT, Map<ConditionT, Long>> getNumExecutions() {
-        return numExecutions;
-    }
-
-    @Override
-    public long getNumExecutionsByTransition(StateT state, ConditionT condition) {
-        return this.numExecutions.containsKey(state) && this.numExecutions.get(state).containsKey(condition) ? this.numExecutions.get(state).get(condition) : 0L;
     }
 }

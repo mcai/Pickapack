@@ -22,6 +22,7 @@ import net.pickapack.Params;
 import net.pickapack.fsm.FiniteStateMachine;
 
 /**
+ * The event when a finite state machine has changed its state.
  *
  * @author Min Cai
  */
@@ -32,11 +33,12 @@ public class FiniteStateMachineStateChangedEvent extends FiniteStateMachineEvent
     private Params params;
 
     /**
+     * Create an event when a finite state machine has changed its state.
      *
-     * @param fsm
-     * @param sender
-     * @param condition
-     * @param params
+     * @param fsm the finite state machine
+     * @param sender the event sender
+     * @param condition the condition
+     * @param params the event parameters
      */
     public FiniteStateMachineStateChangedEvent(FiniteStateMachine<?, ?> fsm, Object sender, Object condition, Params params) {
         this.fsm = fsm;
@@ -46,32 +48,36 @@ public class FiniteStateMachineStateChangedEvent extends FiniteStateMachineEvent
     }
 
     /**
+     * Get the finite state machine.
      *
-     * @return
+     * @return the finite state machine
      */
     public FiniteStateMachine<?, ?> getFsm() {
         return fsm;
     }
 
     /**
+     * Get the event sender.
      *
-     * @return
+     * @return the event sender
      */
     public Object getSender() {
         return sender;
     }
 
     /**
+     * Get the condition.
      *
-     * @return
+     * @return the condition
      */
     public Object getCondition() {
         return condition;
     }
 
     /**
+     * Get the event parameters.
      *
-     * @return
+     * @return the event parameters
      */
     public Params getParams() {
         return params;

@@ -24,10 +24,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ * Simple finite state machine.
  *
  * @author Min Cai
- * @param <StateT>
- * @param <ConditionT>
+ * @param <StateT> the type of the states
+ * @param <ConditionT> the type of the conditions
  */
 public class SimpleFiniteStateMachine<StateT, ConditionT> implements FiniteStateMachine<StateT,ConditionT> {
     private StateT state;
@@ -37,8 +38,9 @@ public class SimpleFiniteStateMachine<StateT, ConditionT> implements FiniteState
     private Map<StateT, Map<ConditionT, Long>> numExecutions;
 
     /**
+     * Create a simple finite state machine.
      *
-     * @param state
+     * @param state the initial state
      */
     public SimpleFiniteStateMachine(StateT state) {
         this.state = state;
@@ -46,22 +48,21 @@ public class SimpleFiniteStateMachine<StateT, ConditionT> implements FiniteState
         this.numExecutions = new LinkedHashMap<StateT, Map<ConditionT, Long>>();
     }
 
-    /**
-     *
-     * @return
-     */
+    @Override
+    public long getNumExecutionsByTransition(StateT state, ConditionT condition) {
+        return this.numExecutions.containsKey(state) && this.numExecutions.get(state).containsKey(condition) ? this.numExecutions.get(state).get(condition) : 0L;
+    }
+
+    @Override
+    public Map<StateT, Map<ConditionT, Long>> getNumExecutions() {
+        return numExecutions;
+    }
+
     @Override
     public StateT getState() {
         return state;
     }
 
-    /**
-     *
-     * @param sender
-     * @param condition
-     * @param params
-     * @param state
-     */
     @Override
     public void setState(Object sender, ConditionT condition, Params params, StateT state) {
         if(this.settingStates) {
@@ -73,15 +74,5 @@ public class SimpleFiniteStateMachine<StateT, ConditionT> implements FiniteState
         this.state = state;
 
         this.settingStates = false;
-    }
-
-    @Override
-    public Map<StateT, Map<ConditionT, Long>> getNumExecutions() {
-        return numExecutions;
-    }
-
-    @Override
-    public long getNumExecutionsByTransition(StateT state, ConditionT condition) {
-        return this.numExecutions.containsKey(state) && this.numExecutions.get(state).containsKey(condition) ? this.numExecutions.get(state).get(condition) : 0L;
     }
 }

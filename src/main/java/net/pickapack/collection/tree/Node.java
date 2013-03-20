@@ -16,23 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with PickaPack. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package net.pickapack;
+package net.pickapack.collection.tree;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  *
  * @author Min Cai
  */
-public class IntegerIntegerPair extends Pair<Integer, Integer> implements Comparable<IntegerIntegerPair> {
+public interface Node extends Serializable {
     /**
      *
-     * @param first
-     * @param second
+     * @return
      */
-    public IntegerIntegerPair(Integer first, Integer second) {
-        super(first, second);
-    }
-
-    public int compareTo(IntegerIntegerPair o) {
-        return this.getSecond().compareTo(o.getSecond());
-    }
+    Object getValue();
+    /**
+     *
+     * @return
+     */
+    List<? extends Node> getChildren();
 }

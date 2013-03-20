@@ -21,14 +21,18 @@ package net.pickapack.util;
 /**
  *
  * @author Min Cai
- * @param <T>
- * @param <ValueProviderT>
  */
-public interface ValueProviderFactory<T, ValueProviderT extends ValueProvider<T>> {
+public class IntegerIntegerPair extends Pair<Integer, Integer> implements Comparable<IntegerIntegerPair> {
     /**
      *
-     * @param args
-     * @return
+     * @param first
+     * @param second
      */
-    ValueProviderT createValueProvider(Object... args);
+    public IntegerIntegerPair(Integer first, Integer second) {
+        super(first, second);
+    }
+
+    public int compareTo(IntegerIntegerPair o) {
+        return this.getSecond().compareTo(o.getSecond());
+    }
 }

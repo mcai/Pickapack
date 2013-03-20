@@ -16,32 +16,45 @@
  * You should have received a copy of the GNU General Public License
  * along with PickaPack. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package net.pickapack.tree;
+package net.pickapack.util;
+
+import java.io.Serializable;
 
 /**
  *
  * @author Min Cai
+ * @param <T>
  */
-public class NodeHelper {
+public class Reference<T> implements Serializable {
+    private T value;
+
     /**
      *
-     * @param node
      */
-    public static void print(Node node) {
-        print(node, "", true);
+    public Reference() {
     }
 
-    private static void print(Node node, String prefix, boolean isTail) {
-        System.out.println(prefix + (isTail ? "└── " : "├── ") + node.getValue());
-        if (node.getChildren() != null) {
-            for (int i = 0; i < node.getChildren().size() - 1; i++) {
-                Node childNode = node.getChildren().get(i);
-                print(childNode, prefix + (isTail ? "    " : "│   "), false);
-            }
-            if (node.getChildren().size() >= 1) {
-                Node lastNode = node.getChildren().get(node.getChildren().size() - 1);
-                print(lastNode, prefix + (isTail ? "    " : "│   "), true);
-            }
-        }
+    /**
+     *
+     * @param value
+     */
+    public Reference(T value) {
+        this.value = value;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public T get() {
+        return value;
+    }
+
+    /**
+     *
+     * @param value
+     */
+    public void set(T value) {
+        this.value = value;
     }
 }

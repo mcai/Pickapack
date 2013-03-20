@@ -18,7 +18,7 @@
  ******************************************************************************/
 package net.pickapack.im.sink;
 
-import net.pickapack.JsonSerializationHelper;
+import net.pickapack.io.serialization.JsonSerializationHelper;
 
 import java.util.HashMap;
 import java.util.List;

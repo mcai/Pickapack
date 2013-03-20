@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with PickaPack. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package net.pickapack;
+package net.pickapack.util;
 
 import java.io.Serializable;
 
@@ -25,19 +25,23 @@ import java.io.Serializable;
  * @author Min Cai
  * @param <K>
  * @param <T>
+ * @param <P>
  */
-public class Pair<K, T> implements Serializable {
+public class Triple<K, T, P> implements Serializable {
     private K first;
     private T second;
+    private P third;
 
     /**
      *
      * @param first
      * @param second
+     * @param third
      */
-    public Pair(K first, T second) {
+    public Triple(K first, T second, P third) {
         this.first = first;
         this.second = second;
+        this.third = third;
     }
 
     /**
@@ -58,18 +62,10 @@ public class Pair<K, T> implements Serializable {
 
     /**
      *
-     * @param first
+     * @return
      */
-    public void setFirst(K first) {
-        this.first = first;
-    }
-
-    /**
-     *
-     * @param second
-     */
-    public void setSecond(T second) {
-        this.second = second;
+    public P getThird() {
+        return third;
     }
 
     @Override
@@ -77,10 +73,11 @@ public class Pair<K, T> implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Pair pair = (Pair) o;
+        Triple triple = (Triple) o;
 
-        if (!first.equals(pair.first)) return false;
-        if (!second.equals(pair.second)) return false;
+        if (!first.equals(triple.first)) return false;
+        if (!second.equals(triple.second)) return false;
+        if (!third.equals(triple.third)) return false;
 
         return true;
     }
@@ -89,11 +86,7 @@ public class Pair<K, T> implements Serializable {
     public int hashCode() {
         int result = first.hashCode();
         result = 31 * result + second.hashCode();
+        result = 31 * result + third.hashCode();
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Pair{first=%s, second=%s}", first, second);
     }
 }

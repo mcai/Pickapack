@@ -18,7 +18,7 @@
  ******************************************************************************/
 package net.pickapack.io;
 
-import net.pickapack.Reference;
+import net.pickapack.util.Reference;
 import net.pickapack.io.appender.OutputAppender;
 
 import java.io.BufferedReader;

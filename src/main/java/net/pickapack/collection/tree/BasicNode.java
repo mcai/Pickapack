@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with PickaPack. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package net.pickapack.tree;
+package net.pickapack.collection.tree;
 
 import java.util.ArrayList;
 import java.util.List;

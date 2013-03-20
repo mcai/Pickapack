@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with PickaPack. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package net.pickapack;
+package net.pickapack.util;
 
 import net.pickapack.io.cmd.CommandLineHelper;
 

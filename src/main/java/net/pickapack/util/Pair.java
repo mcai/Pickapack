@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with PickaPack. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package net.pickapack;
+package net.pickapack.util;
 
 import java.io.Serializable;
 
@@ -25,23 +25,19 @@ import java.io.Serializable;
  * @author Min Cai
  * @param <K>
  * @param <T>
- * @param <P>
  */
-public class Triple<K, T, P> implements Serializable {
+public class Pair<K, T> implements Serializable {
     private K first;
     private T second;
-    private P third;
 
     /**
      *
      * @param first
      * @param second
-     * @param third
      */
-    public Triple(K first, T second, P third) {
+    public Pair(K first, T second) {
         this.first = first;
         this.second = second;
-        this.third = third;
     }
 
     /**
@@ -62,10 +58,18 @@ public class Triple<K, T, P> implements Serializable {
 
     /**
      *
-     * @return
+     * @param first
      */
-    public P getThird() {
-        return third;
+    public void setFirst(K first) {
+        this.first = first;
+    }
+
+    /**
+     *
+     * @param second
+     */
+    public void setSecond(T second) {
+        this.second = second;
     }
 
     @Override
@@ -73,11 +77,10 @@ public class Triple<K, T, P> implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Triple triple = (Triple) o;
+        Pair pair = (Pair) o;
 
-        if (!first.equals(triple.first)) return false;
-        if (!second.equals(triple.second)) return false;
-        if (!third.equals(triple.third)) return false;
+        if (!first.equals(pair.first)) return false;
+        if (!second.equals(pair.second)) return false;
 
         return true;
     }
@@ -86,7 +89,11 @@ public class Triple<K, T, P> implements Serializable {
     public int hashCode() {
         int result = first.hashCode();
         result = 31 * result + second.hashCode();
-        result = 31 * result + third.hashCode();
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Pair{first=%s, second=%s}", first, second);
     }
 }

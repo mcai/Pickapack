@@ -18,7 +18,7 @@
  ******************************************************************************/
 package net.pickapack.fsm.event;
 
-import net.pickapack.Params;
+import net.pickapack.util.Params;
 import net.pickapack.fsm.FiniteStateMachine;
 
 /**

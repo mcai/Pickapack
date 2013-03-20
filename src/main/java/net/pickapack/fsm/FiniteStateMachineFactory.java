@@ -18,7 +18,7 @@
  ******************************************************************************/
 package net.pickapack.fsm;
 
-import net.pickapack.Params;
+import net.pickapack.util.Params;
 
 import java.util.LinkedHashMap;
 import java.util.List;

@@ -18,7 +18,7 @@
  ******************************************************************************/
 package net.pickapack.fsm;
 
-import net.pickapack.Params;
+import net.pickapack.util.Params;
 import net.pickapack.action.Action1;
 import net.pickapack.event.BlockingEventDispatcher;
 import net.pickapack.fsm.event.EnterStateEvent;

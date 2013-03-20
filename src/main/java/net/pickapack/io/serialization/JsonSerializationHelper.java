@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with PickaPack. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package net.pickapack;
+package net.pickapack.io.serialization;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

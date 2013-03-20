@@ -18,7 +18,7 @@
  ******************************************************************************/
 package net.pickapack.math;
 
-import net.pickapack.Triple;
+import net.pickapack.util.Triple;
 
 import java.util.ArrayList;
 import java.util.Collections;

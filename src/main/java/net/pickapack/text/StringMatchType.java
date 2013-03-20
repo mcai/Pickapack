@@ -16,24 +16,23 @@
  * You should have received a copy of the GNU General Public License
  * along with PickaPack. If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package net.pickapack.tree;
-
-import java.io.Serializable;
-import java.util.List;
+package net.pickapack.text;
 
 /**
  *
  * @author Min Cai
  */
-public interface Node extends Serializable {
+public enum StringMatchType {
     /**
      *
-     * @return
      */
-    Object getValue();
+    PLAIN,
     /**
      *
-     * @return
      */
-    List<? extends Node> getChildren();
+    WILDCARD,
+    /**
+     *
+     */
+    REGEX
 }

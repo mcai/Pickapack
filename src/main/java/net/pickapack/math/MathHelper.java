@@ -19,25 +19,28 @@
 package net.pickapack.math;
 
 /**
+ * Math helper.
  *
  * @author Min Cai
  */
 public class MathHelper {
     /**
+     * Get the text representation of the specified byte array.
      *
-     * @param buffer
-     * @return
+     * @param buffer the byte array
+     * @return the text representation of the specified byte array
      */
     public static String dumpBytes(byte[] buffer) {
         return dumpBytes(buffer, 0, buffer.length);
     }
 
     /**
+     * Get the text representation of the specified byte array.
      *
-     * @param buffer
-     * @param offset
-     * @param size
-     * @return
+     * @param buffer the byte array
+     * @param offset the offset
+     * @param size the size
+     * @return the text representation of the specified byte array
      */
     public static String dumpBytes(byte[] buffer, int offset, int size) {
         if (buffer == null) {
@@ -57,79 +60,87 @@ public class MathHelper {
     }
 
     /**
+     * Get a boolean value indicating whether the specified value contains the specified bit or not.
      *
-     * @param value
-     * @param i
-     * @return
+     * @param value the value
+     * @param i the bit to check
+     * @return a boolean value indicating whether the specified value contains the specified bit or not
      */
     public static boolean containsBit(int value, int i) {
         return (value & (1 << i)) != 0;
     }
 
     /**
+     * Set the specified bit in the specified value.
      *
-     * @param value
-     * @param i
-     * @return
+     * @param value the value
+     * @param i the bit to set
+     * @return the new value
      */
     public static int setBit(int value, int i) {
         return value | (1 << i);
     }
 
     /**
+     * Clear the specified bit in the specified value.
      *
-     * @param value
-     * @param i
-     * @return
+     * @param value the value
+     * @param i the bit to clear
+     * @return the new value
      */
     public static int clearBit(int value, int i) {
         return value & ~(1 << i);
     }
 
     /**
+     * Create the mask of the specified length.
      *
-     * @param nbits
-     * @return
+     * @param numBits the length of the mask
+     * @return the mask
      */
-    public static int mask(int nbits) {
-        return (1 << nbits) - 1;
+    public static int mask(int numBits) {
+        return (1 << numBits) - 1;
     }
 
     /**
+     * Get the specified bits from the specified value.
      *
-     * @param val
-     * @param first
-     * @param last
-     * @return
+     * @param value the value
+     * @param first the first bit
+     * @param last the last bit
+     * @return the specified bits from the specified value
      */
-    public static int bits(int val, int first, int last) {
-        return (val >> last) & mask(first - last + 1);
+    public static int bits(int value, int first, int last) {
+        return (value >> last) & mask(first - last + 1);
     }
 
     /**
+     * Get the specified masked bits from the specified value.
      *
-     * @param val
-     * @param first
-     * @param last
-     * @return
+     * @param value the value
+     * @param first the first bit
+     * @param last the last bit
+     * @return the specified masked bits from the specified value
      */
-    public static int mbits(int val, int first, int last) {
-        return val & (mask(first + 1) & ~mask(last));
+    public static int mbits(int value, int first, int last) {
+        return value & (mask(first + 1) & ~mask(last));
     }
 
     /**
+     * Sign extend the specified value.
      *
-     * @param value
-     * @return
+     * @param value the value
+     * @return the sign extended value
      */
     public static int signExtend(int value) {
         return (value << 16) >> 16;
     }
 
     /**
+     * Zero extend the specified value.
      *
-     * @param value
-     * @return
+     * @param value the value
+     * @return the zero extended value
      */
     public static int zeroExtend(int value) {
         return (value & 0xffff);

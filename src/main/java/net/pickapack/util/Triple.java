@@ -21,11 +21,12 @@ package net.pickapack.util;
 import java.io.Serializable;
 
 /**
+ * Triple.
  *
  * @author Min Cai
- * @param <K>
- * @param <T>
- * @param <P>
+ * @param <K> the type of the first element
+ * @param <T> the type of the second element
+ * @param <P> the type of the third element
  */
 public class Triple<K, T, P> implements Serializable {
     private K first;
@@ -33,10 +34,11 @@ public class Triple<K, T, P> implements Serializable {
     private P third;
 
     /**
+     * Create a triple.
      *
-     * @param first
-     * @param second
-     * @param third
+     * @param first the first element
+     * @param second the second element
+     * @param third the third element
      */
     public Triple(K first, T second, P third) {
         this.first = first;
@@ -45,24 +47,27 @@ public class Triple<K, T, P> implements Serializable {
     }
 
     /**
+     * Get the first element.
      *
-     * @return
+     * @return the first element
      */
     public K getFirst() {
         return first;
     }
 
     /**
+     * Get the second element.
      *
-     * @return
+     * @return the second element
      */
     public T getSecond() {
         return second;
     }
 
     /**
+     * Get the third element.
      *
-     * @return
+     * @return the third element
      */
     public P getThird() {
         return third;

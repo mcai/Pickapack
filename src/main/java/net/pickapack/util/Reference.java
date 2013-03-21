@@ -21,38 +21,42 @@ package net.pickapack.util;
 import java.io.Serializable;
 
 /**
+ * Reference.
  *
  * @author Min Cai
- * @param <T>
+ * @param <T> the type of the value contained in the reference
  */
 public class Reference<T> implements Serializable {
     private T value;
 
     /**
-     *
+     * Create a reference.
      */
     public Reference() {
     }
 
     /**
+     * Create a reference from the specified value.
      *
-     * @param value
+     * @param value the value
      */
     public Reference(T value) {
         this.value = value;
     }
 
     /**
+     * Get the value.
      *
-     * @return
+     * @return the value
      */
     public T get() {
         return value;
     }
 
     /**
+     * Set the value.
      *
-     * @param value
+     * @param value the value
      */
     public void set(T value) {
         this.value = value;

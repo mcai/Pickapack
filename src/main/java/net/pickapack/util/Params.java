@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Parameters map.
  *
  * @author Min Cai
  */
@@ -30,16 +31,17 @@ public class Params implements Serializable {
     private Map<Object, Object> properties;
 
     /**
-     *
+     * Create a parameters map.
      */
     public Params() {
         this.properties = new HashMap<Object, Object>();
     }
 
     /**
+     * Set the value for the specified key.
      *
-     * @param key
-     * @param value
+     * @param key the key
+     * @param value the value
      */
     public void put(Object key, Object value) {
         if(key == null || value == null) {
@@ -50,12 +52,13 @@ public class Params implements Serializable {
     }
 
     /**
+     * Get the value from the specified key and the default value.
      *
-     * @param <T>
-     * @param clz
-     * @param key
-     * @param defaultValue
-     * @return
+     * @param <T> the type of the value
+     * @param clz the class of the value
+     * @param key the key
+     * @param defaultValue the default value
+     * @return the value corresponding to the specified key
      */
     @SuppressWarnings("unchecked")
     public <T> T get(Class<T> clz, Object key, T defaultValue) {
@@ -67,27 +70,30 @@ public class Params implements Serializable {
     }
 
     /**
+     * Get the value from the specified key.
      *
-     * @param <T>
-     * @param clz
-     * @param key
-     * @return
+     * @param <T> the type of the value
+     * @param clz the class of the value
+     * @param key the key
+     * @return the value corresponding to the specified key
      */
     public <T> T get(Class<T> clz, Object key) {
         return this.get(clz, key, null);
     }
 
     /**
+     * Get the size of the parameters map.
      *
-     * @return
+     * @return the size of the parameters map
      */
     public int size() {
         return this.properties.size();
     }
 
     /**
+     * Get a value indicating whether the parameters map is empty or not.
      *
-     * @return
+     * @return a value indicating whether the parameters map is empty or not
      */
     public boolean isEmpty() {
         return this.properties.isEmpty();

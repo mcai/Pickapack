@@ -25,63 +25,68 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Jaxen xpath helper.
  *
  * @author Min Cai
  */
 public class JaxenHelper {
     /**
+     * Select the list of nodes under the specified object using the specified expression.
      *
-     * @param <T>
-     * @param obj
-     * @param expr
-     * @return
+     * @param <T> the type of the nodes
+     * @param object the parent object
+     * @param expression the selection expression
+     * @return the list of nodes under the specified object using the specified expression
      */
     @Deprecated
-    public static <T> List<T> selectNodes(Object obj, String expr) {
-        return evaluate(obj, expr);
+    public static <T> List<T> selectNodes(Object object, String expression) {
+        return evaluate(object, expression);
     }
 
     /**
+     * Select a single node under the specified object using the specified expression.
      *
-     * @param <T>
-     * @param obj
-     * @param expr
-     * @return
+     * @param <T> the type of the node
+     * @param object the parent object
+     * @param expression the selection expression
+     * @return the result node under the specified object using the specified expression
      */
     @Deprecated
-    public static <T> T selectSingleNode(Object obj, String expr) {
-        return evaluate(obj, expr);
+    public static <T> T selectSingleNode(Object object, String expression) {
+        return evaluate(object, expression);
     }
 
     /**
+     * Evaluate the specified expression under the specified object.
      *
-     * @param <T>
-     * @param obj
-     * @param expr
-     * @return
+     * @param <T> the type of the node
+     * @param object the parent object
+     * @param expression the selection expression
+     * @return the evaluation result under the specified object using the specified expression
      */
     @SuppressWarnings("unchecked")
-    public static <T> T evaluate(Object obj, String expr) {
-        return (T) JXPathContext.newContext(obj).getValue(expr);
+    public static <T> T evaluate(Object object, String expression) {
+        return (T) JXPathContext.newContext(object).getValue(expression);
     }
 
     /**
+     * Dump the value under the specified object using the specified expression.
      *
-     * @param stats
-     * @param obj
-     * @param expr
+     * @param stats the map of statistics
+     * @param object the parent object
+     * @param expression the selection expression
      */
-    public static void dumpValueFromXPath(Map<String, String> stats, Object obj, String expr) {
-        Object resultObj = selectSingleNode(obj, expr);
+    public static void dumpValueFromXPath(Map<String, String> stats, Object object, String expression) {
+        Object resultObj = selectSingleNode(object, expression);
         if (resultObj != null) {
             if (resultObj instanceof Map) {
                 Map resultMap = (Map) resultObj;
 
                 for (Object key : resultMap.keySet()) {
-                    stats.put(escape(expr) + "/" + key, toString(resultMap.get(key)));
+                    stats.put(escape(expression) + "/" + key, toString(resultMap.get(key)));
                 }
             } else {
-                stats.put(escape(expr), toString(resultObj));
+                stats.put(escape(expression), toString(resultObj));
             }
         } else {
             throw new IllegalArgumentException();
@@ -89,31 +94,44 @@ public class JaxenHelper {
     }
 
     /**
+     * Dump the values under the specified object using the specified expression.
      *
-     * @param stats
-     * @param obj
-     * @param expr
+     * @param stats the map of statistics
+     * @param object the parent object
+     * @param expression the selection expression
      */
-    public static void dumpValuesFromXPath(Map<String, String> stats, Object obj, String expr) {
-        List<Object> result = selectNodes(obj, expr);
+    public static void dumpValuesFromXPath(Map<String, String> stats, Object object, String expression) {
+        List<Object> result = selectNodes(object, expression);
         if (result != null) {
             for (int i = 0; i < result.size(); i++) {
                 Object resultObj = result.get(i);
-                stats.put(escape(expr) + "/" + i, toString(resultObj));
+                stats.put(escape(expression) + "/" + i, toString(resultObj));
             }
         } else {
             throw new IllegalArgumentException();
         }
     }
 
+    /**
+     * Escape the specified string.
+     *
+     * @param str the string that is to be escaped
+     * @return the escaped string
+     */
     public static String escape(String str) {
         return str.replaceAll("'", "").replaceAll("\\[", "\\[").replaceAll("\\]", "\\]");
     }
 
-    public static String toString(Object resultObj) {
-        if (resultObj instanceof Integer || resultObj instanceof Long || resultObj instanceof Float || resultObj instanceof Double) {
-            return MessageFormat.format("{0}", resultObj);
+    /**
+     * Get a text representation of the specified result object.
+     *
+     * @param resultObject the result object
+     * @return the text representation of the specified result object
+     */
+    public static String toString(Object resultObject) {
+        if (resultObject instanceof Integer || resultObject instanceof Long || resultObject instanceof Float || resultObject instanceof Double) {
+            return MessageFormat.format("{0}", resultObject);
         }
-        return escape(resultObj + "");
+        return escape(resultObject + "");
     }
 }

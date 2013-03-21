@@ -19,19 +19,22 @@
 package net.pickapack.util;
 
 /**
+ * Integer-integer pair.
  *
  * @author Min Cai
  */
 public class IntegerIntegerPair extends Pair<Integer, Integer> implements Comparable<IntegerIntegerPair> {
     /**
+     * Create an integer-integer pair.
      *
-     * @param first
-     * @param second
+     * @param first the key
+     * @param second the value
      */
     public IntegerIntegerPair(Integer first, Integer second) {
         super(first, second);
     }
 
+    @Override
     public int compareTo(IntegerIntegerPair o) {
         return this.getSecond().compareTo(o.getSecond());
     }

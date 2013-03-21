@@ -21,19 +21,21 @@ package net.pickapack.util;
 import java.io.Serializable;
 
 /**
+ * Pair.
  *
  * @author Min Cai
- * @param <K>
- * @param <T>
+ * @param <K> the type of the key
+ * @param <T> the type of the value
  */
 public class Pair<K, T> implements Serializable {
     private K first;
     private T second;
 
     /**
+     * Create a pair.
      *
-     * @param first
-     * @param second
+     * @param first the key
+     * @param second the value
      */
     public Pair(K first, T second) {
         this.first = first;
@@ -41,32 +43,36 @@ public class Pair<K, T> implements Serializable {
     }
 
     /**
+     * Get the key.
      *
-     * @return
+     * @return the key
      */
     public K getFirst() {
         return first;
     }
 
     /**
+     * Set the key.
      *
-     * @return
-     */
-    public T getSecond() {
-        return second;
-    }
-
-    /**
-     *
-     * @param first
+     * @param first the key
      */
     public void setFirst(K first) {
         this.first = first;
     }
 
     /**
+     * Get the value.
      *
-     * @param second
+     * @return the value
+     */
+    public T getSecond() {
+        return second;
+    }
+
+    /**
+     * Set the value.
+     *
+     * @param second the value
      */
     public void setSecond(T second) {
         this.second = second;

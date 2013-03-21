@@ -25,13 +25,14 @@ import java.util.BitSet;
 import java.util.List;
 
 /**
+ * Round robin scheduler.
  *
  * @author Min Cai
- * @param <ResourceT>
+ * @param <ResourceT> the type of the resource
  */
 public class RoundRobinScheduler<ResourceT> {
     private final List<ResourceT> resources;
-    private final Predicate<ResourceT> pred;
+    private final Predicate<ResourceT> predicate;
     private final Function1<ResourceT, Boolean> consumeAction;
     private final int quant;
 
@@ -40,15 +41,16 @@ public class RoundRobinScheduler<ResourceT> {
     private BitSet stalled;
 
     /**
+     * Create a round robin scheduler.
      *
-     * @param resources
-     * @param pred
-     * @param consumeAction
-     * @param quant
+     * @param resources the list of resources
+     * @param predicate the predicate
+     * @param consumeAction the consume action
+     * @param quant the quant
      */
-    public RoundRobinScheduler(List<ResourceT> resources, Predicate<ResourceT> pred, Function1<ResourceT, Boolean> consumeAction, int quant) {
+    public RoundRobinScheduler(List<ResourceT> resources, Predicate<ResourceT> predicate, Function1<ResourceT, Boolean> consumeAction, int quant) {
         this.resources = resources;
-        this.pred = pred;
+        this.predicate = predicate;
         this.consumeAction = consumeAction;
         this.quant = quant;
 
@@ -58,7 +60,7 @@ public class RoundRobinScheduler<ResourceT> {
     }
 
     /**
-     *
+     * Consume next.
      */
     public void consumeNext() {
         this.resourceId = consumeNext(this.resourceId);
@@ -66,7 +68,7 @@ public class RoundRobinScheduler<ResourceT> {
 
     private int findNext(BitSet except) {
         for (int i = 0; i < this.resources.size(); i++) {
-            if (this.pred.apply(this.resources.get(i)) && !except.get(i)) {
+            if (this.predicate.apply(this.resources.get(i)) && !except.get(i)) {
                 return i;
             }
         }
@@ -80,7 +82,7 @@ public class RoundRobinScheduler<ResourceT> {
         resourceId = (resourceId + 1) % this.resources.size();
 
         for (int numConsumed = 0; numConsumed < this.quant; numConsumed++) {
-            if (this.stalled.get(resourceId) || !this.pred.apply(this.resources.get(resourceId))) {
+            if (this.stalled.get(resourceId) || !this.predicate.apply(this.resources.get(resourceId))) {
                 resourceId = findNext(this.stalled);
             }
 

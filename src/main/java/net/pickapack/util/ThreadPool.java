@@ -24,44 +24,47 @@ import java.util.LinkedList;
 import java.util.Random;
 
 /**
+ * Thread pool.
  *
  * @author Min Cai
  */
 public class ThreadPool {
     private BlockingQueue queue = new BlockingQueue();
     private boolean closed = true;
-    private int poolSize;
+    private int size;
 
     /**
+     * Create a thread pool of the specified size.
      *
-     * @param poolSize
+     * @param size the size of the thread pool
      */
-    public ThreadPool(int poolSize) {
-        this.poolSize = poolSize;
+    public ThreadPool(int size) {
+        this.size = size;
     }
 
     /**
-     *
+     * Open the thread pool.
      */
     public synchronized void open() {
-        if (!closed) {
+        if (!this.closed) {
             throw new IllegalStateException("Pool already started.");
         }
-        closed = false;
-        for (int i = 0; i < poolSize; ++i) {
+        this.closed = false;
+        for (int i = 0; i < this.size; ++i) {
             new PooledThread().start();
         }
     }
 
     /**
+     * Enqueue the specified runnable in the thread pool.
      *
-     * @param job
+     * @param job the job as a runnable
      */
     public synchronized void execute(Runnable job) {
-        if (closed) {
+        if (this.closed) {
             throw new PoolClosedException();
         }
-        queue.enqueue(job);
+        this.queue.enqueue(job);
     }
 
     private class PooledThread extends Thread {
@@ -81,19 +84,20 @@ public class ThreadPool {
     }
 
     /**
-     *
+     * Close the thread pool.
      */
     public void close() {
-        closed = true;
-        queue.close();
+        this.closed = true;
+        this.queue.close();
     }
 
     /**
+     * Get the size of the thread pool.
      *
-     * @return
+     * @return the size of the thread pool
      */
-    public int getPoolSize() {
-        return poolSize;
+    public int getSize() {
+        return size;
     }
 
     private static class PoolClosedException extends RuntimeException {
@@ -153,8 +157,9 @@ public class ThreadPool {
     }
 
     /**
+     * Entry point.
      *
-     * @param args
+     * @param args the arguments
      */
     public static void main(String[] args) {
         System.out.println("Total memory: " + CommandLineHelper.invokeShellCommandAndGetResult("cat /proc/meminfo | grep MemTotal").get(0).split("\\s+")[1] + "KB");

@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Table helper.
  *
  * @author Min Cai
  */
@@ -39,10 +40,11 @@ public class TableHelper {
     private static final Rectangle A3_EXTRA_LANDSCAPE = new RectangleReadOnly(842,1391, 90);
 
     /**
+     * Generate the table.
      *
-     * @param fileName
-     * @param columns
-     * @param rows
+     * @param fileName the file name
+     * @param columns the list of columns
+     * @param rows the list of rows
      */
     public static void generateTable(String fileName, List<String> columns, List<List<String>> rows) {
         Document document = new Document(A3_EXTRA_LANDSCAPE);

@@ -19,20 +19,23 @@
 package net.pickapack.util;
 
 /**
+ * Value provider.
  *
  * @author Min Cai
- * @param <T>
+ * @param <T> the type of the value
  */
 public interface ValueProvider<T> {
     /**
+     * Get the value.
      *
-     * @return
+     * @return the value
      */
     T get();
 
     /**
+     * Get the initial value.
      *
-     * @return
+     * @return the initial value
      */
     T getInitialValue();
 }

@@ -19,16 +19,18 @@
 package net.pickapack.util;
 
 /**
+ * Value provider factory.
  *
  * @author Min Cai
- * @param <T>
- * @param <ValueProviderT>
+ * @param <T> the type of the value
+ * @param <ValueProviderT> the type of the value provider
  */
 public interface ValueProviderFactory<T, ValueProviderT extends ValueProvider<T>> {
     /**
+     * Create a value provider.
      *
-     * @param args
-     * @return
+     * @param args the array of arguments
+     * @return the newly created value provider
      */
     ValueProviderT createValueProvider(Object... args);
 }

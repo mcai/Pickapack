@@ -19,13 +19,15 @@
 package net.pickapack.collection.tree;
 
 /**
+ * Node helper.
  *
  * @author Min Cai
  */
 public class NodeHelper {
     /**
+     * Print the node.
      *
-     * @param node
+     * @param node the node
      */
     public static void print(Node node) {
         print(node, "", true);

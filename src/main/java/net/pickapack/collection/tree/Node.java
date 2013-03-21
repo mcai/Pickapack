@@ -22,18 +22,22 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * Node.
  *
  * @author Min Cai
  */
 public interface Node extends Serializable {
     /**
+     * Get the value of the node.
      *
-     * @return
+     * @return the value of the node
      */
     Object getValue();
+
     /**
+     * Get the child nodes of the node.
      *
-     * @return
+     * @return the child nodes of the node
      */
     List<? extends Node> getChildren();
 }

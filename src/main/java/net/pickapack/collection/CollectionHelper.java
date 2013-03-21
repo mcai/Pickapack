@@ -30,16 +30,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Collection helper.
  *
  * @author Min Cai
  */
 public class CollectionHelper {
     /**
+     * Get a value indicating whether all the elements in the specified list match the specified predicate.
      *
-     * @param <E>
-     * @param elements
-     * @param predicate
-     * @return
+     * @param <E> the type of the elements in the specified list
+     * @param elements the list of elements
+     * @param predicate the predicate
+     * @return a value indicating whether all the elements in the specified list match the specified predicate
      */
     public static  <E> boolean allMatch(List<E> elements, Predicate<? super E> predicate) {
         for(E element : elements) {
@@ -52,11 +54,12 @@ public class CollectionHelper {
     }
 
     /**
+     * Get a value indicating whether there is any element in the specified list matches the specified predicate.
      *
-     * @param <E>
-     * @param elements
-     * @param predicate
-     * @return
+     * @param <E> the type of the elements in the specified list
+     * @param elements the list of elements
+     * @param predicate the predicate
+     * @return a value indicating whether there is any element in the specified list matches the specified predicate
      */
     public static  <E> boolean anyMatch(List<E> elements, Predicate<? super E> predicate) {
         for(E element : elements) {
@@ -69,11 +72,12 @@ public class CollectionHelper {
     }
 
     /**
+     * Get the filtered list of the specified list based on the specified predicate.
      *
-     * @param <E>
-     * @param elements
-     * @param predicate
-     * @return
+     * @param <E> the type of the elements in the specified list
+     * @param elements the list of elements
+     * @param predicate the predicate
+     * @return the filtered list of the specified list based on the specified predicate
      */
     public static <E> List<E> filter(List<E> elements, Predicate<? super E> predicate) {
         List<E> results = new ArrayList<E>();
@@ -88,12 +92,13 @@ public class CollectionHelper {
     }
 
     /**
+     * Get the transformed list of the specified list based on the specified type cast.
      *
-     * @param <E>
-     * @param <T>
-     * @param elements
-     * @param clz
-     * @return
+     * @param <E> the type of the elements in the specified list
+     * @param <T> the type of the elements in the transformed list
+     * @param elements the list of elements
+     * @param clz the target class that the elements in the specified list need to be casted into
+     * @return the transformed list of the specified list based on the specified type cast
      */
     @SuppressWarnings("unchecked")
     public static <E, T> List<T> transform(List<E> elements, final Class<T> clz) {
@@ -106,12 +111,13 @@ public class CollectionHelper {
     }
 
     /**
+     * Get the transformed list of the specified list based on the specified function.
      *
-     * @param <E>
-     * @param <T>
-     * @param elements
-     * @param function
-     * @return
+     * @param <E> the type of the elements in the specified list
+     * @param <T> the type of the elements in the transformed list
+     * @param elements the list of elements
+     * @param function the transformation function
+     * @return the transformed list of the specified list based on the specified function
      */
     public static <E, T> List<T> transform(List<E> elements, final Function1<? super E, T> function) {
         return transform(elements, new Function2<Integer, E, T>() {
@@ -123,12 +129,13 @@ public class CollectionHelper {
     }
 
     /**
+     * Get the transformed list of the specified list based on the specified function.
      *
-     * @param <E>
-     * @param <T>
-     * @param elements
-     * @param function
-     * @return
+     * @param <E> the type of the elements in the specified list
+     * @param <T> the type of the elements in the transformed list
+     * @param elements the list of elements
+     * @param function the transformation function
+     * @return the transformed list of the specified list based on the specified function
      */
     public static <E, T> List<T> transform(List<E> elements, Function2<Integer, ? super E, T> function) {
         List<T> results = new ArrayList<T>();
@@ -142,13 +149,14 @@ public class CollectionHelper {
     }
 
     /**
+     * Get the transformed map of the specified map based on the specified function.
      *
-     * @param <K>
-     * @param <V>
-     * @param <T>
-     * @param elements
-     * @param function
-     * @return
+     * @param <K> the type of the keys in the specified map
+     * @param <V> the type of the values in the specified map
+     * @param <T> the type of the values in the transformed map
+     * @param elements the map of elements
+     * @param function the transformation function
+     * @return the transformed map of the specified map based on the specified function
      */
     public static <K, V, T> Map<K, T> transform(Map<K, V> elements, final Function2<? super K, V, T> function) {
         return transform(elements, new Function3<Integer, K, V, T>() {
@@ -160,13 +168,14 @@ public class CollectionHelper {
     }
 
     /**
+     * Get the transformed map of the specified map based on the specified function.
      *
-     * @param <K>
-     * @param <V>
-     * @param <T>
-     * @param elements
-     * @param function
-     * @return
+     * @param <K> the type of the keys in the specified map
+     * @param <V> the type of the values in the specified map
+     * @param <T> the type of the values in the transformed map
+     * @param elements the map of elements
+     * @param function the transformation function
+     * @return the transformed map of the specified map based on the specified function
      */
     public static <K, V, T> Map<K, T> transform(Map<K, V> elements, final Function3<Integer, ? super K, V, T> function) {
         Map<K, T> results = new LinkedHashMap<K, T>();
@@ -180,11 +189,12 @@ public class CollectionHelper {
     }
 
     /**
+     * Convert the specified list of pairs into a map of elements.
      *
-     * @param <K>
-     * @param <V>
-     * @param elements
-     * @return
+     * @param <K> the type of keys in the map
+     * @param <V> the type of values in the map
+     * @param elements the list of pairs
+     * @return the result map of elements that correspond to the specified list of pairs
      */
     public static <K, V> Map<K, V> toMap(List<Pair<K, V>> elements) {
         Map<K, V> result = new LinkedHashMap<K, V>();

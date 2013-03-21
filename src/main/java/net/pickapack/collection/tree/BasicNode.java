@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Basic node.
  *
  * @author Min Cai
  */
@@ -30,8 +31,9 @@ public class BasicNode implements Node {
     private List<Node> children;
 
     /**
+     * Create a basic node.
      *
-     * @param value
+     * @param value the value of the node
      */
     public BasicNode(Object value) {
         this.value = value;
@@ -39,8 +41,9 @@ public class BasicNode implements Node {
     }
 
     /**
+     * Get the value of the node.
      *
-     * @return
+     * @return the value of the node
      */
     @Override
     public Object getValue() {
@@ -48,8 +51,9 @@ public class BasicNode implements Node {
     }
 
     /**
+     * Get the child nodes of the node.
      *
-     * @return
+     * @return the child nodes of the node
      */
     @Override
     public List<Node> getChildren() {
@@ -57,8 +61,9 @@ public class BasicNode implements Node {
     }
 
     /**
+     * Entry point.
      *
-     * @param args
+     * @param args the arguments
      */
     public static void main(String[] args) {
         BasicNode node0 = new BasicNode(0);

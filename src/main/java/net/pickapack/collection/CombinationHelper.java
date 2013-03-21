@@ -24,9 +24,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Combination helper.
  *
  * @author Min Cai
- * @param <T>
+ * @param <T> the type of the list items
  */
 public class CombinationHelper<T> {
     private class Pair {
@@ -44,8 +45,9 @@ public class CombinationHelper<T> {
     private boolean hasMoreCombinations = true;
 
     /**
+     * Create a combination helper.
      *
-     * @param uncombinedList
+     * @param uncombinedList the uncombined list of list
      */
     public CombinationHelper(List<List<T>> uncombinedList) {
         this.uncombinedList = uncombinedList;
@@ -85,10 +87,11 @@ public class CombinationHelper<T> {
     }
 
     /**
+     * Get the combinations for the specified list of list.
      *
-     * @param <T>
-     * @param lists
-     * @return
+     * @param <T> the type of the list items
+     * @param lists the specified list of list
+     * @return the combination for the specified list of list
      */
     public static <T> List<List<T>> getCombinations(List<List<T>> lists) {
         List<List<T>> combinations = new ArrayList<List<T>>();

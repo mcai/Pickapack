@@ -21,6 +21,7 @@ package net.pickapack.im.event;
 import net.pickapack.event.BlockingEvent;
 
 /**
+ * Cloud event.
  *
  * @author Min Cai
  */

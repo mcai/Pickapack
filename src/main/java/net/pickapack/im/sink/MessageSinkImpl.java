@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Message sink implementation.
  *
  * @author Min Cai
  */
@@ -33,37 +34,22 @@ public class MessageSinkImpl implements MessageSink {
     private Map<String, CloudUser> users;
 
     /**
-     *
+     * Create a message sink implementation.
      */
     public MessageSinkImpl() {
         this.users = new HashMap<String, CloudUser>();
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public Set<String> getUserIds() {
         return this.users.keySet();
     }
 
-    /**
-     *
-     * @param fromUserId
-     * @param toUserId
-     * @param message
-     */
     @Override
     public synchronized void send(String fromUserId, String toUserId, String message) {
         this.getUser(toUserId).getInstantMessages().add(new InstantMessage(fromUserId, message));
     }
 
-    /**
-     *
-     * @param userId
-     * @return
-     */
     @Override
     public synchronized String receive(String userId) {
         CloudUser user = this.getUser(userId);

@@ -21,6 +21,7 @@ package net.pickapack.im.event.request;
 import net.pickapack.im.event.CloudEvent;
 
 /**
+ * Cloud request event.
  *
  * @author Min Cai
  */

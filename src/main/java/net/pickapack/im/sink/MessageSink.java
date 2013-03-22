@@ -22,33 +22,37 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
+ * Message sink.
  *
  * @author Min Cai
  */
 public interface MessageSink extends Serializable {
     /**
+     * Get the list of user IDs.
      *
-     * @return
+     * @return the list of user IDs
      */
     Set<String> getUserIds();
 
     /**
+     * Send a message.
      *
-     * @param fromUserId
-     * @param toUserId
-     * @param message
+     * @param fromUserId the sender's user ID
+     * @param toUserId   the receiver's user ID
+     * @param message    the message to be sent
      */
     void send(String fromUserId, String toUserId, String message);
 
     /**
+     * Receive a message for the specified user ID.
      *
-     * @param userId
-     * @return
+     * @param userId the user ID
+     * @return a newly arrived message for the specified user ID, if any exists
      */
     String receive(String userId);
 
     /**
-     *
+     * Predefined server user ID.
      */
     public static String USER_ID_SERVER = "#server";
 }

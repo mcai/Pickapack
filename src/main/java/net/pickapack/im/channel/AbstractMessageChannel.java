@@ -19,33 +19,37 @@
 package net.pickapack.im.channel;
 
 import net.pickapack.dateTime.DateHelper;
-import net.pickapack.io.serialization.JsonSerializationHelper;
 import net.pickapack.im.sink.InstantMessage;
 import net.pickapack.im.sink.MessageSink;
+import net.pickapack.io.serialization.JsonSerializationHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
+ * Abstract message channel.
  *
  * @author Min Cai
  */
 public abstract class AbstractMessageChannel implements MessageChannel {
     /**
-     *
+     * Message sink.
      */
     protected MessageSink sink;
+
     /**
-     *
+     * The period in seconds to check for received messages.
      */
     protected long checkReceivedMessagePeriod;
+
     private final List<MessagingListener> listeners;
 
     /**
+     * Create an abstract message channel.
      *
-     * @param sink
-     * @param checkReceivedMessagePeriod
+     * @param sink                       the message sink
+     * @param checkReceivedMessagePeriod the period in seconds to check for received messages
      */
     public AbstractMessageChannel(MessageSink sink, long checkReceivedMessagePeriod) {
         this.checkReceivedMessagePeriod = checkReceivedMessagePeriod;
@@ -54,10 +58,6 @@ public abstract class AbstractMessageChannel implements MessageChannel {
         this.listeners = new ArrayList<MessagingListener>();
     }
 
-    /**
-     *
-     * @param listener
-     */
     @Override
     public void addMessagingListener(MessagingListener listener) {
         synchronized (this.listeners) {
@@ -65,10 +65,6 @@ public abstract class AbstractMessageChannel implements MessageChannel {
         }
     }
 
-    /**
-     *
-     * @param listener
-     */
     @Override
     public void removeMessagingListener(MessagingListener listener) {
         synchronized (this.listeners) {
@@ -77,26 +73,29 @@ public abstract class AbstractMessageChannel implements MessageChannel {
     }
 
     /**
+     * Send an object from the specified sender to the receiver.
      *
-     * @param fromUserId
-     * @param toUserId
-     * @param obj
+     * @param fromUserId the sender's user ID
+     * @param toUserId   the receiver's user ID
+     * @param obj        the object to be sent
      */
     protected void sendObj(String fromUserId, String toUserId, Object obj) {
         this.sink.send(fromUserId, toUserId, JsonSerializationHelper.serialize(new JsonSerializationHelper.ObjectWrapper(obj.getClass().getName(), obj)));
     }
 
     /**
+     * Send an object.
      *
-     * @param message
+     * @param message the object to be sent
      */
     public void send(Object message) {
         this.send(MessageSink.USER_ID_SERVER, message);
     }
 
     /**
+     * Fire an instant message is received.
      *
-     * @param instantMessage
+     * @param instantMessage the instant message that is received
      */
     protected void fireMessageReceived(InstantMessage instantMessage) {
         JsonSerializationHelper.ObjectWrapper objectWrapper = JsonSerializationHelper.deserialize(JsonSerializationHelper.ObjectWrapper.class, instantMessage.getBody());
@@ -107,9 +106,10 @@ public abstract class AbstractMessageChannel implements MessageChannel {
     }
 
     /**
+     * Receive one message for the specified user ID.
      *
-     * @param userId
-     * @return
+     * @param userId the user ID
+     * @return a value indicating whether a message has been received for the specified user
      */
     protected boolean receiveOne(String userId) {
         String str;
@@ -124,23 +124,18 @@ public abstract class AbstractMessageChannel implements MessageChannel {
     }
 
     /**
+     * Receive a batch of messages for the specified user ID.
      *
-     * @param userId
+     * @param userId the user ID
      */
     protected void receiveBatch(String userId) {
         for (; receiveOne(userId); ) ;
     }
 
-    /**
-     *
-     */
     @Override
     public void open() {
     }
 
-    /**
-     *
-     */
     @Override
     public void close() {
         this.listeners.clear();

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Sub line plot.
  *
  * @author Min Cai
  */
@@ -31,8 +32,9 @@ public class SubLinePlot implements Serializable {
     private List<SubLinePlotLine> lines;
 
     /**
+     * Create a sub line plot.
      *
-     * @param titleY
+     * @param titleY the y title
      */
     public SubLinePlot(String titleY) {
         this.titleY = titleY;
@@ -40,16 +42,18 @@ public class SubLinePlot implements Serializable {
     }
 
     /**
+     * Get the y title.
      *
-     * @return
+     * @return the y title
      */
     public String getTitleY() {
         return titleY;
     }
 
     /**
+     * Get the list of lines.
      *
-     * @return
+     * @return the list of lines
      */
     public List<SubLinePlotLine> getLines() {
         return lines;

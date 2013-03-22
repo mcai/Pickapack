@@ -33,16 +33,18 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 /**
+ * Chart to PDF exporter.
  *
  * @author Min Cai
  */
 public class ChartPdfExporter {
     /**
+     * Export the specified chart to the specified PDF file.
      *
-     * @param chart
-     * @param width
-     * @param height
-     * @param fileName
+     * @param chart the chart
+     * @param width the width of the PDF file
+     * @param height the height of the PDF file
+     * @param fileName the PDF file name
      */
     public static void exportPdf(JFreeChart chart, int width, int height, String fileName) {
         try {

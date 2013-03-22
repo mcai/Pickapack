@@ -23,9 +23,10 @@ import net.pickapack.action.Function1;
 import java.io.Serializable;
 
 /**
+ * Sub bar plot.
  *
  * @author Min Cai
- * @param <ItemT>
+ * @param <ItemT> the type of the items
  */
 public class SubBarPlot<ItemT> implements Serializable {
     private String title;
@@ -33,10 +34,11 @@ public class SubBarPlot<ItemT> implements Serializable {
     private Function1<ItemT, String> getTitleCallback;
 
     /**
+     * Create a sub bar plot.
      *
-     * @param title
-     * @param getValueCallback
-     * @param getTitleCallback
+     * @param title the title
+     * @param getValueCallback the callback function used to get the value.
+     * @param getTitleCallback the callback function used to get the title
      */
     public SubBarPlot(String title, Function1<ItemT, Double> getValueCallback, Function1<ItemT, String> getTitleCallback) {
         this.title = title;
@@ -45,24 +47,27 @@ public class SubBarPlot<ItemT> implements Serializable {
     }
 
     /**
+     * Get the title.
      *
-     * @return
+     * @return the title
      */
     public String getTitle() {
         return title;
     }
 
     /**
+     * Get the callback function used to get the value.
      *
-     * @return
+     * @return the callback function used to get the value
      */
     public Function1<ItemT, Double> getGetValueCallback() {
         return getValueCallback;
     }
 
     /**
+     * Get the callback function used to get the title.
      *
-     * @return
+     * @return the callback function used to get the title
      */
     public Function1<ItemT, String> getGetTitleCallback() {
         return getTitleCallback;

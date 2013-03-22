@@ -23,6 +23,7 @@ import net.pickapack.action.Function;
 import java.io.Serializable;
 
 /**
+ * Sub line plot line.
  *
  * @author Min Cai
  */
@@ -31,9 +32,10 @@ public class SubLinePlotLine implements Serializable {
     private Function<Double> getValueCallback;
 
     /**
+     * Create a sub line plot line.
      *
-     * @param title
-     * @param getValueCallback
+     * @param title the value
+     * @param getValueCallback the callback function used to get the value
      */
     public SubLinePlotLine(String title, Function<Double> getValueCallback) {
         this.title = title;
@@ -41,16 +43,18 @@ public class SubLinePlotLine implements Serializable {
     }
 
     /**
+     * Get the title.
      *
-     * @return
+     * @return the title
      */
     public String getTitle() {
         return title;
     }
 
     /**
+     * Get the callback function used to get the value.
      *
-     * @return
+     * @return the callback function used to get the value
      */
     public Function<Double> getGetValueCallback() {
         return getValueCallback;

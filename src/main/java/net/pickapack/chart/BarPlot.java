@@ -25,84 +25,93 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Bar plot.
  *
  * @author Min Cai
- * @param <ItemT>
+ * @param <ItemT> the type of items
  */
 public class BarPlot<ItemT> implements Serializable {
     private String title;
     private String titleY;
     private boolean stacked;
-    private Predicate<ItemT> pred;
+    private Predicate<ItemT> predicate;
     private List<ItemT> items;
     private List<SubBarPlot<ItemT>> subBarPlots;
 
     /**
+     * Create a bar plot.
      *
-     * @param title
-     * @param titleY
-     * @param pred
-     * @param items
+     * @param title the title
+     * @param titleY the y title
+     * @param predicate the predicate
+     * @param items the list of items
      */
-    public BarPlot(String title, String titleY, Predicate<ItemT> pred, List<ItemT> items) {
+    public BarPlot(String title, String titleY, Predicate<ItemT> predicate, List<ItemT> items) {
         this.title = title;
         this.titleY = titleY;
-        this.pred = pred;
+        this.predicate = predicate;
         this.items = items;
         this.subBarPlots = new ArrayList<SubBarPlot<ItemT>>();
     }
 
     /**
+     * Get the title.
      *
-     * @return
+     * @return the title
      */
     public String getTitle() {
         return title;
     }
 
     /**
+     * Get the y title.
      *
-     * @return
+     * @return the y title
      */
     public String getTitleY() {
         return titleY;
     }
 
     /**
+     * Get a value indicating whether the bar plot is stacked or not.
      *
-     * @param stacked
-     */
-    public void setStacked(boolean stacked) {
-        this.stacked = stacked;
-    }
-
-    /**
-     *
-     * @return
+     * @return a value indicating whether the bar plot is stacked or not
      */
     public boolean isStacked() {
         return stacked;
     }
 
     /**
+     * Set a value indicating whether the bar plot is stacked or not.
      *
-     * @return
+     * @param stacked a value indicating whether the bar plot is stacked or not
      */
-    public Predicate<ItemT> getPred() {
-        return pred;
+    public void setStacked(boolean stacked) {
+        this.stacked = stacked;
     }
 
     /**
+     * Get the predicate.
      *
-     * @return
+     * @return the predicate
+     */
+    public Predicate<ItemT> getPredicate() {
+        return predicate;
+    }
+
+    /**
+     * Get the list of items.
+     *
+     * @return the list of items
      */
     public List<ItemT> getItems() {
         return items;
     }
 
     /**
+     * Get the list of sub bar plots.
      *
-     * @return
+     * @return the list of sub bar plots
      */
     public List<SubBarPlot<ItemT>> getSubBarPlots() {
         return subBarPlots;

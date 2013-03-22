@@ -39,23 +39,22 @@ import java.util.*;
 import java.util.List;
 
 /**
+ * Line plot frame.
  *
  * @author Min Cai
  */
 public class LinePlotFrame extends ApplicationFrame {
-    /**
-     *
-     */
-    public int numSubPlots;
+    private int numSubPlots;
     private List<TimeSeriesCollection> dataSets;
     private List<Map<SubLinePlotLine, Function<Double>>> dataSinks;
     private LinePlot linePlot;
 
     /**
+     * Create a line plot frame.
      *
-     * @param linePlot
-     * @param width
-     * @param height
+     * @param linePlot the line plot
+     * @param width the width
+     * @param height the height
      */
     public LinePlotFrame(LinePlot linePlot, int width, int height) {
         super(linePlot.getTitle());

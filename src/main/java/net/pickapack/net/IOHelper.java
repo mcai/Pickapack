@@ -25,13 +25,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
+ * I/O helper.
  *
  * @author Min Cai
  */
 public class IOHelper {
     /**
+     * Extract the resource in the specified path.
      *
-     * @param path
+     * @param path the path to the resource
      */
     public static void extractResource(String path) {
         File file = new File(path);

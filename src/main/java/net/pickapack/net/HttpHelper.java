@@ -36,15 +36,17 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
+ * HTTP helper.
  *
  * @author Min Cai
  */
 public class HttpHelper {
     /**
+     * Create an HTTP request from the specified byte array.
      *
-     * @param bytes
-     * @param bytesRead
-     * @return
+     * @param bytes the byte array
+     * @param bytesRead the number of bytes that is to be read
+     * @return a newly created HTTP request from the specified byte array
      */
     public static HttpRequest createRequest(final byte[] bytes, final int bytesRead) {
         try {
@@ -74,10 +76,11 @@ public class HttpHelper {
     }
 
     /**
+     * Create an HTTP response from the specified byte array.
      *
-     * @param bytes
-     * @param bytesRead
-     * @return
+     * @param bytes the byte array
+     * @param bytesRead the number of bytes that is to be read
+     * @return a newly created HTTP response from the specified byte array
      */
     public static HttpResponse createResponse(final byte[] bytes, final int bytesRead) {
         try {

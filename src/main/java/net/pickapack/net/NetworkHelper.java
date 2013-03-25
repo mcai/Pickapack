@@ -24,20 +24,22 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
+ * Network helper.
  *
  * @author Min Cai
  */
 public class NetworkHelper {
     /**
-     *
+     * Default timeout in milliseconds used in the network reachability test.
      */
     public static final int DEFAULT_TIMEOUT = 400;
 
     /**
+     * Get a value indicating whether the specified host is reachable using the specified timeout.
      *
-     * @param host
-     * @param timeout
-     * @return
+     * @param host the host
+     * @param timeout the timeout in milliseconds used in the network reachability test
+     * @return a value indicating whether the specified host is reachable using the specified timeout
      */
     public static boolean isHostReachable(String host, int timeout) {
         try {
@@ -48,20 +50,22 @@ public class NetworkHelper {
     }
 
     /**
+     * Get a value indicating whether the specified host is reachable using the default timeout.
      *
-     * @param host
-     * @return
+     * @param host the host
+     * @return a value indicating whether the specified host is reachable using the default timeout
      */
     public static boolean isHostReachable(String host) {
         return isHostReachable(host, DEFAULT_TIMEOUT);
     }
 
     /**
+     * Get a value indicating whether the specified port is reachable using the specified timeout.
      *
-     * @param host
-     * @param port
-     * @param timeout
-     * @return
+     * @param host the host
+     * @param port the port
+     * @param timeout the timeout in milliseconds used in the network reachability test
+     * @return a value indicating whether the specified port is reachable using the specified timeout
      */
     public static boolean isPortReachable(String host, int port, int timeout) {
         try {
@@ -75,10 +79,11 @@ public class NetworkHelper {
     }
 
     /**
+     * Get a value indicating whether the specified port is reachable using the default timeout.
      *
-     * @param host
-     * @param port
-     * @return
+     * @param host the host
+     * @param port the port
+     * @return a value indicating whether the specified port is reachable using the default timeout
      */
     public static boolean isPortReachable(String host, int port) {
         return isPortReachable(host, port, DEFAULT_TIMEOUT);

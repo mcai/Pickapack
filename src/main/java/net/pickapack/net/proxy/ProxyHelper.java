@@ -21,22 +21,25 @@ package net.pickapack.net.proxy;
 import java.util.Properties;
 
 /**
+ * Proxy helper.
  *
  * @author Min Cai
  */
 public class ProxyHelper {
     /**
-     *
+     * Proxy IP address.
      */
     public static final String PROXY_IP = "localhost";
+
     /**
-     *
+     * Proxy port.
      */
     public static final int PROXY_PORT = 8888;
 
     /**
+     * Setup proxy.
      *
-     * @param useLocalProxy
+     * @param useLocalProxy a value indicating whether the local proxy is used or not
      */
     public static void setupProxy(boolean useLocalProxy) {
         if (useLocalProxy) {

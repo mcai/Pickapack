@@ -21,6 +21,7 @@ package net.pickapack.im.channel;
 import net.pickapack.im.sink.MessageSink;
 
 /**
+ * Basic message channel.
  *
  * @author Min Cai
  */
@@ -29,19 +30,17 @@ public class BasicMessageChannel extends AbstractMessageChannel {
     private String userId;
 
     /**
+     * Create a basic message channel.
      *
-     * @param userId
-     * @param sink
-     * @param checkReceivedMessagePeriod
+     * @param userId                     the user ID
+     * @param sink                       the message sink
+     * @param checkReceivedMessagePeriod the period in seconds to check for received messages
      */
     public BasicMessageChannel(String userId, MessageSink sink, long checkReceivedMessagePeriod) {
         super(sink, checkReceivedMessagePeriod);
         this.userId = userId;
     }
 
-    /**
-     *
-     */
     @Override
     public void open() {
         super.open();
@@ -58,11 +57,6 @@ public class BasicMessageChannel extends AbstractMessageChannel {
         threadReceive.start();
     }
 
-    /**
-     *
-     * @param to
-     * @param obj
-     */
     @Override
     public void send(String to, Object obj) {
         if (this.open) {
@@ -82,25 +76,24 @@ public class BasicMessageChannel extends AbstractMessageChannel {
         }
     }
 
-    /**
-     *
-     */
     @Override
     public void close() {
         super.close();
     }
 
     /**
+     * Get a value indicating whether the channel is open or not.
      *
-     * @return
+     * @return a value indicating whether the channel is open or not
      */
     public boolean isOpen() {
         return open;
     }
 
     /**
+     * Get the channel's user ID.
      *
-     * @return
+     * @return the channel's user ID
      */
     public String getUserId() {
         return userId;

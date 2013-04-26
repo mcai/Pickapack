@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Graceful message sink.
  *
  * @author Min Cai
  */
@@ -29,17 +30,14 @@ public class GracefulMessageSink implements MessageSink {
     private MessageSink proxy;
 
     /**
+     * Create a graceful message sink.
      *
-     * @param proxy
+     * @param proxy the proxy message sink
      */
     public GracefulMessageSink(MessageSink proxy) {
         this.proxy = proxy;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public Set<String> getUserIds() {
         try {
@@ -50,12 +48,6 @@ public class GracefulMessageSink implements MessageSink {
         }
     }
 
-    /**
-     *
-     * @param fromUserId
-     * @param toUserId
-     * @param message
-     */
     @Override
     public void send(String fromUserId, String toUserId, String message) {
         try {
@@ -65,11 +57,6 @@ public class GracefulMessageSink implements MessageSink {
         }
     }
 
-    /**
-     *
-     * @param userId
-     * @return
-     */
     @Override
     public String receive(String userId) {
         try {

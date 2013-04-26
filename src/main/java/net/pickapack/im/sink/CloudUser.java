@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Cloud user.
  *
  * @author Min Cai
  */
@@ -30,8 +31,9 @@ public class CloudUser {
     private List<InstantMessage> instantMessages;
 
     /**
+     * Create a cloud user of the specified ID.
      *
-     * @param id
+     * @param id the ID of the cloud user
      */
     public CloudUser(String id) {
         this.id = id;
@@ -39,16 +41,18 @@ public class CloudUser {
     }
 
     /**
+     * Get the ID of the cloud user.
      *
-     * @return
+     * @return the ID of the cloud user
      */
     public String getId() {
         return id;
     }
 
     /**
+     * Get the list of instant messages belonging to the user.
      *
-     * @return
+     * @return the list of instant messages belonging to the user
      */
     public List<InstantMessage> getInstantMessages() {
         return instantMessages;

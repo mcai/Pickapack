@@ -19,6 +19,7 @@
 package net.pickapack.im.event.request;
 
 /**
+ * Pause experiment request event.
  *
  * @author Min Cai
  */
@@ -26,16 +27,18 @@ public class PauseExperimentRequestEvent extends CloudRequestEvent {
     private long experimentProfileId;
 
     /**
+     * Create a pause experiment request event.
      *
-     * @param experimentProfileId
+     * @param experimentProfileId the experiment profile ID
      */
     public PauseExperimentRequestEvent(long experimentProfileId) {
         this.experimentProfileId = experimentProfileId;
     }
 
     /**
+     * Get the experiment profile ID.
      *
-     * @return
+     * @return the experiment profile ID
      */
     public long getExperimentProfileId() {
         return experimentProfileId;

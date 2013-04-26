@@ -19,14 +19,16 @@
 package net.pickapack.im.channel;
 
 /**
+ * Messaging listener.
  *
  * @author Min Cai
  */
 public interface MessagingListener {
     /**
+     * Called when a message is received.
      *
-     * @param from
-     * @param obj
+     * @param from the sender of the message
+     * @param obj  the message object
      */
     void messageReceived(String from, Object obj);
 }

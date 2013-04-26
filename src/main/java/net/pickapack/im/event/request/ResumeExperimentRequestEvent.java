@@ -19,6 +19,7 @@
 package net.pickapack.im.event.request;
 
 /**
+ * Resume experiment request event.
  *
  * @author Min Cai
  */
@@ -26,16 +27,18 @@ public class ResumeExperimentRequestEvent extends CloudRequestEvent {
     private long experimentProfileId;
 
     /**
+     * Create a resume experiment request event.
      *
-     * @param experimentProfileId
+     * @param experimentProfileId the experiment profile ID
      */
     public ResumeExperimentRequestEvent(long experimentProfileId) {
         this.experimentProfileId = experimentProfileId;
     }
 
     /**
+     * Get the experiment profile ID.
      *
-     * @return
+     * @return the experiment profile ID
      */
     public long getExperimentProfileId() {
         return experimentProfileId;

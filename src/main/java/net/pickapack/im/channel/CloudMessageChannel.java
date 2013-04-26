@@ -24,6 +24,7 @@ import net.pickapack.im.event.CloudEvent;
 import net.pickapack.im.sink.MessageSink;
 
 /**
+ * Cloud message channel.
  *
  * @author Min Cai
  */
@@ -31,9 +32,10 @@ public class CloudMessageChannel extends BasicMessageChannel {
     private BlockingEventDispatcher<CloudEvent> cloudEventDispatcher;
 
     /**
+     * Create a cloud message channel.
      *
-     * @param userId
-     * @param sink
+     * @param userId the user ID
+     * @param sink   the message sink
      */
     public CloudMessageChannel(String userId, MessageSink sink) {
         super(userId, sink, 5000);
@@ -51,20 +53,22 @@ public class CloudMessageChannel extends BasicMessageChannel {
     }
 
     /**
+     * Add the specified listener for the specified cloud event class.
      *
-     * @param <CloudEventT>
-     * @param eventClass
-     * @param listener
+     * @param <CloudEventT> the type of the cloud event
+     * @param eventClass    the cloud event class
+     * @param listener      the cloud event listener to be added
      */
     public <CloudEventT extends CloudEvent> void addCloudEventListener(Class<CloudEventT> eventClass, Action1<CloudEventT> listener) {
         this.cloudEventDispatcher.addListener(eventClass, listener);
     }
 
     /**
+     * Remove the specified listener for the specified cloud event class.
      *
-     * @param <CloudEventT>
-     * @param eventClass
-     * @param listener
+     * @param <CloudEventT> the type of the cloud event
+     * @param eventClass    the cloud event class
+     * @param listener      the cloud event listener to be removed
      */
     public <CloudEventT extends CloudEvent> void removeCloudEventListener(Class<CloudEventT> eventClass, Action1<CloudEventT> listener) {
         this.cloudEventDispatcher.removeListener(eventClass, listener);

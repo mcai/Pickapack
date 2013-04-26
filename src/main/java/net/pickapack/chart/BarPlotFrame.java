@@ -32,17 +32,19 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
+ * Bar plot frame.
  *
  * @author Min Cai
- * @param <ItemT>
+ * @param <ItemT> the type of items
  */
 public class BarPlotFrame<ItemT> extends ApplicationFrame {
     /**
+     * Create a bar plot frame.
      *
-     * @param barPlot
-     * @param domainAxisLabel
-     * @param width
-     * @param height
+     * @param barPlot the bar plot
+     * @param domainAxisLabel the domain axis label
+     * @param width the width
+     * @param height the height
      */
     public BarPlotFrame(BarPlot<ItemT> barPlot, String domainAxisLabel, int width, int height) {
         super(barPlot.getTitle());
@@ -50,7 +52,7 @@ public class BarPlotFrame<ItemT> extends ApplicationFrame {
         DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
 
         for (ItemT item : barPlot.getItems()) {
-            if (barPlot.getPred().apply(item)) {
+            if (barPlot.getPredicate().apply(item)) {
                 for (SubBarPlot<ItemT> subBarPlot : barPlot.getSubBarPlots()) {
                     dataSet.addValue(
                             subBarPlot.getGetValueCallback().apply(item), subBarPlot.getTitle(),

@@ -19,36 +19,40 @@
 package net.pickapack.im.channel;
 
 /**
+ * Message channel.
  *
  * @author Min Cai
  */
 public interface MessageChannel {
     /**
-     *
+     * Open the channel.
      */
     void open();
 
     /**
+     * Send an object to the specified receiver.
      *
-     * @param to
-     * @param obj
+     * @param to  the receiver
+     * @param obj the object to send
      */
     void send(String to, Object obj);
 
     /**
-     *
+     * Close the channel.
      */
     void close();
 
     /**
+     * Add the specified messaging listener to the channel.
      *
-     * @param listener
+     * @param listener the messaging listener to be added
      */
     void addMessagingListener(MessagingListener listener);
 
     /**
+     * Remove the specified messaging listener from the channel.
      *
-     * @param listener
+     * @param listener the messaging listener to be removed
      */
     void removeMessagingListener(MessagingListener listener);
 }

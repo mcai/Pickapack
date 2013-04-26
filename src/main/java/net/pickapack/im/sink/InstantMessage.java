@@ -19,6 +19,7 @@
 package net.pickapack.im.sink;
 
 /**
+ * Instant message.
  *
  * @author Min Cai
  */
@@ -28,9 +29,10 @@ public class InstantMessage {
     private String body;
 
     /**
+     * Create an instant message.
      *
-     * @param fromUserId
-     * @param body
+     * @param fromUserId the sender's user ID
+     * @param body       the body of the message
      */
     public InstantMessage(String fromUserId, String body) {
         this.id = currentId++;
@@ -39,24 +41,27 @@ public class InstantMessage {
     }
 
     /**
+     * Get the ID of the message.
      *
-     * @return
+     * @return the ID of the message
      */
     public Long getId() {
         return id;
     }
 
     /**
+     * Get the sender's user ID.
      *
-     * @return
+     * @return the sender's user ID
      */
     public String getFromUserId() {
         return fromUserId;
     }
 
     /**
+     * Get the body of the message.
      *
-     * @return
+     * @return the body of the message
      */
     public String getBody() {
         return body;

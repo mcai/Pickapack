@@ -38,6 +38,7 @@ import java.lang.Object;import java.lang.RuntimeException;import java.lang.Strin
 import java.util.List;
 
 /**
+ * XPath helper.
  *
  * @author Min Cai
  */
@@ -45,20 +46,22 @@ public class XPathHelper {
     private static XPath xpath = XPathFactory.newInstance().newXPath();
 
     /**
+     * Get the first node from the specified object using the specified XPath expression.
      *
-     * @param obj
-     * @param xpathExpression
-     * @return
+     * @param obj the object
+     * @param xpathExpression the XPath expression
+     * @return the first node from the specified object matched using the specified XPath expression
      */
     public static Node getFirstByXPath(Object obj, String xpathExpression) {
         return evaluate(obj, xpathExpression, XPathConstants.NODE);
     }
 
     /**
+     * Get the list of nodes from the specified object using the specified XPath expression.
      *
-     * @param obj
-     * @param xpathExpression
-     * @return
+     * @param obj the object
+     * @param xpathExpression the XPath expression
+     * @return the list of nodes from the specified object matched using the specified XPath expression.
      */
     public static List<Node> getByXPath(Object obj, String xpathExpression) {
         NodeList list1 = evaluate(obj, xpathExpression, XPathConstants.NODESET);
@@ -81,9 +84,10 @@ public class XPathHelper {
     }
 
     /**
+     * Get the document parsed from the specified text.
      *
-     * @param text
-     * @return
+     * @param text the text
+     * @return the document parsed from the specified text
      * @throws IOException
      * @throws TransformerException
      * @throws XPathExpressionException
@@ -93,22 +97,24 @@ public class XPathHelper {
     }
 
     /**
+     * Get the document parsed from the specified byte array.
      *
-     * @param data
-     * @return
+     * @param data the byte array
+     * @return the document parsed from the specified byte array
      * @throws IOException
      * @throws TransformerException
      * @throws XPathExpressionException
      */
     public static Document parse(byte[] data) throws IOException, TransformerException, XPathExpressionException {
-        return parse(data, HtmlCleaner.DEFAULT_CHARSET);
+        return parse(data, System.getProperty("file.encoding"));
     }
 
     /**
+     * Get the document parsed from the specified byte array using the specified charset.
      *
-     * @param data
-     * @param charset
-     * @return
+     * @param data the byte array
+     * @param charset the charset
+     * @return the document parsed from the specified byte array using the specified charset
      * @throws IOException
      * @throws TransformerException
      * @throws XPathExpressionException

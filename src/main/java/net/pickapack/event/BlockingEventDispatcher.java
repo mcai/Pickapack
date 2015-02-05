@@ -39,10 +39,16 @@ public class BlockingEventDispatcher<BlockingEventT extends BlockingEvent> {
     protected final Map<Class<? extends BlockingEventT>, List<Action2<?, ? extends BlockingEventT>>> listeners;
 
     /**
+     * Map of any event listeners.
+     */
+    protected final List<Action2<Object, BlockingEventT>> anyListeners;
+
+    /**
      * Create a blocking event dispatcher.
      */
     public BlockingEventDispatcher() {
         this.listeners = new LinkedHashMap<Class<? extends BlockingEventT>, List<Action2<?, ? extends BlockingEventT>>>();
+        this.anyListeners = new ArrayList<Action2<Object, BlockingEventT>>();
     }
 
     /**
@@ -70,6 +76,10 @@ public class BlockingEventDispatcher<BlockingEventT extends BlockingEvent> {
             for (Action2<?, ? extends BlockingEventT> listener : this.listeners.get(eventClass)) {
                 ((Action2<Object, BlockingEventK>) listener).apply(sender, event);
             }
+        }
+
+        for (Action2<Object, BlockingEventT> anyListener : this.anyListeners) {
+            anyListener.apply(sender, event);
         }
     }
 
@@ -102,6 +112,17 @@ public class BlockingEventDispatcher<BlockingEventT extends BlockingEvent> {
     }
 
     /**
+     * Add an any listener.
+     *
+     * @param listener the listener that is to be added
+     */
+    public synchronized void addAnyListener(Action2<Object, BlockingEventT> listener) {
+        if (!this.anyListeners.contains(listener)) {
+            this.anyListeners.add(listener);
+        }
+    }
+
+    /**
      * Remove the specified listener for the specified event class.
      *
      * @param <BlockingEventK> the type of the event
@@ -120,6 +141,17 @@ public class BlockingEventDispatcher<BlockingEventT extends BlockingEvent> {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Remove the specified any listener.
+     *
+     * @param listener         the listener that is to be removed
+     */
+    public synchronized void removeAnyListener(Action2<Object, BlockingEventT> listener) {
+        if (this.anyListeners.contains(listener)) {
+            this.anyListeners.remove(listener);
         }
     }
 

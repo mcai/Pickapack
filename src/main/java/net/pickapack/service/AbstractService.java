@@ -234,6 +234,82 @@ public class AbstractService implements Service {
     }
 
     /**
+     * Get the first item matching the specified key and value.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @param key the key
+     * @param value the value
+     * @return the first item matching the specified key and value
+     */
+    protected  <TItem extends WithId> TItem getFirstItemBy(Dao<TItem, Long> dao, String key, String value) {
+        try {
+            PreparedQuery<TItem> query = dao.queryBuilder().where().eq(key, value).prepare();
+            return dao.queryForFirst(query);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Get the list of items matching the specified key and value.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @param key the key
+     * @param value the value
+     * @return the list of items matching the specified key and value
+     */
+    protected <TItem extends WithId> List<TItem> getItemsBy(Dao<TItem, Long> dao, String key, String value) {
+        try {
+            PreparedQuery<TItem> query = dao.queryBuilder().where().eq(key, value).prepare();
+            return dao.query(query);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Get the list of items matching the specified key and value, and with paging.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @param key the key
+     * @param value the value
+     * @param offset the offset
+     * @param limit the limit
+     * @return the list of items matching the specified key and value, and with the specified offset and limit
+     */
+    protected <TItem extends WithId> List<TItem> getItemsBy(Dao<TItem, Long> dao, String key, String value, long offset, long limit) {
+        try {
+            QueryBuilder<TItem, Long> queryBuilder = dao.queryBuilder();
+            queryBuilder.where().eq(key, value);
+            queryBuilder.offset(offset).limit(limit);
+            return dao.query(queryBuilder.prepare());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Get the number of items matching the specified key and value.
+     *
+     * @param <TItem> the item type
+     * @param dao the data access object
+     * @param key the key
+     * @param value the value
+     * @return the number of items matching the specified key and value
+     */
+    protected <TItem extends WithTitle> long getNumItemsBy(Dao<TItem, Long> dao, String key, String value) {
+        try {
+            PreparedQuery<TItem> query = dao.queryBuilder().setCountOf(true).where().eq(key, value).prepare();
+            return dao.countOf(query);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Get the latest item matching the specified title.
      *
      * @param <TItem> the item type
@@ -259,12 +335,7 @@ public class AbstractService implements Service {
      * @return the list of items matching the specified title
      */
     public <TItem extends WithTitle> List<TItem> getItemsByTitle(Dao<TItem, Long> dao, String title) {
-        try {
-            PreparedQuery<TItem> query = dao.queryBuilder().where().eq("title", title).prepare();
-            return dao.query(query);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return this.getItemsBy(dao, "title", title);
     }
 
     /**
@@ -278,14 +349,7 @@ public class AbstractService implements Service {
      * @return the list of items matching the specified title and with the specified offset and limit
      */
     public <TItem extends WithTitle> List<TItem> getItemsByTitle(Dao<TItem, Long> dao, String title, long offset, long limit) {
-        try {
-            QueryBuilder<TItem, Long> queryBuilder = dao.queryBuilder();
-            queryBuilder.where().eq("title", title);
-            queryBuilder.offset(offset).limit(limit);
-            return dao.query(queryBuilder.prepare());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return this.getItemsBy(dao, "title", title, offset, limit);
     }
 
     /**
@@ -297,12 +361,7 @@ public class AbstractService implements Service {
      * @return the number of items matching the specified title
      */
     public <TItem extends WithTitle> long getNumItemsByTitle(Dao<TItem, Long> dao, String title) {
-        try {
-            PreparedQuery<TItem> query = dao.queryBuilder().setCountOf(true).where().eq("title", title).prepare();
-            return dao.countOf(query);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return this.getNumItemsBy(dao, "title", title);
     }
 
     /**

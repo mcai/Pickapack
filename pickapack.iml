@@ -14,8 +14,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: net.pickapack:pickapack.micro:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.j256.ormlite:ormlite-core:4.45" level="project" />
     <orderEntry type="library" name="Maven: javax.mail:mail:1.5.0-b01" level="project" />
     <orderEntry type="library" name="Maven: javax.activation:activation:1.1" level="project" />
     <orderEntry type="library" name="Maven: net.sourceforge.htmlunit:htmlunit:2.12" level="project" />
@@ -45,6 +43,7 @@
     <orderEntry type="library" name="Maven: org.apache.commons:commons-exec:1.1" level="project" />
     <orderEntry type="library" name="Maven: net.java.dev.jna:jna:3.5.2" level="project" />
     <orderEntry type="library" name="Maven: com.j256.ormlite:ormlite-jdbc:4.45" level="project" />
+    <orderEntry type="library" name="Maven: com.j256.ormlite:ormlite-core:4.45" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.25" level="project" />
     <orderEntry type="library" name="Maven: org.subethamail:subethasmtp:3.1.7" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.6.1" level="project" />

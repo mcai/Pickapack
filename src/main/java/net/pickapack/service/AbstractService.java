@@ -300,7 +300,7 @@ public class AbstractService implements Service {
      * @param value the value
      * @return the number of items matching the specified key and value
      */
-    protected <TItem extends WithTitle> long getNumItemsBy(Dao<TItem, Long> dao, String key, String value) {
+    protected <TItem extends WithId> long getNumItemsBy(Dao<TItem, Long> dao, String key, String value) {
         try {
             PreparedQuery<TItem> query = dao.queryBuilder().setCountOf(true).where().eq(key, value).prepare();
             return dao.countOf(query);

@@ -383,6 +383,7 @@ public class AbstractService implements Service {
     /**
      * Add an item.
      *
+     * @param <TItem> the item type
      * @param dao the data access object
      * @param item the item that is to be added
      * @return the ID of the newly added item
@@ -397,6 +398,7 @@ public class AbstractService implements Service {
     /**
      * Add a list of items.
      *
+     * @param <TItem> the item type
      * @param dao the data access object
      * @param items the list of items that is to be added
      */
@@ -420,6 +422,7 @@ public class AbstractService implements Service {
     /**
      * Remove the item matching the specified ID.
      *
+     * @param <TItem> the item type
      * @param dao the data access object
      * @param id the ID of the item that is to be removed
      */
@@ -432,6 +435,7 @@ public class AbstractService implements Service {
     /**
      * Remove the specified items.
      *
+     * @param <TItem> the item type
      * @param dao the data access object
      * @param items the items that is to be removed
      */
@@ -446,6 +450,7 @@ public class AbstractService implements Service {
     /**
      * Remove the items matching the specified list of IDs.
      *
+     * @param <TItem> the item type
      * @param dao the data access object
      * @param ids the list of IDs
      */
@@ -462,6 +467,7 @@ public class AbstractService implements Service {
     /**
      * Clear the items.
      *
+     * @param <TItem> the item type
      * @param dao the data access object
      */
     public <TItem extends WithId> void clearItems(Dao<TItem, Long> dao) {
@@ -473,8 +479,27 @@ public class AbstractService implements Service {
     }
 
     /**
+     * Clear the items under the specified parent.
+     *
+     * @param <TItem> the item type
+     * @param <TItemDirectory> the item directory type
+     * @param dao the data access object
+     * @param parent the parent
+     */
+    public <TItem extends WithId, TItemDirectory extends WithId> void clearItemsByParent(Dao<TItem, Long> dao, TItemDirectory parent) {
+        try {
+            DeleteBuilder<TItem, Long> deleteBuilder = dao.deleteBuilder();
+            deleteBuilder.where().eq("parentId", parent.getId());
+            dao.delete(deleteBuilder.prepare());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Update the specified item.
      *
+     * @param <TItem> the item type
      * @param dao the data access object
      * @param item the item that is to be updated
      */
@@ -487,6 +512,7 @@ public class AbstractService implements Service {
     /**
      * Update the specified list of items.
      *
+     * @param <TItem> the item type
      * @param dao the data access object
      * @param items the items that is to be updated
      */
